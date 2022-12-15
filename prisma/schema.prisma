@@ -1,5 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider          = "mysql"
@@ -8,26 +11,67 @@ datasource db {
   relationMode      = "prisma"
 }
 
-generator client {
-  provider = "prisma-client-js"
+model Customer {
+  id          String     @id @default(uuid())
+  name        String     
+  email       String
+  userId      String
+  phoneNumber Int?
+  address     String?
+  city        String?
+  postalCode  String?
+  pets        Pet[]
+  Booking     Bookings[]
+
+  @@index([email])
+}
+
+model Pet {
+  id         String     @id @default(uuid())
+  name       String
+  breed      String
+  pet_owner  Customer   @relation(fields: [ownerId], references: [id])
+  ownerId    String
+  vaccinated Boolean    @default(false)
+  Booking    Bookings[]
+
+  @@index([ownerId])
+}
+
+model Services {
+  id           String     @id @default(uuid())
+  service_name String     @unique
+  price        Int
+  Booking      Bookings[]
+
+  @@index([service_name])
+}
+
+model Bookings {
+  id            String   @id @default(uuid())
+  customer_name Customer @relation(fields: [customerId], references: [id])
+  pet_name      Pet      @relation(fields: [petId], references: [id])
+  service_name  Services @relation(fields: [serviceId], references: [id])
+  customerId    String
+  petId         String
+  serviceId     String
 }
 
 // Necessary for Next auth
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -48,6 +92,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+
+  @@index([email])
 }
 
 model VerificationToken {
