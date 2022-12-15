@@ -14,7 +14,7 @@ const Footer = () => {
 					<a href="https://www.mnmk9.ca" target="_blank" className="mr-4 hover:underline md:mr-6">MNMK-9 Website</a>
 				</li>
 				<li>
-					<a href="/contact" className="hover:underline">Contact</a>
+					<a href="/contact-us" className="hover:underline">Contact</a>
 				</li>
 			</ul>
 		</footer>
