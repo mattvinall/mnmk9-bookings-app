@@ -52,19 +52,22 @@ const Navbar = () => {
 						</div>
 						<div className="hidden md:flex items-center space-x-1">
 							<a
+								href="/"
+								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
+							<a
 								href="/create-booking"
-								className="py-4 px-4 text-purple-700 border-b-4 border-green-500 font-semibold ">Book a Service</a>
+								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Book a Service</a>
 							<a
 								href="/manage-booking"
-								className="py-4 px-4 text-purple-700 font-semibold hover:text-green-500 transition duration-300">Manage A Service</a>
+								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage A Service</a>
 							<a
 								href="/contact"
-								className="py-4 px-4 text-purple-700 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
+								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Contact Us</a>
 						</div>
 						<AuthShowcase />
 						<div className="md:hidden flex items-center">
 							<button className="outline-none mobile-menu-button" onClick={handleClick}>
-								<svg className=" w-6 h-6 text-gray-500 hover:text-green-500 "
+								<svg className=" w-6 h-6 text-gray-500 "
 									x-show="!showMenu"
 									fill="none"
 									strokeLinecap="round"
