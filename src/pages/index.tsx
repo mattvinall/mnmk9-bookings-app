@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
             >
               <h3 className="text-2xl font-bold">Create Booking →</h3>
               <div className="text-lg">
-                Click to book a service with Tyler
+                Book a service
               </div>
             </Link>
             <Link
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
             >
               <h3 className="text-2xl font-bold">Manage a Booking →</h3>
               <div className="text-lg">
-                If you need to modify a booking for your fur baby
+                Manage a booking
               </div>
             </Link>
           </div>
