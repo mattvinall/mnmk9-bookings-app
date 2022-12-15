@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
-import Image from 'next/image'
-import logo from "../../../public/mnmk9-logo.jpg";
+import Image from 'next/image';
+import logo from "../../public/mnmk9-logo.jpg";
 
-const MyImage = () => {
+const Logo = () => {
 	return (
 		<Image
 			src={logo}
@@ -47,7 +47,7 @@ const Navbar = () => {
 					<div className="flex items-center h-32">
 						<div>
 							<a href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
-								<MyImage />
+								<Logo />
 							</a>
 						</div>
 						<div className="hidden md:flex items-center space-x-1">
@@ -67,9 +67,9 @@ const Navbar = () => {
 								<svg className=" w-6 h-6 text-gray-500 hover:text-green-500 "
 									x-show="!showMenu"
 									fill="none"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
 									viewBox="0 0 24 24"
 									stroke="currentColor"
 								>
@@ -80,13 +80,13 @@ const Navbar = () => {
 					</div>
 				</div>
 
-				<div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
+				{/* <div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
 					<ul className="">
 						<li className="active"><a href="/create-booking" className="block text-md px-2 py-4 text-white bg-green-500 font-semibold">Book a Service</a></li>
 						<li><a href="/manage-booking" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Manage A Service</a></li>
 						<li><a href="/contact" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Contact Us</a></li>
 					</ul>
-				</div>
+				</div> */}
 			</div>
 		</nav>
 	)
