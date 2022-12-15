@@ -13,10 +13,10 @@ datasource db {
 
 model Customer {
   id          String     @id @default(uuid())
-  userId      User?       @relation(fields: [user_id], references: [id])
-  user_id     String?
+  customer    User       @relation(fields: [customerId], references: [id])
+  customerId  String     @unique
   name        String
-  email       String
+  email       String     @unique
   phoneNumber Int?
   address     String?
   city        String?
@@ -24,38 +24,43 @@ model Customer {
   pets        Pet[]
   Booking     Bookings[]
 
-  @@index([email, user_id])
+  @@index([email, customerId])
 }
 
 model Pet {
   id         String     @id @default(uuid())
   name       String
-  breed      String
-  pet_owner  Customer   @relation(fields: [ownerId], references: [id])
+  breed      String?
+  petOwner   Customer   @relation(fields: [ownerId], references: [id])
   ownerId    String
-  vaccinated Boolean    @default(false)
-  Booking    Bookings[]
+  vaccinated Boolean?   @default(false)
+  Bookings   Bookings[]
 
   @@index([ownerId])
 }
 
 model Services {
-  id           String     @id @default(uuid())
-  service_name String     @unique
-  price        Int
-  Booking      Bookings[]
+  id          String     @id @default(uuid())
+  serviceName String     @unique
+  price       Int
+  Booking     Bookings[]
 
-  @@index([service_name])
+  @@index([serviceName])
 }
 
 model Bookings {
-  id            String   @id @default(uuid())
-  customer_name Customer @relation(fields: [customerId], references: [id])
-  pet_name      Pet      @relation(fields: [petId], references: [id])
-  service_name  Services @relation(fields: [serviceId], references: [id])
-  customerId    String
-  petId         String
-  serviceId     String
+  id         String   @id @default(uuid())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  email      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  pet        Pet      @relation(fields: [petId], references: [id])
+  service    Services @relation(fields: [serviceId], references: [id])
+  customerId String
+  petId      String
+  serviceId  String
+
+  @@index([customerId, serviceId, petId])
 }
 
 // Necessary for Next auth
@@ -86,14 +91,14 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Customer      Customer[]
+  Customer      Customer
 
   @@index([email])
 }
