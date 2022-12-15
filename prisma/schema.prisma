@@ -98,7 +98,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Customer      Customer
+  customer      Customer?
 
   @@index([email])
 }
