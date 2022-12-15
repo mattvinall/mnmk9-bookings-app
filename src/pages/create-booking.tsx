@@ -1,6 +1,14 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 
+const cards = [
+  {
+    service: "Boarding",
+    href: "/create-booking/boarding",
+    text: ""
+  }
+]
+
 const CreateBooking: NextPage = () => {
   return (
     <>
@@ -16,9 +24,7 @@ const CreateBooking: NextPage = () => {
           >
             <div className="flex justify-center">
               <div className="rounded-lg shadow-lg bg-white max-w-md">
-                <a href="#!">
-                  <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" alt="" />
-                </a>
+                <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" alt="" />
                 <div className="p-6">
                   <h2 className="text-gray-900 text-xl font-medium mb-2">Boarding</h2>
                   <p className="text-gray-700 text-base mb-4">
@@ -35,9 +41,7 @@ const CreateBooking: NextPage = () => {
           >
             <div className="flex justify-center">
               <div className="rounded-lg shadow-lg bg-white max-w-sm">
-                <a href="#!">
-                  <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/185.jpg" alt="" />
-                </a>
+                <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/185.jpg" alt="" />
                 <div className="p-6">
                   <h2 className="text-gray-900 text-xl font-medium mb-2">Daycare</h2>
                   <p className="text-gray-700 text-base mb-4">
@@ -54,9 +58,7 @@ const CreateBooking: NextPage = () => {
           >
             <div className="flex justify-center">
               <div className="rounded-lg shadow-lg bg-white max-w-sm">
-                <a href="#!">
-                  <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/186.jpg" alt="" />
-                </a>
+                <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/186.jpg" alt="" />
                 <div className="p-6">
                   <h2 className="text-gray-900 text-xl font-medium mb-2">Grooming</h2>
                   <p className="text-gray-700 text-base mb-4">
@@ -73,9 +75,7 @@ const CreateBooking: NextPage = () => {
           >
             <div className="flex justify-center">
               <div className="rounded-lg shadow-lg bg-white max-w-sm">
-                <a href="#!">
-                  <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/187.jpg" alt="" />
-                </a>
+                <img className="rounded-t-lg" src="https://mdbootstrap.com/img/new/standard/nature/187.jpg" alt="" />
                 <div className="p-6">
                   <h2 className="text-gray-900 text-xl font-medium mb-2">Training</h2>
                   <p className="text-gray-700 text-base mb-4">
