@@ -9,7 +9,7 @@ const CreateBooking: NextPage = () => {
           <span className="text-[hsl(280,100%,70%)]">Book a Service</span>
         </h1>
         <p className="text-xl text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab nam enim et laboriosam officiis?</p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-8">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8">
           <Link
             className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
             href="/create-booking/boarding"
