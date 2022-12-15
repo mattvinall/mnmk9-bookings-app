@@ -50,7 +50,7 @@ const Navbar = () => {
 								<Logo />
 							</a>
 						</div>
-						<div className="hidden md:flex items-center space-x-1">
+						<div className="hidden md:flex items-center">
 							<a
 								href="/"
 								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
