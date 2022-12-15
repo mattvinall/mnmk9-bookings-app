@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
 import logo from "../../public/mnmk9-logo.jpg";
@@ -15,8 +15,13 @@ const Logo = () => {
 
 const AuthShowcase: React.FC = () => {
 	const { data: sessionData } = useSession();
-	const userImage = sessionData && sessionData?.user?.image;
-	const userName = sessionData && sessionData?.user?.name
+	const userImage = useMemo(() => {
+		return sessionData && sessionData?.user?.image;
+	}, [sessionData?.user])
+	const userName = useMemo(() => {
+		return sessionData && sessionData?.user?.name
+	}, [sessionData?.user])
+
 	return (
 		<div className="flex items-center">
 			<p className="text-small text-purple pl-24">
@@ -56,10 +61,10 @@ const Navbar = () => {
 								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
 							<a
 								href="/create-booking"
-								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Book a Service</a>
+								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Book Service</a>
 							<a
 								href="/manage-booking"
-								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage A Service</a>
+								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage Booking</a>
 							<a
 								href="/contact-us"
 								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Contact Us</a>
