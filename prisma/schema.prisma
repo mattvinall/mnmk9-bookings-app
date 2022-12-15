@@ -13,9 +13,10 @@ datasource db {
 
 model Customer {
   id          String     @id @default(uuid())
-  name        String     
+  userId      User?       @relation(fields: [user_id], references: [id])
+  user_id     String?
+  name        String
   email       String
-  userId      String
   phoneNumber Int?
   address     String?
   city        String?
@@ -23,7 +24,7 @@ model Customer {
   pets        Pet[]
   Booking     Bookings[]
 
-  @@index([email])
+  @@index([email, user_id])
 }
 
 model Pet {
@@ -71,7 +72,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -85,13 +86,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Customer      Customer[]
 
   @@index([email])
 }
