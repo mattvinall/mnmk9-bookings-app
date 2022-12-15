@@ -61,7 +61,7 @@ const Navbar = () => {
 								href="/manage-booking"
 								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage A Service</a>
 							<a
-								href="/contact"
+								href="/contact-us"
 								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Contact Us</a>
 						</div>
 						<AuthShowcase />
