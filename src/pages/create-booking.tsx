@@ -14,7 +14,7 @@ const CreateBooking: NextPage = () => {
     <>
       <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          <span className="text-[hsl(280,100%,70%)]">Book a Service</span>
+          Book a  <span className="text-[hsl(280,100%,70%)]">Service</span>
         </h1>
         <h2 className="text-3xl font-bold text-white">Select a Service that you want to book</h2>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
