@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const cards = [
   {
@@ -33,40 +34,50 @@ const cards = [
 ]
 
 const CreateBooking: NextPage = () => {
+  const { data: sessionData } = useSession();
+
   return (
     <>
-      <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Book a  <span className="text-[hsl(280,100%,70%)]">Service</span>
-        </h1>
-        <h2 className="text-3xl font-bold text-white text-center">Select a Service that you want to book</h2>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
-          {
-            cards && cards.map(card =>{
-              return (
-                <Link
-                  className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-                  href={card.href}
-                  key={card.service}
-                >
-                  <div className="flex justify-center">
-                    <div className="rounded-lg shadow-lg bg-white max-w-md">
-                      <img className="rounded-t-lg" src={card.imageSrc} alt="" />
-                      <div className="p-6">
-                        <h2 className="text-gray-900 text-xl font-medium mb-2">{card.service}</h2>
-                        <p className="text-gray-700 text-base mb-4">
-                          {card.text}
-                        </p>
-                        <p className="text-gray-600 font-bold text-xs">{card.price}</p>
+      {
+        sessionData ? (
+          <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
+            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+              Book a  <span className="text-[hsl(280,100%,70%)]">Service</span>
+            </h1>
+            <h2 className="text-3xl font-bold text-white text-center">Select a Service that you want to book</h2>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
+              {
+                cards && cards.map(card => {
+                  return (
+                    <Link
+                      className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+                      href={card.href}
+                      key={card.service}
+                    >
+                      <div className="flex justify-center">
+                        <div className="rounded-lg shadow-lg bg-white max-w-md">
+                          <img className="rounded-t-lg" src={card.imageSrc} alt="" />
+                          <div className="p-6">
+                            <h2 className="text-gray-900 text-xl font-medium mb-2">{card.service}</h2>
+                            <p className="text-gray-700 text-base mb-4">
+                              {card.text}
+                            </p>
+                            <p className="text-gray-600 font-bold text-xs">{card.price}</p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })
-          }
-        </div>
-      </div>
+                    </Link>
+                  )
+                })
+              }
+            </div>
+          </div>
+        ) : (
+          <div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
+            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please Login to book a service</h1>
+          </div>
+        )
+      }
     </>
   );
 };
