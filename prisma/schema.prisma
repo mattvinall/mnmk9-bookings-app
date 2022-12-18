@@ -11,27 +11,11 @@ datasource db {
   relationMode      = "prisma"
 }
 
-model Customer {
-  id          String     @id @default(uuid())
-  customer    User       @relation(fields: [customerId], references: [id])
-  customerId  String     @unique
-  name        String
-  email       String     @unique
-  phoneNumber Int?
-  address     String?
-  city        String?
-  postalCode  String?
-  pets        Pet[]
-  Booking     Bookings[]
-
-  @@index([email, customerId])
-}
-
 model Pet {
   id         String     @id @default(uuid())
   name       String
   breed      String?
-  petOwner   Customer   @relation(fields: [ownerId], references: [id])
+  petOwner   User       @relation(fields: [ownerId], references: [id])
   ownerId    String
   vaccinated Boolean?   @default(false)
   Bookings   Bookings[]
@@ -43,24 +27,24 @@ model Services {
   id          String     @id @default(uuid())
   serviceName String     @unique
   price       Int
-  Booking     Bookings[]
+  bookings    Bookings[]
 
   @@index([serviceName])
 }
 
 model Bookings {
-  id         String   @id @default(uuid())
-  customer   Customer @relation(fields: [customerId], references: [id])
-  email      String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime
-  pet        Pet      @relation(fields: [petId], references: [id])
-  service    Services @relation(fields: [serviceId], references: [id])
-  customerId String
-  petId      String
-  serviceId  String
+  id        String   @id @default(uuid())
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  pet       Pet      @relation(fields: [petId], references: [id])
+  service   Services @relation(fields: [serviceId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  petId     String
+  serviceId String
+  userId    String
 
-  @@index([customerId, serviceId, petId])
+  @@index([userId, serviceId, petId])
 }
 
 // Necessary for Next auth
@@ -91,16 +75,21 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  customer      Customer?
+  phoneNumber   String?
+  address       String?
+  city          String?
+  postalCode    String?
+  pets          Pet[]
+  bookings      Bookings[]
 
-  @@index([email])
+  @@index([email, id, phoneNumber])
 }
 
 model VerificationToken {
