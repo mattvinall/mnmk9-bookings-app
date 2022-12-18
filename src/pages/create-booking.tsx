@@ -47,6 +47,7 @@ const CreateBooking: NextPage = () => {
                 <Link
                   className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
                   href={card.href}
+                  key={card.service}
                 >
                   <div className="flex justify-center">
                     <div className="rounded-lg shadow-lg bg-white max-w-md">
