@@ -15,12 +15,14 @@ const Logo = () => {
 
 const AuthShowcase: React.FC = () => {
 	const { data: sessionData } = useSession();
+
 	const userImage = useMemo(() => {
 		return sessionData && sessionData?.user?.image;
-	}, [sessionData?.user])
+	}, [sessionData?.user.image])
+
 	const userName = useMemo(() => {
 		return sessionData && sessionData?.user?.name
-	}, [sessionData?.user])
+	}, [sessionData?.user?.name])
 
 	return (
 		<div className="flex items-center">
@@ -45,6 +47,7 @@ const Navbar = () => {
 		console.log("icon clicked", menuToggled);
 		setMenuToggled((prevState) => !prevState);
 	}
+	
 	return (
 		<nav className="bg-white shadow-lg">
 			<div className="max-w-6xl mx-auto px-4">
