@@ -31,16 +31,16 @@ model Services {
 }
 
 model Bookings {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   petId     String
   serviceId String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   email     String
-  updatedAt DateTime
+  updatedAt DateTime? @updatedAt()
   userId    String
-  pet       Pet      @relation(fields: [petId], references: [id])
-  service   Services @relation(fields: [serviceId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  pet       Pet       @relation(fields: [petId], references: [id])
+  service   Services  @relation(fields: [serviceId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
 
   @@index([userId, serviceId, petId])
 }
