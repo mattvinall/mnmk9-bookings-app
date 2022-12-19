@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -36,18 +37,6 @@ const cards = [
 
 const CreateBooking: NextPage = () => {
   const { data: sessionData } = useSession();
-
-
-  // fuck yeah
-  const users = trpc.user.getAllUsers.useQuery();
-
-  const { data } = users;
-  console.log("all users", data);
-
-  const bookings = trpc.bookings.getAllBookings.useQuery();
-  console.log("all bookings", bookings.data);
-
-
   return (
     <>
       {
