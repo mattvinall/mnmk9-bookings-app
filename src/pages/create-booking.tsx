@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { trpc } from "../utils/trpc";
 
 const cards = [
   {
@@ -35,6 +36,17 @@ const cards = [
 
 const CreateBooking: NextPage = () => {
   const { data: sessionData } = useSession();
+
+
+  // fuck yeah
+  const users = trpc.user.getAllUsers.useQuery();
+
+  const { data } = users;
+  console.log("all users", data);
+
+  const bookings = trpc.bookings.getAllBookings.useQuery();
+  console.log("all bookings", bookings.data);
+
 
   return (
     <>
