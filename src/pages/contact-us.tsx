@@ -30,4 +30,4 @@ const ContactUs: NextPage = () => {
 	)
 }
 
-export default ContactUs
+export default ContactUs;
