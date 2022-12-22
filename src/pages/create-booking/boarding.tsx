@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
+import useFetchUserPets from "../../hooks/useFetchUserPers";
 
 
 // const schema = z.object({
@@ -15,13 +16,18 @@ import { trpc } from '../../utils/trpc';
 
 
 const Boarding: NextPage = () => {
-
+	const [userPets, setUserPets] = useState([]);
 	const { data: sessionData } = useSession();
-
 	const email = sessionData?.user?.email
-	const userByEmail = email && trpc.user.byEmail.useQuery({ email })
-	const userPets = userByEmail && userByEmail?.data?.pets;
 
+	const { data } = trpc.user.byEmail.useQuery({ email })
+
+	useEffect(() => {
+		if (data) {
+			setUserPets(data?.pets)
+			console.log("user pets state", userPets);
+		}
+	}, [])
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
@@ -70,7 +76,7 @@ const Boarding: NextPage = () => {
 									<option className="text-gray-900 w-[10%]" value={name}>{name}</option>
 								)
 							})}
-							<svg class="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+							<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
 						</select>
 					</div>
 					<div className="relative z-0 mb-6 w-full group">
