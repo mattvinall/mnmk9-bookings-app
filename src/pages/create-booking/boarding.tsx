@@ -1,33 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import useFetchUserPets from "../../hooks/useFetchUserPers";
 
 
-// const schema = z.object({
-// 	name: z.string(),
-// 	checkInDate: z.date(),
-// 	checkoutDate: z.date(),
-// })
+const schema = z.object({
+	firstName: z.string(),
+	lastName: z.string(),
+	phoneNumber: z.string(),
+	email: z.string(),
+	checkInDate: z.date(),
+	checkoutDate: z.date(),
+	pet: z.string(),
+	notes: z.string(),
+})
 
 
 const Boarding: NextPage = () => {
-	const [userPets, setUserPets] = useState([]);
+
 	const { data: sessionData } = useSession();
-	const email = sessionData?.user?.email
+	const email = sessionData?.user?.email;
 
-	const { data } = trpc.user.byEmail.useQuery({ email })
+	const { data, isLoading, error } = trpc.user.byEmail.useQuery({ email })
 
-	useEffect(() => {
-		if (data) {
-			setUserPets(data?.pets)
-			console.log("user pets state", userPets);
-		}
-	}, [])
+	if (isLoading) return <p>Loading...</p>
+
+	if (error) return <p>Error fetching user data...</p>
+
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
@@ -70,14 +72,14 @@ const Boarding: NextPage = () => {
 						{/* <input type="text" name="petName" id="petName" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer" placeholder=" " required /> */}
 						<label htmlFor="petName" className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Select Pet</label>
 						<select className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer">
-							{userPets && userPets.map((pet) => {
+							{data?.pets && data.pets.map((pet) => {
 								const { name } = pet;
 								return (
-									<option className="text-gray-900 w-[10%]" value={name}>{name}</option>
+									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
 								)
 							})}
-							<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
 						</select>
+						<svg style={{ fill: "#fff", position: "absolute", bottom: "15px", height: "20px" }} className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
 					</div>
 					<div className="relative z-0 mb-6 w-full group">
 						<textarea type="textarea" rows="1" name="notes" id="notes" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer" placeholder=" " required />
