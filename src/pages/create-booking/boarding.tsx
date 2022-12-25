@@ -36,6 +36,7 @@ const Boarding: NextPage = () => {
 				Book <span className="text-[hsl(280,100%,70%)]">Boarding</span>
 			</h1>
 
+			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">Fill out the form below and someone from the MNMK-9 team will confirm your booking.</p>
 			<form className="w-[60%] md:w-[90%]">
 				<div className="grid md:grid-cols-2 md:gap-6">
 					<div className="relative z-0 mb-6 w-full group">
@@ -79,7 +80,7 @@ const Boarding: NextPage = () => {
 								)
 							})}
 						</select>
-						<svg style={{ fill: "#fff", position: "absolute", bottom: "15px", height: "20px" }} className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						<svg style={{ fill: "#fff", position: "absolute", right: "0", bottom: "15px", height: "20px" }} className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
 					</div>
 					<div className="relative z-0 mb-6 w-full group">
 						<textarea type="textarea" rows="1" name="notes" id="notes" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer" placeholder=" " required />
@@ -87,7 +88,7 @@ const Boarding: NextPage = () => {
 					</div>
 				</div>
 
-				<button type="submit" className="rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Submit</button>
+				<button type="submit" className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Submit</button>
 			</form>
 		</div>
 	)
