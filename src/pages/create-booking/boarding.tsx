@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
@@ -11,21 +11,22 @@ type FormSchemaType = {
 	lastName: string,
 	phoneNumber: string,
 	email: string,
-	checkInDate: Date,
-	checkOutDate: Date,
+	checkInDate: string,
+	checkOutDate: string,
 	pet: string,
 	notes?: string
-
 }
 
 // define schema for the form 
 const schema = z.object({
-	firstName: z.string(),
-	lastName: z.string(),
+	firstName: z.string().min(1, { message: "Firstname is required" }),
+	lastName: z.string().min(1, { message: "Lastname is required" }),
 	phoneNumber: z.string(),
-	email: z.string().email(),
-	checkInDate: z.date(),
-	checkOutDate: z.date(),
+	email: z.string().min(1, { message: "Email is required" }).email({
+		message: "Must be a valid email",
+	}),
+	checkInDate: z.string(),
+	checkOutDate: z.string(),
 	pet: z.string(),
 	notes: z.string(),
 })
@@ -42,6 +43,14 @@ const Boarding: NextPage = () => {
 		resolver: zodResolver(schema)
 	});
 
+	const handleFormSubmit: SubmitHandler<FormSchemaType> = async (data) => {
+
+		console.log(
+			"data", data
+		)
+
+	}
+
 	if (isLoading) return <p>Loading...</p>;
 
 	if (error) return <p>Error fetching user data...</p>;
@@ -55,7 +64,7 @@ const Boarding: NextPage = () => {
 			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 				Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 			</p>
-			<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit}>
+			<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(handleFormSubmit)}>
 				<div className="grid md:grid-cols-2 md:gap-6">
 					<div className="relative z-0 mb-6 w-full group">
 						<input
@@ -172,10 +181,24 @@ const Boarding: NextPage = () => {
 								)
 							})}
 						</select>
-						<svg style={{ fill: "#fff", position: "absolute", right: "0", bottom: "15px", height: "20px" }} className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						<svg
+							style={{ fill: "#fff", position: "absolute", right: "0", bottom: "15px", height: "20px" }}
+							className="ml-2 w-4 h-4"
+							aria-hidden="true"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2" d="M19 9l-7 7-7-7">
+							</path>
+						</svg>
 					</div>
 					<div className="relative z-0 mb-6 w-full group">
 						<textarea
+							{...register("notes")}
 							type="textarea"
 							rows="1"
 							name="notes"
