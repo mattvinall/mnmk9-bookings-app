@@ -34,11 +34,11 @@ model Bookings {
   id           String    @id @default(uuid())
   firstName    String
   lastName     String
+  phoneNumber  String
+  email        String
   checkInDate  DateTime
   checkOutDate DateTime?
   petName      String
-  phoneNumber  String
-  email        String
   notes        String
   address      String?
   createdAt    DateTime  @default(now())
