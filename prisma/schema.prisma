@@ -36,11 +36,10 @@ model Bookings {
   lastName     String
   phoneNumber  String
   email        String
-  checkInDate  DateTime
-  checkOutDate DateTime?
+  checkInDate  String
+  checkOutDate String?
   petName      String
   notes        String
-  address      String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt()
   pet          Pet       @relation(fields: [petId], references: [id])
