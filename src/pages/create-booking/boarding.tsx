@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -11,10 +10,13 @@ type FormSchemaType = {
 	lastName: string,
 	phoneNumber: string,
 	email: string,
-	checkInDate: string,
-	checkOutDate: string,
-	pet: string,
+	scheduledDate: string,
+	endDate: string,
+	petName: string,
 	notes?: string
+	userId: string,
+	serviceId: string,
+	petId: string
 }
 
 // define schema for the form 
@@ -27,28 +29,65 @@ const schema = z.object({
 	}),
 	checkInDate: z.string(),
 	checkOutDate: z.string(),
-	pet: z.string(),
+	petName: z.string(),
 	notes: z.string(),
+	userId: z.string(),
+	serviceId: z.string(),
+	petId: z.string(),
 })
 
 
 const Boarding: NextPage = () => {
-
+	// get email from session data
 	const { data: sessionData } = useSession();
 	const email = sessionData?.user?.email;
 
+	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byEmail.useQuery({ email })
+	// console.log("user data", data)
 
 	const { register, handleSubmit, reset, formState: { errors } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
 	});
 
+	const utils = trpc.useContext();
+
+	const addNewBooking = trpc.bookings.newBooking.useMutation({
+		onMutate: () => {
+			utils.bookings.getAllBookings.cancel();
+			const optimisticUpdate = utils.bookings.getAllBookings.getData()
+
+			if (optimisticUpdate) {
+				utils.bookings.getAllBookings.setData(optimisticUpdate);
+			}
+		},
+		onSettled: () => {
+			utils.bookings.getAllBookings.invalidate();
+		}
+	})
+
+	console.log("add new booking", addNewBooking);
+
+
 	const handleFormSubmit: SubmitHandler<FormSchemaType> = async (data) => {
+		console.log("form data", data);
+		const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes } = formData;
 
-		console.log(
-			"data", data
-		)
+		addNewBooking.mutate({
+			firstName,
+			lastName,
+			phoneNumber,
+			email,
+			checkInDate,
+			petName,
+			checkOutDate,
+			notes,
+			userId: "clbxy97w40000ut7sumd8kd83",
+			petId: "f8de421d-7cd4-4c06-81ac-975fa069b0a4",
+			serviceId: "006605da-dd50-479b-a55c-7bf8e572a3e9"
+		});
 
+		reset();
 	}
 
 	if (isLoading) return <p>Loading...</p>;
@@ -170,7 +209,7 @@ const Boarding: NextPage = () => {
 							Select Pet
 						</label>
 						<select
-							{...register("pet", { required: true })}
+							{...register("petName", { required: true })}
 							className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 							id="pet-select"
 						>
