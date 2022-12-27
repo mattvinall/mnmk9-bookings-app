@@ -10,14 +10,20 @@ type FormSchemaType = {
 	lastName: string,
 	phoneNumber: string,
 	email: string,
-	scheduledDate: string,
-	endDate: string,
+	checkInDate: string,
+	checkOutDate: string,
 	petName: string,
-	notes?: string
+	notes: string
 	userId: string,
 	serviceId: string,
 	petId: string
 }
+
+// const dateSchema = z.preprocess((arg) => {
+// 	if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
+// }, z.date());
+
+// type DateSchema = z.infer<typeof dateSchema>;
 
 // define schema for the form 
 const schema = z.object({
@@ -27,8 +33,8 @@ const schema = z.object({
 	email: z.string().min(1, { message: "Email is required" }).email({
 		message: "Must be a valid email",
 	}),
-	checkInDate: z.string(),
-	checkOutDate: z.string(),
+	checkInDate: z.string() || z.date(),
+	checkOutDate: z.string() || z.date(),
 	petName: z.string(),
 	notes: z.string(),
 	userId: z.string(),
@@ -46,11 +52,12 @@ const Boarding: NextPage = () => {
 	const { data, isLoading, error } = trpc.user.byEmail.useQuery({ email })
 	// console.log("user data", data)
 
-	const { register, handleSubmit, reset, formState: { errors } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
 	});
 
 	const utils = trpc.useContext();
+	console.log("utils", utils);
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation({
 		onMutate: () => {
@@ -58,7 +65,8 @@ const Boarding: NextPage = () => {
 			const optimisticUpdate = utils.bookings.getAllBookings.getData()
 
 			if (optimisticUpdate) {
-				utils.bookings.getAllBookings.setData(optimisticUpdate);
+				console.log("optimistic update", optimisticUpdate);
+				// utils.bookings.getAllBookings.setData(optimisticUpdate);
 			}
 		},
 		onSettled: () => {
@@ -71,16 +79,16 @@ const Boarding: NextPage = () => {
 
 	const handleFormSubmit: SubmitHandler<FormSchemaType> = async (data) => {
 		console.log("form data", data);
-		const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes } = formData;
+		const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes } = data;
 
-		addNewBooking.mutate({
+		addNewBooking && addNewBooking.mutateAsync({
 			firstName,
 			lastName,
 			phoneNumber,
 			email,
 			checkInDate,
-			petName,
 			checkOutDate,
+			petName,
 			notes,
 			userId: "clbxy97w40000ut7sumd8kd83",
 			petId: "f8de421d-7cd4-4c06-81ac-975fa069b0a4",
@@ -253,6 +261,7 @@ const Boarding: NextPage = () => {
 				</div>
 
 				<button
+					disabled={isSubmitting}
 					type="submit"
 					className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 					Submit
