@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { router, publicProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const serviceRouter = router({
-	getAllServices: publicProcedure.query(({ ctx }) => {
+	getAllServices: protectedProcedure.query(({ ctx }) => {
 		return ctx.prisma.services.findMany();
 	})
 });
