@@ -8,10 +8,10 @@ export const petRouter = router({
 	}),
 	byId: protectedProcedure
 	.input(z.object({ id: z.string() }))
-	.query(async ({ ctx, input }) => {
-		try {
-			const { id } = input;
-			return await ctx.prisma.pet.findUnique({ where: { id } })
+		.query(async ({ ctx, input }) => {
+			try {
+				const { id } = input;
+				return await ctx.prisma.pet.findMany({ where: { ownerId: id } })
 		} catch (err) {
 			console.log(`Pet cannot be fetched by ID: ${err}`)
 		}
