@@ -43,6 +43,18 @@ const Boarding: NextPage = () => {
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
+	console.log("user data", data);
+
+	// query service table and find the service name of boarding and store the service ID
+	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+	console.log("service data", data);
+
+	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
+	const boardingId = boarding?.id;
+
+	// query the pets table and find the 
+	const { data: petData } = trpc.pet.byId.useQuery({ id });
+	console.log("pet data", petData);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
@@ -50,34 +62,45 @@ const Boarding: NextPage = () => {
 
 	const utils = trpc.useContext();
 
-	const addNewBooking = trpc.bookings.newBooking.useMutation(
-		// {
-		// 	onMutate: () => {
-		// 		utils.bookings.getAllBookings.cancel();
-		// 		const optimisticUpdate = utils.bookings.getAllBookings.getData()
-		// 		console.log("optimistic update", optimisticUpdate);
+	const addNewBooking = trpc.bookings.newBooking.useMutation({
+		onMutate: () => {
+			utils.bookings.getAllBookings.cancel();
+			const optimisticUpdate = utils.bookings.getAllBookings.getData()
+			console.log("optimistic update", optimisticUpdate);
+			console.log("utils", utils);
 
-		// 		if (optimisticUpdate) {
-		// 			// utils.bookings.getAllBookings.setData( optimisticUpdate)
-		// 			return;
-		// 		}
-		// 	},
-		// 	onSettled: () => {
-		// 		utils.bookings.getAllBookings.invalidate();
-		// 	}
-		// }
-	)
+			if (optimisticUpdate) {
+				// utils.bookings.getAllBookings.setData( optimisticUpdate)
+				return;
+			}
+		},
+		onSettled: () => {
+			utils.bookings.getAllBookings.invalidate();
+		}
+	});
 
-	console.log("add new booking", addNewBooking);
 
-	const onSubmit: SubmitHandler<FormSchemaType> = (data) => {
-		data.serviceId = "c531ecec-a9b1-4503-859f-42dc3a7d826f";
-		data.userId = "clc6m7u4m0000utwgqqzfbuet";
-		data.petId = "9e85e63d-f60c-49db-9c26-8aba4a12fc27"
+	const onSubmit: SubmitHandler<FormSchemaType> = async (formData) => {
+		if (boardingId) {
+			formData.serviceId = boardingId;
+		}
 
-		console.log("submit data", data);
+		if (data) {
+			formData.userId = data.id
+		}
 
-		addNewBooking.mutate(data);
+		if (petId) {
+			formData.petId = "9e85e63d-f60c-49db-9c26-8aba4a12fc27"
+		}
+
+
+		console.log("submit formData", formData);
+
+		if (!formData) {
+			return;
+		}
+
+		addNewBooking.mutate(formData);
 
 		reset();
 	}
