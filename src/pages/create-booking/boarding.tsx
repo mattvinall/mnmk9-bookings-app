@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
+import { useQueryClient } from "@tanstack/react-query";
 
 type FormSchemaType = {
 	firstName: string,
@@ -13,17 +15,11 @@ type FormSchemaType = {
 	checkInDate: string,
 	checkOutDate: string,
 	petName: string,
-	notes: string
+	notes?: string,
 	userId: string,
 	serviceId: string,
 	petId: string
 }
-
-// const dateSchema = z.preprocess((arg) => {
-// 	if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
-// }, z.date());
-
-// type DateSchema = z.infer<typeof dateSchema>;
 
 // define schema for the form 
 const schema = z.object({
@@ -33,67 +29,55 @@ const schema = z.object({
 	email: z.string().min(1, { message: "Email is required" }).email({
 		message: "Must be a valid email",
 	}),
-	checkInDate: z.string() || z.date(),
-	checkOutDate: z.string() || z.date(),
+	checkInDate: z.string(),
+	checkOutDate: z.string(),
 	petName: z.string(),
 	notes: z.string(),
-	userId: z.string(),
-	serviceId: z.string(),
-	petId: z.string(),
 })
 
 
 const Boarding: NextPage = () => {
 	// get email from session data
 	const { data: sessionData } = useSession();
-	const email = sessionData?.user?.email;
+	const id = sessionData?.user?.id;
 
 	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byEmail.useQuery({ email })
-	// console.log("user data", data)
+	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
 	});
 
 	const utils = trpc.useContext();
-	console.log("utils", utils);
 
-	const addNewBooking = trpc.bookings.newBooking.useMutation({
-		onMutate: () => {
-			utils.bookings.getAllBookings.cancel();
-			const optimisticUpdate = utils.bookings.getAllBookings.getData()
+	const addNewBooking = trpc.bookings.newBooking.useMutation(
+		// {
+		// 	onMutate: () => {
+		// 		utils.bookings.getAllBookings.cancel();
+		// 		const optimisticUpdate = utils.bookings.getAllBookings.getData()
+		// 		console.log("optimistic update", optimisticUpdate);
 
-			if (optimisticUpdate) {
-				console.log("optimistic update", optimisticUpdate);
-				// utils.bookings.getAllBookings.setData(optimisticUpdate);
-			}
-		},
-		onSettled: () => {
-			utils.bookings.getAllBookings.invalidate();
-		}
-	})
+		// 		if (optimisticUpdate) {
+		// 			// utils.bookings.getAllBookings.setData( optimisticUpdate)
+		// 			return;
+		// 		}
+		// 	},
+		// 	onSettled: () => {
+		// 		utils.bookings.getAllBookings.invalidate();
+		// 	}
+		// }
+	)
 
 	console.log("add new booking", addNewBooking);
 
+	const onSubmit: SubmitHandler<FormSchemaType> = (data) => {
+		data.serviceId = "c531ecec-a9b1-4503-859f-42dc3a7d826f";
+		data.userId = "clc6m7u4m0000utwgqqzfbuet";
+		data.petId = "9e85e63d-f60c-49db-9c26-8aba4a12fc27"
 
-	const handleFormSubmit: SubmitHandler<FormSchemaType> = async (data) => {
-		console.log("form data", data);
-		const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes } = data;
+		console.log("submit data", data);
 
-		addNewBooking && addNewBooking.mutateAsync({
-			firstName,
-			lastName,
-			phoneNumber,
-			email,
-			checkInDate,
-			checkOutDate,
-			petName,
-			notes,
-			userId: "clbxy97w40000ut7sumd8kd83",
-			petId: "f8de421d-7cd4-4c06-81ac-975fa069b0a4",
-			serviceId: "006605da-dd50-479b-a55c-7bf8e572a3e9"
-		});
+		addNewBooking.mutate(data);
 
 		reset();
 	}
@@ -111,7 +95,7 @@ const Boarding: NextPage = () => {
 			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 				Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 			</p>
-			<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(handleFormSubmit)}>
+			<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 				<div className="grid md:grid-cols-2 md:gap-6">
 					<div className="relative z-0 mb-6 w-full group">
 						<input
@@ -266,7 +250,6 @@ const Boarding: NextPage = () => {
 					className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 					Submit
 				</button>
-
 			</form>
 		</div>
 	)
