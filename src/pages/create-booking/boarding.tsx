@@ -244,7 +244,7 @@ const Boarding: NextPage = () => {
 							id="pet-select"
 							onChange={handleChange}
 						>
-							{petData && petData.map((pet) => {
+							{petData?.map((pet) => {
 								const { name } = pet;
 								return (
 									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
