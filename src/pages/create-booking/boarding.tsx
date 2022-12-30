@@ -5,7 +5,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import { useQueryClient } from "@tanstack/react-query";
 
 type FormSchemaType = {
 	firstName: string,
@@ -79,27 +78,43 @@ const Boarding: NextPage = () => {
 		}
 	});
 
+	// store the pet ID of the first pet in the petData array as default
+	const initialPetId = petData && petData[0]?.id;
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData) => {
+	// set the initial pet ID to the first pet in the array
+	const [petId, setPetID] = useState(initialPetId);
+
+	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
+	// set the ID of the pet selected to state
+	const handleChange = (e: any) => {
+		const petName = e.target.value;
+
+		const petSelected = petData?.find(pet => pet.name === petName);
+		const petSelectedId = petSelected?.id;
+		console.log("pet selected ID", petSelectedId);
+
+		petSelectedId && setPetID(petSelectedId);
+	}
+
+	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+		// TODO: add error handling
+		if (!formData) {
+			return;
+		}
+
 		if (boardingId) {
 			formData.serviceId = boardingId;
 		}
 
 		if (data) {
-			formData.userId = data.id
+			formData.userId = data.id;
 		}
 
 		if (petId) {
-			formData.petId = "9e85e63d-f60c-49db-9c26-8aba4a12fc27"
+			formData.petId = petId;
 		}
-
 
 		console.log("submit formData", formData);
-
-		if (!formData) {
-			return;
-		}
-
 		addNewBooking.mutate(formData);
 
 		reset();
@@ -227,9 +242,10 @@ const Boarding: NextPage = () => {
 							{...register("petName", { required: true })}
 							className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 							id="pet-select"
+							onChange={handleChange}
 						>
-							{data?.pets && data.pets.map((pet) => {
-								const { name } = pet;
+							{petData && petData.map((pet) => {
+								const { name, id } = pet;
 								return (
 									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
 								)
@@ -273,8 +289,8 @@ const Boarding: NextPage = () => {
 					className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 					Submit
 				</button>
-			</form>
-		</div>
+			</form >
+		</div >
 	)
 }
 
