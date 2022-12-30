@@ -22,8 +22,8 @@ type FormSchemaType = {
 
 // define schema for the form 
 const schema = z.object({
-	firstName: z.string().min(1, { message: "Firstname is required" }),
-	lastName: z.string().min(1, { message: "Lastname is required" }),
+	firstName: z.string().min(1, { message: "First name is required" }),
+	lastName: z.string().min(1, { message: "Last name is required" }),
 	phoneNumber: z.string(),
 	email: z.string().min(1, { message: "Email is required" }).email({
 		message: "Must be a valid email",
@@ -107,7 +107,7 @@ const Boarding: NextPage = () => {
 		}
 
 		if (data) {
-			formData.userId = data.id;
+			formData.userId = data?.id;
 		}
 
 		if (petId) {
@@ -245,7 +245,7 @@ const Boarding: NextPage = () => {
 							onChange={handleChange}
 						>
 							{petData && petData.map((pet) => {
-								const { name, id } = pet;
+								const { name } = pet;
 								return (
 									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
 								)
