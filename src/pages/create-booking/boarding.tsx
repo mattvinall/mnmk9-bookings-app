@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -79,22 +79,42 @@ const Boarding: NextPage = () => {
 		}
 	});
 
-	// store the pet ID of the first pet in the petData array as default
-	const initialPetId = petData && petData[0]?.id;
+	const [petId, setPetID] = useState<String>("");
 
-	// set the initial pet ID to the first pet in the array
-	const [petId, setPetID] = useState(initialPetId);
-	console.log("petId", petId);
+	useEffect(() => {
+		if (petData && petData?.length > 1) {
+			// store the pet ID of the first pet in the petData array as default
+			const initialPetId = petData && petData[0]?.id;
+
+
+			initialPetId && setPetID(initialPetId);
+		}
+	}, [])
+
+	useEffect(() => {
+		if (petData && petData?.length > 1) {
+			// store the pet ID of the first pet in the petData array as default
+			const initialPetId = petData && petData[0]?.id;
+
+
+			initialPetId && setPetID(initialPetId);
+		}
+	}, [petData])
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
 	const handleChange = (e: any) => {
+		// get the pet name from the target value
 		const petName = e.target.value;
 
+		// find the pet in the petData array based on the name to set the selected pet
 		const petSelected = petData?.find(pet => pet.name === petName);
+
+		// store the ID of the pet
 		const petSelectedId = petSelected?.id;
 		console.log("pet selected ID", petSelectedId);
 
+		// if petSelectedId is truthy, set the state
 		petSelectedId && setPetID(petSelectedId);
 	}
 
@@ -104,23 +124,28 @@ const Boarding: NextPage = () => {
 			return;
 		}
 
+		// check if boardingId is truthy and then set the id of the service
 		if (boardingId) {
 			formData.serviceId = boardingId;
 		}
 
+		// if data (user session) is truthy, set the userId
 		if (data) {
 			formData.userId = data?.id;
 		}
 
-		if (petId) {
-			formData.petId = petId;
-		}
+		// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
+		const id = petData && petData[0]?.id;
+		console.log("id if there is only 1 pet", id);
+		formData.petId = petId ? petId : id;
 
+		// set the service name to Boarding
 		formData.serviceName = "Boarding";
 
-		console.log("submit formData", formData);
+		// mutate / POST request to bookings api endpoint and submit the form data
 		addNewBooking.mutate(formData);
 
+		// reset the form state
 		reset();
 	}
 
