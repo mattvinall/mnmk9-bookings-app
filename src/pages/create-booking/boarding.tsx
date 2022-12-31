@@ -15,6 +15,7 @@ type FormSchemaType = {
 	checkOutDate: string,
 	petName: string,
 	notes?: string,
+	serviceName: string,
 	userId: string,
 	serviceId: string,
 	petId: string
@@ -83,6 +84,7 @@ const Boarding: NextPage = () => {
 
 	// set the initial pet ID to the first pet in the array
 	const [petId, setPetID] = useState(initialPetId);
+	console.log("petId", petId);
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
@@ -113,6 +115,8 @@ const Boarding: NextPage = () => {
 		if (petId) {
 			formData.petId = petId;
 		}
+
+		formData.serviceName = "Boarding";
 
 		console.log("submit formData", formData);
 		addNewBooking.mutate(formData);
