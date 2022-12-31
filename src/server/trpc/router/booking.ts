@@ -27,7 +27,7 @@ export const bookingRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
-				const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes, serviceName, petId, serviceId, userId } = input
+				const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes, startTime, endTime, serviceName, petId, serviceId, userId } = input
 				return await ctx.prisma.bookings.create({
 					data: {
 						firstName,
@@ -36,6 +36,8 @@ export const bookingRouter = router({
 						email,
 						checkInDate,
 						checkOutDate,
+						startTime, 
+						endTime,
 						petName,
 						notes,
 						serviceName,
