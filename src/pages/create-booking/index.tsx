@@ -1,8 +1,6 @@
-import { useEffect } from "react"
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { trpc } from "../../utils/trpc";
 
 const cards = [
   {
