@@ -3,8 +3,8 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 export const bookingRouter = router({
-	getAllBookings: protectedProcedure.query(({ ctx }) => {
-		return ctx.prisma.bookings.findMany();
+	getAllBookings: protectedProcedure.query(async({ ctx }) => {
+		return await ctx.prisma.bookings.findMany();
 	}),
 	newBooking: protectedProcedure	
 		.input(
