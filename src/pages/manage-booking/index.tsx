@@ -21,11 +21,12 @@ const ManageBooking = () => {
 						<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 							Manage a  <span className="text-[hsl(280,100%,70%)]">Booking</span>
 						</h1>
-						{/* <h2 className="text-3xl font-bold text-white text-center">Select a Service that you want to book</h2> */}
+						<h2 className="text-3xl font-bold text-white text-center">To manage a service, click the actions. Clicking on the box will take you to the detail page.</h2>
 						<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
 							{
 
 								data?.bookings?.map(booking => {
+									console.log("booking", booking);
 									return (
 										<Link
 											className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
@@ -38,9 +39,13 @@ const ManageBooking = () => {
 														<h2 className="text-gray-900 text-xl font-medium mb-2">{booking.serviceName}</h2>
 														<p className="text-gray-900 text-xl font-medium mb-2">{booking.petName}</p>
 														<p className="text-gray-700 text-base mb-4">
-															confirmation ID: <br />{booking.serviceId}
+															confirmation ID: <br />{booking.id}
 														</p>
-														<p className="text-gray-600 font-bold text-xs">{booking.checkInDate}</p>
+														<p className="text-gray-600 font-bold text-xs flex">
+															{booking.checkInDate}
+															{booking.startTime ? (<span className="ml-5 text-gray-600 font-bold text-xs">{booking.startTime}</span>) : null}
+															{booking.endTime ? (<span className="text-gray-600 font-bold text-xs">-{booking.endTime}</span>) : null}
+														</p>
 													</div>
 												</div>
 											</div>
