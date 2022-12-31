@@ -64,7 +64,7 @@ const Training: NextPage = () => {
 
 	const utils = trpc.useContext();
 
-	const addNewTrainningBooking = trpc.bookings.newBooking.useMutation({
+	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation({
 		onMutate: () => {
 			utils.bookings.getAllBookings.cancel();
 			const optimisticUpdate = utils.bookings.getAllBookings.getData()
@@ -82,10 +82,12 @@ const Training: NextPage = () => {
 	});
 
 	// store the pet ID of the first pet in the petData array as default
-	const initialPetId = petData && petData[0]?.id;
+	const initialPetIdTraining = petData && petData[0]?.id;
+	console.log("initial pet id: ", initialPetIdTraining);
 
 	// set the initial pet ID to the first pet in the array
-	const [petId, setPetID] = useState(initialPetId);
+	const [petId, setPetID] = useState(initialPetIdTraining);
+	console.log("petId training", petId);
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
@@ -120,7 +122,7 @@ const Training: NextPage = () => {
 		formData.serviceName = "Training";
 
 		console.log("submit formData", formData);
-		addNewTrainningBooking.mutate(formData);
+		addNewTrainingBooking.mutate(formData);
 
 		reset();
 	}
