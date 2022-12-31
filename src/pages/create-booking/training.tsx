@@ -16,6 +16,7 @@ type FormSchemaType = {
 	endTime: string,
 	petName: string,
 	notes?: string,
+	serviceName: string,
 	userId: string,
 	serviceId: string,
 	petId: string
@@ -115,6 +116,8 @@ const Training: NextPage = () => {
 		if (petId) {
 			formData.petId = petId;
 		}
+
+		formData.serviceName = "Training";
 
 		console.log("submit formData", formData);
 		addNewTrainningBooking.mutate(formData);
