@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -81,13 +81,28 @@ const Training: NextPage = () => {
 		}
 	});
 
-	// store the pet ID of the first pet in the petData array as default
-	const initialPetIdTraining = petData && petData[0]?.id;
-	console.log("initial pet id: ", initialPetIdTraining);
+	const [petId, setPetID] = useState<String>("");
 
-	// set the initial pet ID to the first pet in the array
-	const [petId, setPetID] = useState(initialPetIdTraining);
-	console.log("petId training", petId);
+	useEffect(() => {
+		if (petData && petData?.length > 1) {
+			// store the pet ID of the first pet in the petData array as default
+			const initialPetId = petData && petData[0]?.id;
+
+
+			initialPetId && setPetID(initialPetId);
+		}
+	}, [])
+
+	useEffect(() => {
+		if (petData && petData?.length > 1) {
+			// store the pet ID of the first pet in the petData array as default
+			const initialPetId = petData && petData[0]?.id;
+
+
+			initialPetId && setPetID(initialPetId);
+		}
+	}, [petData])
+
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
@@ -115,9 +130,10 @@ const Training: NextPage = () => {
 			formData.userId = data?.id;
 		}
 
-		if (petId) {
-			formData.petId = petId;
-		}
+		// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
+		const id = petData && petData[0]?.id;
+		console.log("id if there is only 1 pet", id);
+		formData.petId = petId ? petId : id;
 
 		formData.serviceName = "Training";
 
