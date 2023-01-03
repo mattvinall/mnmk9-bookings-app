@@ -3,10 +3,20 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 export const bookingRouter = router({
-	getAllBookings: protectedProcedure.query(async({ ctx }) => {
+	getAllBookings: protectedProcedure.query(async ({ ctx }) => {
 		return await ctx.prisma.bookings.findMany();
 	}),
-	newBooking: protectedProcedure	
+	byId: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.query(async ({ ctx, input }) => {
+			try {
+				const { id } = input;
+				return await ctx.prisma.bookings.findUnique({ where: { id } })
+			} catch (error) {
+				console.log(`Booking cannot be fetched by ID: ${error}`)
+			}
+		}),
+	newBooking: protectedProcedure
 		.input(
 			z.object({
 				firstName: z.string(),
@@ -36,7 +46,7 @@ export const bookingRouter = router({
 						email,
 						checkInDate,
 						checkOutDate,
-						startTime, 
+						startTime,
 						endTime,
 						petName,
 						notes,
@@ -48,6 +58,56 @@ export const bookingRouter = router({
 				})
 			} catch (error) {
 				console.log(`booking could not be created: ${error}`)
+			}
+		}),
+	editBooking: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				checkInDate: z.string().optional(),
+				checkOutDate: z.string().optional(),
+				startTime: z.string().optional(),
+				endTime: z.string().optional(),
+				notes: z.string().optional()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, checkInDate, checkOutDate, startTime, endTime, notes } = input;
+
+			try {
+				return await ctx.prisma.bookings.update({
+					where: {
+						id,
+					}, 
+					data: {
+						checkInDate,
+						checkOutDate,
+						startTime, 
+						endTime, 
+						notes
+					}
+				})
+			} catch (error) {
+				console.log(`booking could not be edited: ${error}`)
+			}
+		}),
+	cancelBooking: protectedProcedure
+		.input(
+			z.object({
+				id: z.string()
+			})
+	)
+		.mutation(async ({ ctx, input }) => {
+			const { id } = input;
+
+			try {
+				return await ctx.prisma.bookings.delete({
+					where: {
+						id
+					}
+				})
+			} catch (error) {
+				console.log(`booking could not be cancelled/deleted: ${error}`)
 			}
 	})
 });
