@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
 import logo from "../../public/mnmk9-logo.jpg";
+import { trpc } from "../utils/trpc";
 
 const Logo = () => {
 	return (
@@ -41,7 +42,9 @@ const AuthShowcase: React.FC = () => {
 };
 
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
+	const { data: sessionData } = useSession();
+	// const userId = data?.id;
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
 		console.log("icon clicked", menuToggled);
@@ -50,7 +53,7 @@ const Navbar = () => {
 
 	return (
 		<nav className="bg-white shadow-lg">
-			<div className="max-w-6xl mx-auto px-4">
+			<div className="max-w-7xl mx-auto px-4">
 				<div className="flex justify-between align-start">
 					<div className="flex items-center h-32">
 						<div>
@@ -61,16 +64,21 @@ const Navbar = () => {
 						<div className="hidden md:flex items-center">
 							<a
 								href="/"
-								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
+							<a
+								href={`/${sessionData?.user?.id}`}
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
+								Profile
+							</a>
 							<a
 								href="/create-booking"
-								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold ">Book Service</a>
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">Book Service</a>
 							<a
 								href="/manage-booking"
-								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage Booking</a>
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage Booking</a>
 							<a
 								href="/contact-us"
-								className="py-4 px-4 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Contact Us</a>
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Contact Us</a>
 						</div>
 						<AuthShowcase />
 						<div className="md:hidden flex items-center">
