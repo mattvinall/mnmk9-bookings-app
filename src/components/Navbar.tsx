@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
 import logo from "../../public/mnmk9-logo.jpg";
-import { trpc } from "../utils/trpc";
 
 const Logo = () => {
 	return (
