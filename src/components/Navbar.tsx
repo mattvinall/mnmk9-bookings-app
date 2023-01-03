@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
 								href="/"
 								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
 							<a
-								href={`/${sessionData?.user?.id}`}
+								href={`/profile/${sessionData?.user?.id}`}
 								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
 								Profile
 							</a>
@@ -98,14 +98,14 @@ const Navbar: React.FC = () => {
 						</div>
 					</div>
 				</div>
-
-				{/* <div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
+				{/* mobile */}
+				<div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
 					<ul className="">
 						<li className="active"><a href="/create-booking" className="block text-md px-2 py-4 text-white bg-green-500 font-semibold">Book a Service</a></li>
 						<li><a href="/manage-booking" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Manage A Service</a></li>
 						<li><a href="/contact" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Contact Us</a></li>
 					</ul>
-				</div> */}
+				</div>
 			</div>
 		</nav>
 	)
