@@ -34,5 +34,29 @@ export const userRouter = router({
 			} catch (err) {
 				console.log(`User cannot be fetched by ID: ${err}`)
 			}
-	}),
+		}),
+	editProfile: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				address: z.string().optional(),
+				city: z.string().optional(),
+				postalCode: z.string().optional(),
+				phoneNumber: z.string().optional()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, address, city, postalCode, phoneNumber } = input;
+			return await ctx.prisma.user.update({ 
+				where: {
+					id
+				},
+				data: {
+					address,
+					city,
+					postalCode,
+					phoneNumber
+				}
+		})
+	})
 })
