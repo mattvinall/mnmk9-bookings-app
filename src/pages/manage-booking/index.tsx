@@ -10,8 +10,6 @@ const ManageBooking = () => {
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
-	console.log("user data", data);
-
 
 	return (
 		<>
@@ -24,13 +22,11 @@ const ManageBooking = () => {
 						<h2 className="text-3xl font-bold text-white text-center">To manage a service, click the actions. Clicking on the box will take you to the detail page.</h2>
 						<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
 							{
-
 								data?.bookings?.map(booking => {
-									console.log("booking", booking);
 									return (
 										<Link
 											className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-											href={booking.id}
+											href={`/manage-booking/${booking.id}`}
 											key={booking.id}
 										>
 											<div className="flex justify-center">
@@ -57,7 +53,7 @@ const ManageBooking = () => {
 					</div>
 				) : (
 					<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
-						<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please Login to book a service</h1>
+						<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please Login to manage a booking.</h1>
 					</div>
 				)
 			}
