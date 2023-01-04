@@ -39,7 +39,7 @@ const schema = z.object({
 const Boarding: NextPage = () => {
 	// get email from session data
 	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id;
+	const id = sessionData?.user?.id as string;
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
@@ -50,7 +50,7 @@ const Boarding: NextPage = () => {
 	console.log("service data", data);
 
 	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
-	const boardingId = boarding?.id;
+	const boardingId = boarding?.id as string;
 
 	// query the pets table and find the 
 	const { data: petData } = trpc.pet.byId.useQuery({ id });
