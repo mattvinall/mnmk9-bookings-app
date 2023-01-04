@@ -41,7 +41,7 @@ const schema = z.object({
 const Grooming: NextPage = () => {
 	// get email from session data
 	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id;
+	const id = sessionData?.user?.id as string;
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
