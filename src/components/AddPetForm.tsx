@@ -5,53 +5,59 @@ import { z } from 'zod';
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 
-const AddPetForm: React.FC = () => {
-	type UserFormSchema = {
+type Props = {
+	setShowPetForm: (bool: boolean) => void;
+}
+
+const AddPetForm = ({ setShowPetForm }: Props) => {
+	type AddPetFormSchema = {
 		name: string,
 		breed: string,
-		vaccinated: boolean,
+		vaccinated: boolean
 	}
 
 	const schema = z.object({
 		name: z.string().min(1),
 		breed: z.string().min(1),
-		vaccinated: z.literal(false)
+		vaccinated: z.boolean().default(false),
 	});
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
+	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
 		resolver: zodResolver(schema)
 	});
 
 	const { data: sessionData } = useSession()
-	const id = sessionData?.user?.id;
+	const id = sessionData?.user?.id as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
-	// const editProfile = trpc.user.editProfile.useMutation();
+	const addPet = trpc.pet.addPet.useMutation();
+	console.log("add pet", addPet);
 
-	// const onSubmit: SubmitHandler<UserFormSchema> = async (formData: any) => {
-	// 	formData.id = userData?.id;
+	const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
 
-	// 	editProfile.mutate(formData);
+		formData.ownerId = userData?.id;
+		// formData.vaccinated === "yes" ? true : false;
+		addPet.mutate(formData);
 
-	// 	reset();
-	// }
+		reset();
+
+		setShowPetForm(false);
+	}
 
 	return (
-		<form className="w-[60%] md:w-[90%]"
-		// onSubmit={handleSubmit(onSubmit)}
-		>
+		<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 			<div className="grid md:grid-cols-1 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
 					<input
 						{...register("name", { required: true })}
 						type="text"
-						name="address"
-						id="floating_address"
+						name="name"
+						id="floating_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
 					/>
 					<label
-						htmlFor="floating_address"
+						htmlFor="floating_name"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 						Name
 					</label>
@@ -60,28 +66,27 @@ const AddPetForm: React.FC = () => {
 					<input
 						{...register("breed", { required: true })}
 						type="text"
-						name="city"
-						id="floating_city"
+						name="breed"
+						id="floating_breed"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
 					/>
 					<label
-						htmlFor="floating_city"
+						htmlFor="floating_breed"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 						Breed
 					</label>
 				</div>
 
-				<p className="text-white font-bold">vaccinated</p>
+				{/* <p className="text-white font-bold">vaccinated</p>
 				<div className="flex items-center mr-4">
 					<input
-						{...register("vaccinated", { required: true })}
+						{...register("vaccinated")}
 						type="radio"
 						name="vaccinated-yes"
 						value="yes"
 						id="floating_vaccinated-yes"
 						className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-						required
 					/>
 					<label
 						htmlFor="floating_vaccinated-yes"
@@ -89,22 +94,20 @@ const AddPetForm: React.FC = () => {
 						Yes
 					</label>
 					<input
-						{...register("vaccinated", { required: true })}
+						{...register("vaccinated")}
 						type="radio"
 						name="vaccinated-no"
 						value="no"
 						id="floating_vaccinated-no"
 						className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-						required
 					/>
 					<label
 						htmlFor="floating_vaccinated-no"
 						className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
 						No
 					</label>
-				</div>
+				</div> */}
 			</div>
-
 			<button
 				disabled={isSubmitting}
 				type="submit"
