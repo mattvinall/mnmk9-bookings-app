@@ -6,9 +6,9 @@ import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 
 type Props = {
-	setShowForm: (bool: boolean) => void;
+	setShowUserForm: (bool: boolean) => void;
 }
-const UserDetailForm = ({ setShowForm }: Props) => {
+const UserDetailForm = ({ setShowUserForm }: Props) => {
 	type UserFormSchema = {
 		address: string,
 		city: string,
@@ -28,7 +28,7 @@ const UserDetailForm = ({ setShowForm }: Props) => {
 	});
 
 	const { data: sessionData } = useSession()
-	const id = sessionData?.user?.id;
+	const id = sessionData?.user?.id as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
 	const editProfile = trpc.user.editProfile.useMutation();
@@ -40,7 +40,7 @@ const UserDetailForm = ({ setShowForm }: Props) => {
 
 		reset();
 
-		setShowForm(false);
+		setShowUserForm(false);
 	}
 
 	return (
