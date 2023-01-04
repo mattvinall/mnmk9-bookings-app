@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import UserDetailForm from "../../components/UserDetailForm";
 import { trpc } from "../../utils/trpc";
+import UserDetailForm from "../../components/UserDetailForm";
+import AddPetForm from "../../components/AddPetForm";
 
 const UserDetail: () => void = () => {
 	const router = useRouter();
@@ -10,15 +11,17 @@ const UserDetail: () => void = () => {
 
 	console.log("user detail", userDetail);
 
-	const [showForm, setShowForm] = useState<Boolean>(false);
-	const [showModal, setShowModal] = useState<Boolean>(false);
+	const [showUserForm, setShowUserForm] = useState<Boolean>(false);
+	const [showPetForm, setShowPetForm] = useState<Boolean>(false);
 
-	const handleShowForm = () => {
-		setShowForm((prev) => !prev);
+	const handleShowUserForm = () => {
+		setShowUserForm(true);
+		setShowPetForm(false);
 	}
 
-	const handleShowModal = () => {
-		setShowModal((prev) => !prev);
+	const handleShowPetForm = () => {
+		setShowPetForm(true);
+		setShowUserForm(false);
 	}
 
 	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
@@ -36,10 +39,11 @@ const UserDetail: () => void = () => {
 				Manage Profile or Add Pets to your Profile
 			</p>
 			<div className="flex justify-center">
-				<button onClick={handleShowForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Manage Profile</button>
-				<button onClick={handleShowModal} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Pet(s)</button>
+				<button onClick={handleShowUserForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Manage Profile</button>
+				<button onClick={handleShowPetForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Pet(s)</button>
 			</div>
-			<>{showForm && (<UserDetailForm setShowForm={setShowForm} />)}</>
+			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
+			<>{showPetForm && (<AddPetForm />)}</>
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
 				{userDetail?.pets?.map((pet, i) => {
 					return (
