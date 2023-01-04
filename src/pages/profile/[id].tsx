@@ -36,18 +36,19 @@ const UserDetail: () => void = () => {
 				Manage  <span className="text-[hsl(280,100%,70%)]">Profile</span>
 			</h1>
 			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
-				Manage Profile or Add Pets to your Profile
+				Manage Your Information or Add Pets to your Profile
 			</p>
 			<div className="flex justify-center">
 				<button onClick={handleShowUserForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Manage Profile</button>
 				<button onClick={handleShowPetForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Pet(s)</button>
 			</div>
 			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
-			<>{showPetForm && (<AddPetForm />)}</>
-			<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
+			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
+			{userDetail?.pets && <h3 className="text-white text-left font-bold sm:text-[2.5rem]">Your Pets</h3>}
+			<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 mt-10">
 				{userDetail?.pets?.map((pet, i) => {
 					return (
-						<a className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20" href={`/pet/${pet.name}`}>
+						<a key={pet.id} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20" href={`/pet/${pet.name}`}>
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
 									<img className="rounded-t-lg" src={`https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt="" />
