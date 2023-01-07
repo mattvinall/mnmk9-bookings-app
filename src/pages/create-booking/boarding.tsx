@@ -5,6 +5,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
+import { ses } from "../../server/aws/ses";
+
+
+console.log("ses", ses.config);
 
 type FormSchemaType = {
 	firstName: string,
@@ -53,31 +57,14 @@ const Boarding: NextPage = () => {
 	const boardingId = boarding?.id as string;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byId.useQuery({ id });
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
 	console.log("pet data", petData);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
 	});
 
-	const utils = trpc.useContext();
-
-	const addNewBooking = trpc.bookings.newBooking.useMutation({
-		onMutate: () => {
-			utils.bookings.getAllBookings.cancel();
-			const optimisticUpdate = utils.bookings.getAllBookings.getData()
-			console.log("optimistic update", optimisticUpdate);
-			console.log("utils", utils);
-
-			if (optimisticUpdate) {
-				// utils.bookings.getAllBookings.setData( optimisticUpdate)
-				return;
-			}
-		},
-		onSettled: () => {
-			utils.bookings.getAllBookings.invalidate();
-		}
-	});
+	const addNewBooking = trpc.bookings.newBooking.useMutation();
 
 	const [petId, setPetID] = useState<String>("");
 
@@ -118,6 +105,51 @@ const Boarding: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
+	const sendEmail = async (
+		emailTo: string,
+		emailFrom: string,
+		firstName: string,
+		lastName: string,
+		email: string,
+		phoneNumber: string,
+		petName: string,
+		checkInDate: string,
+		checkOutDate: string,
+		notes?: string,
+	) => {
+		const params = {
+			Destination: {
+				ToAddresses: [emailTo]
+			},
+			Message: {
+				Body: {
+					Text: {
+						Data:
+							`Thanks ${firstName} ${lastName} for booking your Boarding appointment. We look forward to seeing ${petName}. 
+							Below are the booking details:
+							Pet Name: ${petName}
+							email: ${email}
+							phone number: ${phoneNumber}
+							Check in date: ${checkInDate}
+							Check out date: ${checkOutDate}
+							Notes/Instructions: ${notes}
+
+							If you need to make any changes or cancel the appointment, use the app and head to manage bookings to do so.
+						`
+					}
+				},
+				Subject: {
+					Data: `Booking Appointment from ${firstName} ${lastName} // Pet: ${petName}`
+				}
+			},
+			Source: emailFrom
+		}
+
+		console.log("params from email", params)
+
+		return await ses.sendEmail(params).promise();
+	}
+
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
 		// TODO: add error handling
 		if (!formData) {
@@ -144,6 +176,21 @@ const Boarding: NextPage = () => {
 
 		// mutate / POST request to bookings api endpoint and submit the form data
 		addNewBooking.mutate(formData);
+
+		const response = await sendEmail(
+			"matt.vinall7@gmail.com",
+			"matt.vinall7@gmail.com",
+			formData?.firstName,
+			formData?.lastName,
+			formData?.email,
+			formData?.phoneNumber,
+			formData?.petName,
+			formData?.checkInDate,
+			formData?.checkOutDate,
+			formData?.notes || ""
+		);
+
+		console.log("response from email", response);
 
 		// reset the form state
 		reset();
@@ -281,7 +328,7 @@ const Boarding: NextPage = () => {
 							id="pet-select"
 							onChange={handleChange}
 						>
-							{petData?.map((pet) => {
+							{petData && petData?.map((pet) => {
 								const { name } = pet;
 								return (
 									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
