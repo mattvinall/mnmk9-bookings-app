@@ -98,15 +98,6 @@ const BookingDetail: NextPage = () => {
 				Click the buttons if you want to edit or cancel your booking.
 			</p>
 
-			<div className="text-white text-left w-[80%] font-medium sm:text-[1.5rem]">
-				Booking Details <br />
-				{bookingDetail?.checkInDate ? (<><p>Checkin date: {bookingDetail?.checkInDate}</p></>) : null}
-				{bookingDetail?.checkOutDate ? (<><p>Checkout date / drop off time: {bookingDetail?.checkOutDate}</p></>) : null}
-				{bookingDetail?.startTime ? (<><p>start time / drop off time: {bookingDetail?.startTime} </p></>) : null}
-				{bookingDetail?.endTime ? (<><p>end time / pick up time: {bookingDetail?.endTime}</p></>) : null}
-				{bookingDetail?.notes ? (<><p>Notes: {bookingDetail?.notes}</p></>) : null}
-			</div>
-
 			<div className="flex justify-center">
 				<button
 					onClick={handleEditBooking}
@@ -124,7 +115,7 @@ const BookingDetail: NextPage = () => {
 
 				<form className="w-[80%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 
-					<div className="grid md:grid-cols-2 md:gap-6">
+					<div className={bookingDetail?.checkOutDate ? `grid md:grid-cols-2 md:gap-6` : `grid md:grid-cols-1 md:gap-6`}>
 						<div className="relative z-0 mb-6 w-full group">
 							<input
 								{...register("checkInDate", { required: true })}
@@ -136,7 +127,7 @@ const BookingDetail: NextPage = () => {
 							/>
 							<label
 								htmlFor="checkInDate"
-								className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+								className="peer-focus:font-medium absolute text-md text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 								Check In Date
 							</label>
 						</div>
@@ -173,7 +164,7 @@ const BookingDetail: NextPage = () => {
 								<label
 									htmlFor="startTime"
 									className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-									Start Time / Drop off Time
+									Start Time / Drop off Time: {bookingDetail?.endTime}
 								</label>
 							</div>
 							<div className="relative z-0 mb-6 w-full group">
@@ -188,7 +179,7 @@ const BookingDetail: NextPage = () => {
 								<label
 									htmlFor="endTime"
 									className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-									End Time / Pick Up Time
+									End Time / Pick Up Time: {bookingDetail?.endTime}
 								</label>
 							</div>
 						</div>
