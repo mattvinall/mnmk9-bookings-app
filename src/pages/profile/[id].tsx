@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/UserDetailForm";
@@ -48,7 +48,7 @@ const UserDetail: () => void = () => {
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 mt-10">
 				{userDetail?.pets?.map((pet, i) => {
 					return (
-						<a key={pet.id} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20" href={`/pet/${pet.name}`}>
+						<a key={pet.id} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20" href={`/pet/${pet.id}`}>
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
 									<img className="rounded-t-lg" src={`https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt="" />
