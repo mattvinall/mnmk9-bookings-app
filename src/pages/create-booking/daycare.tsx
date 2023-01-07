@@ -143,9 +143,17 @@ const Daycare: NextPage = () => {
 		reset();
 	}
 
-	if (isLoading) return <p>Loading...</p>;
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
 
-	if (error) return <p>Error fetching user data...</p>;
+	if (error) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		</div>
+	)
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
