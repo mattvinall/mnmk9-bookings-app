@@ -31,26 +31,27 @@ model Services {
 }
 
 model Bookings {
-  id           String    @id @default(uuid())
-  firstName    String
-  lastName     String
-  phoneNumber  String
-  email        String
-  checkInDate  String
-  checkOutDate String?
-  startTime    String?
-  endTime      String?
-  petName      String
-  notes        String?
-  serviceName  String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime? @updatedAt()
-  pet          Pet       @relation(fields: [petId], references: [id])
-  petId        String
-  service      Services  @relation(fields: [serviceId], references: [id])
-  serviceId    String
-  user         User      @relation(fields: [userId], references: [id])
-  userId       String
+  id               String    @id @default(uuid())
+  firstName        String
+  lastName         String
+  phoneNumber      String
+  email            String
+  checkInDate      String
+  checkOutDate     String?
+  startTime        String?
+  endTime          String?
+  petName          String
+  notes            String?
+  confirmedBooking Boolean   @default(false)
+  serviceName      String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime? @updatedAt()
+  pet              Pet       @relation(fields: [petId], references: [id])
+  petId            String
+  service          Services  @relation(fields: [serviceId], references: [id])
+  serviceId        String
+  user             User      @relation(fields: [userId], references: [id])
+  userId           String
 
   @@index([userId, serviceId, petId])
 }
