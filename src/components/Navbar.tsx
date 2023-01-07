@@ -18,11 +18,11 @@ const AuthShowcase: React.FC = () => {
 
 	const userImage = useMemo(() => {
 		return sessionData && sessionData?.user?.image;
-	}, [sessionData?.user])
+	}, [sessionData?.user?.image])
 
 	const userName = useMemo(() => {
 		return sessionData && sessionData?.user?.name
-	}, [sessionData?.user])
+	}, [sessionData?.user?.name])
 
 	return (
 		<div className="flex items-center">
