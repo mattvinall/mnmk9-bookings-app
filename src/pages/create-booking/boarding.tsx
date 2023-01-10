@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { ses } from "../../server/aws/ses";
+import { useRouter } from "next/router";
 
 
 console.log("ses", ses.config);
@@ -44,6 +45,8 @@ const Boarding: NextPage = () => {
 	// get email from session data
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
+
+	const router = useRouter();
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
@@ -117,37 +120,42 @@ const Boarding: NextPage = () => {
 		checkOutDate: string,
 		notes?: string,
 	) => {
-		const params = {
+		const htmlTemplate = `
+    <html>
+      <body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+        <h1 style="text-align: center; font-size: 24px;">Booking Details</h1>
+        <div style="border: 1px solid #ccc; padding: 20px;">
+          <p style="font-size: 18px;"><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p style="font-size: 18px;"><strong>Email:</strong> ${email}</p>
+          <p style="font-size: 18px;"><strong>Phone Number:</strong> ${phoneNumber}</p>
+          <p style="font-size: 18px;"><strong>Pet Name:</strong> ${petName}</p>
+          <p style="font-size: 18px;"><strong>Check-In Date:</strong> ${checkInDate}</p>
+          <p style="font-size: 18px;"><strong>Check-Out Date:</strong> ${checkOutDate}</p>
+          <p style="font-size: 18px;"><strong>Notes:</strong> ${notes}</p>
+        </div>
+      </body>
+    </html>
+  `
+		const emailParams = {
 			Destination: {
 				ToAddresses: [emailTo]
 			},
 			Message: {
 				Body: {
-					Text: {
-						Data:
-							`Thanks ${firstName} ${lastName} for booking your Boarding appointment. We look forward to seeing ${petName}. 
-							Below are the booking details:
-							Pet Name: ${petName}
-							email: ${email}
-							phone number: ${phoneNumber}
-							Check in date: ${checkInDate}
-							Check out date: ${checkOutDate}
-							Notes/Instructions: ${notes}
-
-							If you need to make any changes or cancel the appointment, use the app and head to manage bookings to do so.
-						`
+					Html: {
+						Charset: 'UTF-8',
+						Data: htmlTemplate
 					}
 				},
 				Subject: {
-					Data: `Booking Appointment from ${firstName} ${lastName} // Pet: ${petName}`
+					Charset: 'UTF-8',
+					Data: `Booking for Boarding: ${firstName} ${lastName} | Pet: ${petName}`
 				}
 			},
 			Source: emailFrom
 		}
 
-		console.log("params from email", params)
-
-		return await ses.sendEmail(params).promise();
+		return await ses.sendEmail(emailParams).promise();
 	}
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
@@ -168,7 +176,6 @@ const Boarding: NextPage = () => {
 
 		// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 		const id = petData && petData[0]?.id;
-		console.log("id if there is only 1 pet", id);
 		formData.petId = petId ? petId : id;
 
 		// set the service name to Boarding
@@ -177,7 +184,8 @@ const Boarding: NextPage = () => {
 		// mutate / POST request to bookings api endpoint and submit the form data
 		addNewBooking.mutate(formData);
 
-		const response = await sendEmail(
+		// call send email function that leverages AWS SES to send the form data via email
+		await sendEmail(
 			"matt.vinall7@gmail.com",
 			"matt.vinall7@gmail.com",
 			formData?.firstName,
@@ -187,13 +195,13 @@ const Boarding: NextPage = () => {
 			formData?.petName,
 			formData?.checkInDate,
 			formData?.checkOutDate,
-			formData?.notes || ""
+			formData?.notes
 		);
-
-		console.log("response from email", response);
 
 		// reset the form state
 		reset();
+
+		router.push("/");
 	}
 
 	if (isLoading) return (
