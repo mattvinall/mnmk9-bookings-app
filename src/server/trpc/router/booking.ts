@@ -120,7 +120,7 @@ export const bookingRouter = router({
 			const { id } = input;
 
 			try {
-				return  await ctx.prisma.bookings.update({
+				return await ctx.prisma.bookings.update({
 					where: {
 						id
 					},
