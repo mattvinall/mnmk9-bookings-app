@@ -23,7 +23,7 @@ export const petRouter = router({
 				const { id } = input;
 				return await ctx.prisma.pet.findMany({ where: { ownerId: id } })
 		} catch (err) {
-			console.log(`Pet cannot be fetched by ID: ${err}`)
+			console.log(`Pet cannot be fetched by Owner ID: ${err}`)
 		}
 	}),
 	addPet: protectedProcedure
@@ -49,5 +49,27 @@ export const petRouter = router({
 			} catch (error) {
 				console.log(`Pet cannot be created: ${error}`);
 			}
+		}),
+	addPetProfilePicture: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				profileImage: z.string()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, profileImage } = input;
+
+			try {
+				return await ctx.prisma.pet.update({
+					where: { id },
+					data: {
+						profileImage
+					}
+				})
+			} catch (error) {
+				console.log(`Cannot update profile image of the pet: ${error}`)
+			}
 		})
+	
 });
