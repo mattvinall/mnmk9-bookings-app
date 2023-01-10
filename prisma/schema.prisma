@@ -15,7 +15,7 @@ model Pet {
   ownerId          String
   breed            String?
   vaccinatedStatus Boolean?    @default(false)
-  profileImage     String
+  profileImage     String?
   documents        Documents[]
   petOwner         User        @relation(fields: [ownerId], references: [id])
   Bookings         Bookings[]
