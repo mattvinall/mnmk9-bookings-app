@@ -96,7 +96,7 @@ export const bookingRouter = router({
 			z.object({
 				id: z.string()
 			})
-	)
+		)
 		.mutation(async ({ ctx, input }) => {
 			const { id } = input;
 
@@ -109,5 +109,28 @@ export const bookingRouter = router({
 			} catch (error) {
 				console.log(`booking could not be cancelled/deleted: ${error}`)
 			}
-	})
+		}),
+	confirmBooking: protectedProcedure
+		.input(
+			z.object({
+				id: z.string()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id } = input;
+
+			try {
+				return  await ctx.prisma.bookings.update({
+					where: {
+						id
+					},
+					data: {
+						confirmedBooking: true
+					}
+				});
+
+			} catch (error) {
+				console.log(`error updating booking status to confirmed: ${error}`)
+			}
+		})
 });
