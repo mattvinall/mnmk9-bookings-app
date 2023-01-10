@@ -10,15 +10,26 @@ datasource db {
 }
 
 model Pet {
-  id         String     @id @default(uuid())
-  name       String
-  ownerId    String
-  breed      String?
-  vaccinated Boolean?   @default(false)
-  petOwner   User       @relation(fields: [ownerId], references: [id])
-  Bookings   Bookings[]
+  id               String      @id @default(uuid())
+  name             String
+  ownerId          String
+  breed            String?
+  vaccinatedStatus Boolean?    @default(false)
+  profileImage     String
+  documents        Documents[]
+  petOwner         User        @relation(fields: [ownerId], references: [id])
+  Bookings         Bookings[]
 
   @@index([ownerId])
+}
+
+model Documents {
+  id       String  @id @default(uuid())
+  fileName String
+  Pet      Pet?    @relation(fields: [petId], references: [id])
+  petId    String?
+
+  @@index([petId])
 }
 
 model Services {
