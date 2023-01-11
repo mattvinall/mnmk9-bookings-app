@@ -8,6 +8,7 @@ const PetDetail = () => {
 
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
+	console.log("pet detail: ", petDetail)
 
 	const [vaccinationDocuments, setVaccinationDocuments] = useState([]);
 	const [file, setFile] = useState(null);
@@ -68,7 +69,6 @@ const PetDetail = () => {
 		});
 
 		if (files && files.length === 1) {
-			// 	console.log("file not null", file);
 			// 	// Upload the file to S3
 			const params = {
 				Bucket: 'mnmk9-bookings/documents',
@@ -81,6 +81,7 @@ const PetDetail = () => {
 					console.log("data", data)
 					setUploadedVaccinationDocumentUrl(data.Location);
 				}
+				// add error handling
 				console.log("err", err);
 			})
 		}
@@ -94,7 +95,7 @@ const PetDetail = () => {
 
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
-	// const uploadVaccinationDocument = trpc.documents.uploadVaccination.useMutation();
+	const uploadVaccinationDocument = trpc.documents.addVaccinationDocument.useMutation();
 
 	useEffect(() => {
 		if (uploadedProfileImageUrl) {
@@ -104,9 +105,18 @@ const PetDetail = () => {
 		// after 1 second, refetch from DB
 		setTimeout(() => {
 			refetch();
-		}, 1200);
+		}, 1000);
 	}, [uploadedProfileImageUrl])
 
+	useEffect(() => {
+		if (uploadedVaccinationDocumentUrl) {
+			uploadVaccinationDocument.mutate({ petId: id, fileName: uploadedVaccinationDocumentUrl as string })
+		}
+
+		setTimeout(() => {
+			refetch();
+		}, 1000);
+	}, [uploadedVaccinationDocumentUrl])
 	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 		Loading...
 	</h1>
@@ -140,7 +150,7 @@ const PetDetail = () => {
 										</label>
 										<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={handleUploadProfileImage}>Upload Profile Image</button>
 										<label style={{ cursor: "pointer" }} htmlFor="vaccination-documents" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-											Upload Vaccination Document (PDF)
+											Upload Vaccination Document
 											<input
 												style={{ cursor: "pointer" }}
 												type="file"
@@ -152,8 +162,11 @@ const PetDetail = () => {
 											/>
 										</label>
 									</form>
-									{/* {file && <p>image selected: {file?.name}</p>}
-									{vaccinationDocuments?.map(document => <p>document uploaded: {document?.name}</p>)} */}
+									{/* {pet.documents &&pet?.documents?.map(doc => {
+										<a href={doc.fileName}>
+
+										</a>
+									})} */}
 								</div>
 							</div>
 						</div>
