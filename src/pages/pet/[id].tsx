@@ -11,16 +11,17 @@ const PetDetail = () => {
 
 	const [vaccinationDocuments, setVaccinationDocuments] = useState([]);
 	const [file, setFile] = useState(null);
-	const [uploadeProfileImageUrl, setUploadedProfileImageUrl] = useState(null)
+	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState(null)
 	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState(null)
 
-	const handleProfileImageFileChange = (event: any) => {
-		const imageFile = event.target.files[0];
+	const handleProfileImageFileChange = (e: any) => {
+		const imageFile = e.target.files[0];
 		imageFile && setFile(imageFile);
 		console.log("file state", file)
 	};
 
-	const handleUploadProfileImage = (event: any) => {
+	const handleUploadProfileImage = (e: SubmitEvent) => {
+		e.preventDefault();
 
 		// Instantiate an S3 client
 		const s3 = new S3({
@@ -50,6 +51,7 @@ const PetDetail = () => {
 
 	const handleUploadVaccinationDocuments = (files: any, e: SubmitEvent) => {
 		e.preventDefault();
+
 		console.log("files", files);
 		const uploadedVaccinationDocuments = [...vaccinationDocuments];
 
@@ -92,17 +94,18 @@ const PetDetail = () => {
 
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
+	// const uploadVaccinationDocument = trpc.documents.uploadVaccination.useMutation();
 
 	useEffect(() => {
-		if (uploadeProfileImageUrl) {
-			uploadPetProfileImage.mutate({ id, profileImage: uploadeProfileImageUrl as string });
+		if (uploadedProfileImageUrl) {
+			uploadPetProfileImage.mutate({ id, profileImage: uploadedProfileImageUrl as string });
 		}
 
 		// after 1 second, refetch from DB
 		setTimeout(() => {
 			refetch();
-		}, 1000);
-	}, [uploadeProfileImageUrl])
+		}, 1200);
+	}, [uploadedProfileImageUrl])
 
 	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 		Loading...
@@ -118,7 +121,7 @@ const PetDetail = () => {
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
 
-								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadeProfileImagedUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
@@ -148,10 +151,9 @@ const PetDetail = () => {
 												onChange={handleVaccinationDocumentFileChange}
 											/>
 										</label>
-										{/* <button style={{ cursor: "pointer" }} className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={() => handleUploadVaccinationDocuments}>Upload Vaccination Documents</button> */}
 									</form>
-									{file && <p>uploaded: {file?.name}</p>}
-									{vaccinationDocuments?.map(document => <p>document uploaded:{document?.name}</p>)}
+									{/* {file && <p>image selected: {file?.name}</p>}
+									{vaccinationDocuments?.map(document => <p>document uploaded: {document?.name}</p>)} */}
 								</div>
 							</div>
 						</div>
