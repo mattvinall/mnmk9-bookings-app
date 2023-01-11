@@ -26,5 +26,24 @@ export const documentRouter = router({
 			} catch (error) {
 				console.log(`failed to create new vaccination document: ${error}`)
 			}
-		})
+		}),
+	deleteVaccinationDocument: protectedProcedure
+		.input(
+			z.object({
+				id: z.string()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id } = input;
+
+			try {
+				return await ctx.prisma.documents.delete({
+					where: {
+						id
+					}
+				})
+			} catch (error) {
+				console.log(`document could not be deleted: ${error}`)
+			}
+		}),
 })
