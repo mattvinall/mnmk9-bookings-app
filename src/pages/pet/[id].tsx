@@ -47,25 +47,19 @@ const PetDetail = () => {
 				console.log("err", err);
 			})
 		}
-
-		refetch();
 	};
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
 
 	useEffect(() => {
 		if (uploadedUrl) {
-			uploadPetProfileImage.mutate({ id, profileImage: uploadedUrl as string })
+			uploadPetProfileImage.mutate({ id, profileImage: uploadedUrl as string });
 		}
 
-		refetch()
-	}, [])
-
-	useEffect(() => {
-		if (uploadedUrl) {
-			uploadPetProfileImage.mutate({ id, profileImage: uploadedUrl as string })
-		}
-
+		// after 1 second, refetch from DB
+		setTimeout(() => {
+			refetch();
+		}, 1000);
 	}, [uploadedUrl])
 
 	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
