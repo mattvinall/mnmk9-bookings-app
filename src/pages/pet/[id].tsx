@@ -61,6 +61,13 @@ const PetDetail = () => {
 		refetch()
 	}, [])
 
+	useEffect(() => {
+		if (uploadedUrl) {
+			uploadPetProfileImage.mutate({ id, profileImage: uploadedUrl as string })
+		}
+
+	}, [uploadedUrl])
+
 	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 		Loading...
 	</h1>
@@ -75,7 +82,7 @@ const PetDetail = () => {
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white">
 
-								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={petImageURL || uploadedUrl || `https://mdbootstrap.com/img/new/standard/nature/185.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={petImageURL || uploadedUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
