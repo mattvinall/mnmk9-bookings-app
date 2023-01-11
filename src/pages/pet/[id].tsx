@@ -8,7 +8,6 @@ const PetDetail = () => {
 
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
-	const petImageURL = petDetail?.map(pet => pet.profileImage)[0];
 
 	// const [newVaccinationDocuments, setNewVaccinationDocuments] = useState([]);
 
@@ -70,13 +69,13 @@ const PetDetail = () => {
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-			<div className="grid grid-cols-1 gap-4 lg:grid-cols-1 md:grid-cols-2 md:gap-8 mt-10">
+			<div className="grid grid-cols-1 gap-2 lg:grid-cols-1 md:grid-cols-2 md:gap-8 mt-10">
 				{petDetail?.map((pet, i) => {
 					return (
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white">
 
-								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={petImageURL || uploadedUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadedUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
