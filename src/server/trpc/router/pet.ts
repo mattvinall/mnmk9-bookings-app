@@ -11,7 +11,7 @@ export const petRouter = router({
 			.query(async ({ ctx, input }) => {
 				try {
 					const { id } = input;
-					return await ctx.prisma.pet.findMany({ where: { id } })
+					return await ctx.prisma.pet.findMany({ where: { id }, include: { documents: true } })
 			} catch (err) {
 				console.log(`Pet cannot be fetched by ID: ${err}`)
 			}
