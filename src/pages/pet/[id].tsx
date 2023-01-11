@@ -146,7 +146,7 @@ const PetDetail = () => {
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
 									<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
 									<form className="mt-6">
-										<label style={{ cursor: "pointer" }} htmlFor="pet-profile-image" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+										<label style={{ cursor: "pointer" }} htmlFor="pet-profile-image" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-5">
 											Select Pet Profile Image
 											<input
 												style={{ cursor: "pointer" }}
