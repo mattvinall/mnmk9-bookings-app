@@ -125,6 +125,7 @@ const PetDetail = () => {
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 max-w-8xl">
+			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[hsl(280,100%,70%)]">Details</span></h1>
 			<div className="m-auto">
 				{petDetail?.map((pet, i) => {
 					return (
