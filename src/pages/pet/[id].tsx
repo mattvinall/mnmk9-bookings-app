@@ -9,19 +9,19 @@ const PetDetail = () => {
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
 
-	// const [newVaccinationDocuments, setNewVaccinationDocuments] = useState([]);
-
+	const [vaccinationDocuments, setVaccinationDocuments] = useState([]);
 	const [file, setFile] = useState(null);
-	const [uploadedUrl, setUploadedUrl] = useState(null);
+	const [uploadeProfileImageUrl, setUploadedProfileImageUrl] = useState(null)
+	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState(null)
 
-	const handleFileChange = (event: any) => {
-		const file = event.target.files[0];
-		file && setFile(file);
+	const handleProfileImageFileChange = (event: any) => {
+		const imageFile = event.target.files[0];
+		imageFile && setFile(imageFile);
 		console.log("file state", file)
 	};
 
-	const handleUpload = (event: SubmitEvent) => {
-		event.preventDefault();
+	const handleUploadProfileImage = (event: any) => {
+
 		// Instantiate an S3 client
 		const s3 = new S3({
 			accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
@@ -40,7 +40,7 @@ const PetDetail = () => {
 			s3.upload(params, (err: any, data: any) => {
 				if (data) {
 					console.log("data", data)
-					setUploadedUrl(data.Location);
+					setUploadedProfileImageUrl(data.Location);
 				}
 
 				console.log("err", err);
@@ -48,18 +48,61 @@ const PetDetail = () => {
 		}
 	};
 
+	const handleUploadVaccinationDocuments = (files: any, e: SubmitEvent) => {
+		e.preventDefault();
+		console.log("files", files);
+		const uploadedVaccinationDocuments = [...vaccinationDocuments];
+
+		files?.some((file: any) => {
+			if (uploadedVaccinationDocuments && uploadedVaccinationDocuments.findIndex((f) => f.name === file.name) === -1) {
+				file && uploadedVaccinationDocuments.push(file);
+				setVaccinationDocuments(uploadedVaccinationDocuments);
+			}
+		})
+		// Instantiate an S3 client
+		const s3 = new S3({
+			accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+			secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
+		});
+
+		if (files && files.length === 1) {
+			// 	console.log("file not null", file);
+			// 	// Upload the file to S3
+			const params = {
+				Bucket: 'mnmk9-bookings/documents',
+				Key: files[0].name,
+				Body: files[0],
+				// ACL: ' public-read-write',
+			}
+			s3.upload(params, (err: any, data: any) => {
+				if (data) {
+					console.log("data", data)
+					setUploadedVaccinationDocumentUrl(data.Location);
+				}
+				console.log("err", err);
+			})
+		}
+	};
+
+	const handleVaccinationDocumentFileChange = (event: any) => {
+		const chosenFiles = Array.from(event.target.files);
+		console.log("chosenFiles", chosenFiles);
+		handleUploadVaccinationDocuments(chosenFiles, event);
+	}
+
+
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
 
 	useEffect(() => {
-		if (uploadedUrl) {
-			uploadPetProfileImage.mutate({ id, profileImage: uploadedUrl as string });
+		if (uploadeProfileImageUrl) {
+			uploadPetProfileImage.mutate({ id, profileImage: uploadeProfileImageUrl as string });
 		}
 
 		// after 1 second, refetch from DB
 		setTimeout(() => {
 			refetch();
 		}, 1000);
-	}, [uploadedUrl])
+	}, [uploadeProfileImageUrl])
 
 	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 		Loading...
@@ -68,44 +111,47 @@ const PetDetail = () => {
 	if (error) return router.back();
 
 	return (
-		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-			<div className="grid grid-cols-1 gap-2 lg:grid-cols-1 md:grid-cols-2 md:gap-8 mt-10">
+		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 max-w-8xl">
+			<div className="m-auto">
 				{petDetail?.map((pet, i) => {
 					return (
 						<div key={pet?.id} className="flex justify-center">
-							<div className="rounded-lg shadow-lg bg-white">
+							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
 
-								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadedUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadeProfileImagedUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
 									<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
-									<form className="mt-6" onSubmit={handleUpload}>
-										{/* <label htmlFor="vaccination-documents" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-											Upload Vaccination Documents
-										</label>
-										<input
-											style={{ cursor: "pointer" }}
-											type="file"
-											multiple
-											accept=".pdf"
-											id="vaccination-documents"
-											className="hidden"
-											onChange={handleVaccinationDocumentUpload}
-										/> */}
+									<form className="mt-6">
 										<label style={{ cursor: "pointer" }} htmlFor="pet-profile-image" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-											Upload Pet Profile Image
+											Select Pet Profile Image
 											<input
 												style={{ cursor: "pointer" }}
 												type="file"
 												accept="image/*"
 												id="pet-profile-image"
 												className="hidden"
-												onChange={handleFileChange}
+												onChange={handleProfileImageFileChange}
 											/>
 										</label>
-										<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" type="submit">Upload</button>
+										<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={handleUploadProfileImage}>Upload Profile Image</button>
+										<label style={{ cursor: "pointer" }} htmlFor="vaccination-documents" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+											Upload Vaccination Document (PDF)
+											<input
+												style={{ cursor: "pointer" }}
+												type="file"
+												multiple
+												accept=".pdf"
+												id="vaccination-documents"
+												className="hidden"
+												onChange={handleVaccinationDocumentFileChange}
+											/>
+										</label>
+										{/* <button style={{ cursor: "pointer" }} className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={() => handleUploadVaccinationDocuments}>Upload Vaccination Documents</button> */}
 									</form>
+									{file && <p>uploaded: {file?.name}</p>}
+									{vaccinationDocuments?.map(document => <p>document uploaded:{document?.name}</p>)}
 								</div>
 							</div>
 						</div>
