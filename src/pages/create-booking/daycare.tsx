@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
+import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import { ses } from "../../server/aws/ses";
+import { ses } from "../../server/aws/ses/index";
 import Swal from "sweetalert2";
 
 type FormSchemaType = {
@@ -41,6 +42,8 @@ const schema = z.object({
 
 
 const Daycare: NextPage = () => {
+	const router = useRouter();
+
 	// get email from session data
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
@@ -144,7 +147,7 @@ const Daycare: NextPage = () => {
 				},
 				Subject: {
 					Charset: 'UTF-8',
-					Data: `Booking for Boarding: ${firstName} ${lastName} | Pet: ${petName}`
+					Data: `Booking for Daycare: ${firstName} ${lastName} | Pet: ${petName}`
 				}
 			},
 			Source: emailFrom
@@ -184,18 +187,23 @@ const Daycare: NextPage = () => {
 				formData?.startTime,
 				formData?.endTime,
 				formData?.notes
-			)
+			);
 
 			// success message 
 			Swal.fire({
 				icon: 'success',
 				title: `PAWesome 🐶`,
 				text: `Successfully Booked ${formData.petName} for Daycare. An email confirmation with your booking details will be sent to your email.`,
-			})
+			});
 
+			// reset form state
 			reset();
 
+			// navigate to home page on form submit
+			router.push("/");
+
 		} catch (error) {
+			// error message
 			Swal.fire({
 				icon: 'error',
 				title: 'Oops...',
