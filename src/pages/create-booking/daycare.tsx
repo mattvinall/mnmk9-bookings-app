@@ -5,6 +5,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
+import { ses } from "../../server/aws/ses";
+import Swal from "sweetalert2";
 
 type FormSchemaType = {
 	firstName: string,
@@ -62,24 +64,7 @@ const Daycare: NextPage = () => {
 		resolver: zodResolver(schema)
 	});
 
-	const utils = trpc.useContext();
-
-	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation({
-		onMutate: () => {
-			utils.bookings.getAllBookings.cancel();
-			const optimisticUpdate = utils.bookings.getAllBookings.getData()
-			console.log("optimistic update", optimisticUpdate);
-			console.log("utils", utils);
-
-			if (optimisticUpdate) {
-				// utils.bookings.getAllBookings.setData( optimisticUpdate)
-				return;
-			}
-		},
-		onSettled: () => {
-			utils.bookings.getAllBookings.invalidate();
-		}
-	});
+	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation();
 
 	const [petId, setPetID] = useState<String>("");
 
@@ -116,31 +101,109 @@ const Daycare: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
+	const sendEmail = async (
+		emailTo: string,
+		emailFrom: string,
+		firstName: string,
+		lastName: string,
+		email: string,
+		phoneNumber: string,
+		petName: string,
+		checkInDate: string,
+		startTime: string,
+		endTime: string,
+		notes?: string,
+	) => {
+		const htmlTemplate = `
+    <html>
+      <body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+        <h1 style="text-align: center; font-size: 24px;">Booking Details</h1>
+        <div style="border: 1px solid #ccc; padding: 20px;">
+          <p style="font-size: 18px;"><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p style="font-size: 18px;"><strong>Email:</strong> ${email}</p>
+          <p style="font-size: 18px;"><strong>Phone Number:</strong> ${phoneNumber}</p>
+          <p style="font-size: 18px;"><strong>Pet Name:</strong> ${petName}</p>
+          <p style="font-size: 18px;"><strong>Check-In Date:</strong> ${checkInDate}</p>
+          <p style="font-size: 18px;"><strong>Drop Off Time:</strong> ${startTime}</p>
+					<p style="font-size: 18px;"><strong>Pick Up Time:</strong> ${endTime}</p>
+          <p style="font-size: 18px;"><strong>Notes:</strong> ${notes}</p>
+        </div>
+      </body>
+    </html>
+  `
+		const emailParams = {
+			Destination: {
+				ToAddresses: [emailTo]
+			},
+			Message: {
+				Body: {
+					Html: {
+						Charset: 'UTF-8',
+						Data: htmlTemplate
+					}
+				},
+				Subject: {
+					Charset: 'UTF-8',
+					Data: `Booking for Boarding: ${firstName} ${lastName} | Pet: ${petName}`
+				}
+			},
+			Source: emailFrom
+		}
+
+		return await ses.sendEmail(emailParams).promise();
+	}
+
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
-		// TODO: add error handling
-		if (!formData) {
-			return;
+		try {
+			if (trainingId) {
+				formData.serviceId = trainingId;
+			}
+
+			if (data) {
+				formData.userId = data?.id;
+			}
+
+			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
+			const id = petData && petData[0]?.id;
+			console.log("id if there is only 1 pet", id);
+			formData.petId = petId ? petId : id;
+
+			formData.serviceName = "Daycare";
+
+			addNewDaycareBooking.mutate(formData);
+
+			await sendEmail(
+				"matt.vinall7@gmail.com",
+				"matt.vinall7@gmail.com",
+				formData?.firstName,
+				formData?.lastName,
+				formData?.email,
+				formData?.phoneNumber,
+				formData?.petName,
+				formData?.checkInDate,
+				formData?.startTime,
+				formData?.endTime,
+				formData?.notes
+			)
+
+			// success message 
+			Swal.fire({
+				icon: 'success',
+				title: `PAWesome 🐶`,
+				text: `Successfully Booked ${formData.petName} for Daycare. An email confirmation with your booking details will be sent to your email.`,
+				footer: '<a href="">Why do I have this issue?</a>'
+			})
+
+			reset();
+
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			});
 		}
 
-		if (trainingId) {
-			formData.serviceId = trainingId;
-		}
-
-		if (data) {
-			formData.userId = data?.id;
-		}
-
-		// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
-		const id = petData && petData[0]?.id;
-		console.log("id if there is only 1 pet", id);
-		formData.petId = petId ? petId : id;
-
-		formData.serviceName = "Daycare";
-
-		console.log("submit formData", formData);
-		addNewDaycareBooking.mutate(formData);
-
-		reset();
 	}
 
 	if (isLoading) return (
