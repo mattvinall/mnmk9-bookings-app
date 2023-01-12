@@ -7,9 +7,7 @@ import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { ses } from "../../server/aws/ses";
 import { useRouter } from "next/router";
-
-
-console.log("ses", ses.config);
+import Swal from "sweetalert2";
 
 type FormSchemaType = {
 	firstName: string,
@@ -39,7 +37,6 @@ const schema = z.object({
 	petName: z.string(),
 	notes: z.string(),
 })
-
 
 const Boarding: NextPage = () => {
 	// get email from session data
@@ -159,49 +156,62 @@ const Boarding: NextPage = () => {
 	}
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
-		// TODO: add error handling
-		if (!formData) {
-			return;
+
+		try {
+			// check if boardingId is truthy and then set the id of the service
+			if (boardingId) {
+				formData.serviceId = boardingId;
+			}
+
+			// if data (user session) is truthy, set the userId
+			if (data) {
+				formData.userId = data?.id;
+			}
+
+			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
+			const id = petData && petData[0]?.id;
+			formData.petId = petId ? petId : id;
+
+			// set the service name to Boarding
+			formData.serviceName = "Boarding";
+
+			// mutate / POST request to bookings api endpoint and submit the form data
+			addNewBooking.mutate(formData);
+
+			// call send email function that leverages AWS SES to send the form data via email
+			await sendEmail(
+				"matt.vinall7@gmail.com",
+				"matt.vinall7@gmail.com",
+				formData?.firstName,
+				formData?.lastName,
+				formData?.email,
+				formData?.phoneNumber,
+				formData?.petName,
+				formData?.checkInDate,
+				formData?.checkOutDate,
+				formData?.notes
+			);
+
+			// success message 
+			Swal.fire({
+				icon: 'success',
+				title: `PAWesome 🐶`,
+				text: `Successfully Booked ${formData.petName} for Daycare. An email confirmation with your booking details will be sent to your email.`,
+				footer: '<a href="">Why do I have this issue?</a>'
+			})
+
+			// reset the form state
+			reset();
+
+			router.push("/");
+
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			});
 		}
-
-		// check if boardingId is truthy and then set the id of the service
-		if (boardingId) {
-			formData.serviceId = boardingId;
-		}
-
-		// if data (user session) is truthy, set the userId
-		if (data) {
-			formData.userId = data?.id;
-		}
-
-		// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
-		const id = petData && petData[0]?.id;
-		formData.petId = petId ? petId : id;
-
-		// set the service name to Boarding
-		formData.serviceName = "Boarding";
-
-		// mutate / POST request to bookings api endpoint and submit the form data
-		addNewBooking.mutate(formData);
-
-		// call send email function that leverages AWS SES to send the form data via email
-		await sendEmail(
-			"matt.vinall7@gmail.com",
-			"matt.vinall7@gmail.com",
-			formData?.firstName,
-			formData?.lastName,
-			formData?.email,
-			formData?.phoneNumber,
-			formData?.petName,
-			formData?.checkInDate,
-			formData?.checkOutDate,
-			formData?.notes
-		);
-
-		// reset the form state
-		reset();
-
-		router.push("/");
 	}
 
 	if (isLoading) return (
