@@ -196,8 +196,7 @@ const Boarding: NextPage = () => {
 			Swal.fire({
 				icon: 'success',
 				title: `PAWesome 🐶`,
-				text: `Successfully Booked ${formData.petName} for Daycare. An email confirmation with your booking details will be sent to your email.`,
-				footer: '<a href="">Why do I have this issue?</a>'
+				text: `Successfully Booked ${formData.petName} for Boarding. An email confirmation with your booking details will be sent to your email.`,
 			})
 
 			// reset the form state
