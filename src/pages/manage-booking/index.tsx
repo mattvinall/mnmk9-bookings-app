@@ -1,15 +1,27 @@
-import React from 'react'
+import { useEffect } from 'react'
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import Link from "next/link";
 
 const ManageBooking = () => {
+	const router = useRouter();
+	console.log("router", router);
 	// get email from session data
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
 
 	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
+	const { data, isLoading, error, refetch } = trpc.user.byId.useQuery({ id })
+
+	useEffect(() => {
+		console.log("run after changing routes")
+		// wait 1 second for page to load and refetch 
+		// handles edge case when user edits their booking and routes back - want most up to date data
+		setTimeout(() => {
+			refetch();
+		}, 1000)
+	}, [router.pathname])
 
 	if (isLoading) return (
 		<div className="container text-center">
