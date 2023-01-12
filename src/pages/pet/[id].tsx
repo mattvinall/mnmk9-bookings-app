@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { S3 } from 'aws-sdk';
+import Swal from "sweetalert2";
 
 const PetDetail = () => {
 	const router = useRouter();
@@ -13,10 +14,13 @@ const PetDetail = () => {
 	const [vaccinationDocuments, setVaccinationDocuments] = useState([]);
 	const [file, setFile] = useState(null);
 	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState(null)
-	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState(null)
+	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState(null);
+	const [imageFileNamePreview, setImageFileNamePreview] = useState(null);
 
 	const handleProfileImageFileChange = (e: any) => {
 		const imageFile = e.target.files[0];
+		console.log("image file: ", imageFile)
+		imageFile && setImageFileNamePreview(imageFile?.name)
 		imageFile && setFile(imageFile);
 		console.log("file state", file)
 	};
@@ -39,13 +43,18 @@ const PetDetail = () => {
 				Body: file,
 				// ACL: ' public-read-write',
 			}
-			s3.upload(params, (err: any, data: any) => {
-				if (data) {
-					console.log("data", data)
-					setUploadedProfileImageUrl(data.Location);
+			s3.upload(params, (error: any, data: any) => {
+				// throw error popup if upload failed
+				if (error) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: `Something went wrong uploading your pets profile image! ${error}`,
+					});
 				}
 
-				console.log("err", err);
+				setUploadedProfileImageUrl(data.Location);
+				setImageFileNamePreview(null);
 			})
 		}
 	};
@@ -76,13 +85,17 @@ const PetDetail = () => {
 				Body: files[0],
 				// ACL: ' public-read-write',
 			}
-			s3.upload(params, (err: any, data: any) => {
-				if (data) {
-					console.log("data", data)
-					setUploadedVaccinationDocumentUrl(data.Location);
+			s3.upload(params, (error: any, data: any) => {
+				// throw error popup if upload failed
+				if (error) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: `Something went wrong uploading your pets profile image! ${error}`,
+					});
 				}
-				// add error handling
-				console.log("err", err);
+				// set url of file to state
+				setUploadedVaccinationDocumentUrl(data.Location);
 			})
 		}
 	};
@@ -92,7 +105,6 @@ const PetDetail = () => {
 		console.log("chosenFiles", chosenFiles);
 		handleUploadVaccinationDocuments(chosenFiles, event);
 	}
-
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
 	const uploadVaccinationDocument = trpc.documents.addVaccinationDocument.useMutation();
@@ -125,11 +137,17 @@ const PetDetail = () => {
 		}
 	}, [deleteVaccinationDocument]);
 
-	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-		Loading...
-	</h1>
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
 
-	if (error) return router.back();
+	if (error) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		</div>
+	)
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 max-w-8xl">
@@ -171,6 +189,7 @@ const PetDetail = () => {
 											/>
 										</label>
 									</form>
+									{imageFileNamePreview && <p>Image Selected: {imageFileNamePreview}</p>}
 									{pet?.documents && pet?.documents.length > 0 && <h2 className="text-gray-900 text-xl font-medium mb-2 mt-6">Documents</h2>}
 									{pet?.documents?.map(doc => {
 										const fileName = doc.fileName.split("/")[4];
