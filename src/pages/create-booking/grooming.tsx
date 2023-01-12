@@ -176,6 +176,9 @@ const Grooming: NextPage = () => {
 
 			addNewGroomingBooking.mutate(formData);
 
+			// reset form
+			reset();
+
 			await sendEmail(
 				"matt.vinall7@gmail.com",
 				"matt.vinall7@gmail.com",
@@ -195,13 +198,12 @@ const Grooming: NextPage = () => {
 				icon: 'success',
 				title: `PAWesome 🐶`,
 				text: `Successfully Booked ${formData.petName} for Grooming. An email confirmation with your booking details will be sent to your email.`,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// navigate to home page on submit
+					router.push("/");
+				}
 			});
-
-			// reset form
-			reset();
-
-			// navigate to home page on submit
-			router.push("/");
 
 		} catch (error) {
 			// error message
