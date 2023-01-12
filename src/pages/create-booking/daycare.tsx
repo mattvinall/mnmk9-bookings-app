@@ -175,6 +175,9 @@ const Daycare: NextPage = () => {
 
 			addNewDaycareBooking.mutate(formData);
 
+			// reset form state
+			reset();
+
 			await sendEmail(
 				"matt.vinall7@gmail.com",
 				"matt.vinall7@gmail.com",
@@ -194,14 +197,12 @@ const Daycare: NextPage = () => {
 				icon: 'success',
 				title: `PAWesome 🐶`,
 				text: `Successfully Booked ${formData.petName} for Daycare. An email confirmation with your booking details will be sent to your email.`,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// navigate to home page on submit
+					router.push("/");
+				}
 			});
-
-			// reset form state
-			reset();
-
-			// navigate to home page on form submit
-			router.push("/");
-
 		} catch (error) {
 			// error message
 			Swal.fire({
