@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
+import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import { ses } from "../../server/aws/ses";
-import { useRouter } from "next/router";
+import { ses } from "../../server/aws/ses/index";
 import Swal from "sweetalert2";
 
 type FormSchemaType = {
@@ -202,6 +202,7 @@ const Boarding: NextPage = () => {
 			// reset the form state
 			reset();
 
+			// navigate to home page on form submit
 			router.push("/");
 
 		} catch (error) {
