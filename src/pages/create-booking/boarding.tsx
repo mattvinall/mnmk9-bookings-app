@@ -178,6 +178,9 @@ const Boarding: NextPage = () => {
 			// mutate / POST request to bookings api endpoint and submit the form data
 			addNewBooking.mutate(formData);
 
+			// reset the form state
+			reset();
+
 			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmail(
 				"matt.vinall7@gmail.com",
@@ -197,14 +200,12 @@ const Boarding: NextPage = () => {
 				icon: 'success',
 				title: `PAWesome 🐶`,
 				text: `Successfully Booked ${formData.petName} for Boarding. An email confirmation with your booking details will be sent to your email.`,
-			})
-
-			// reset the form state
-			reset();
-
-			// navigate to home page on form submit
-			router.push("/");
-
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// navigate to home page on submit
+					router.push("/");
+				}
+			});
 		} catch (error) {
 			Swal.fire({
 				icon: 'error',
