@@ -60,7 +60,7 @@ const Training: NextPage = () => {
 	const trainingId = training?.id;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byId.useQuery({ id });
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
 	console.log("pet data", petData);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
