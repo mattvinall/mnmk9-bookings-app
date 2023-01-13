@@ -1,4 +1,4 @@
-import AWS from "aws-sdk/client/s3";
+import AWS from "aws-sdk";
 
 export const ses = new AWS.SES({
   accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
