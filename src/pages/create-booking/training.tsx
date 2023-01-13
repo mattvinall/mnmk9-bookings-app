@@ -94,7 +94,7 @@ const Training: NextPage = () => {
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
-	const handleChange = (e: any) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const petName = e.target.value;
 
 		const petSelected = petData?.find(pet => pet.name === petName);
@@ -102,58 +102,6 @@ const Training: NextPage = () => {
 		console.log("pet selected ID", petSelectedId);
 
 		petSelectedId && setPetID(petSelectedId);
-	}
-
-	const sendEmail = async (
-		emailTo: string,
-		emailFrom: string,
-		firstName: string,
-		lastName: string,
-		email: string,
-		phoneNumber: string,
-		petName: string,
-		checkInDate: string,
-		startTime: string,
-		endTime: string,
-		notes?: string,
-	) => {
-		const htmlTemplate = `
-    <html>
-      <body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
-        <h1 style="text-align: center; font-size: 24px;">Booking Details</h1>
-        <div style="border: 1px solid #ccc; padding: 20px;">
-          <p style="font-size: 18px;"><strong>Name:</strong> ${firstName} ${lastName}</p>
-          <p style="font-size: 18px;"><strong>Email:</strong> ${email}</p>
-          <p style="font-size: 18px;"><strong>Phone Number:</strong> ${phoneNumber}</p>
-          <p style="font-size: 18px;"><strong>Pet Name:</strong> ${petName}</p>
-          <p style="font-size: 18px;"><strong>Check-In Date:</strong> ${checkInDate}</p>
-          <p style="font-size: 18px;"><strong>Start Time:</strong> ${startTime}</p>
-					<p style="font-size: 18px;"><strong>End Time:</strong> ${endTime}</p>
-          <p style="font-size: 18px;"><strong>Notes:</strong> ${notes}</p>
-        </div>
-      </body>
-    </html>
-  `
-		const emailParams = {
-			Destination: {
-				ToAddresses: [emailTo]
-			},
-			Message: {
-				Body: {
-					Html: {
-						Charset: 'UTF-8',
-						Data: htmlTemplate
-					}
-				},
-				Subject: {
-					Charset: 'UTF-8',
-					Data: `Booking for Training: ${firstName} ${lastName} | Pet: ${petName}`
-				}
-			},
-			Source: emailFrom
-		}
-
-		return await ses.sendEmail(emailParams).promise();
 	}
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
