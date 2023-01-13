@@ -1,8 +1,10 @@
+"use-client";
+
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
-import UserDetailForm from "../../components/UserDetailForm";
-import AddPetForm from "../../components/AddPetForm";
+import UserDetailForm from "../../components/forms/UserDetailForm";
+import AddPetForm from "../../components/forms/AddPetForm";
 
 const UserDetail: () => void = () => {
 	const router = useRouter();
@@ -28,7 +30,7 @@ const UserDetail: () => void = () => {
 		Loading...
 	</h1>
 
-	if (error) return router.back();
+	// if (error) return router.back();
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
