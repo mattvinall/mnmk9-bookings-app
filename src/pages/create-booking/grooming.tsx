@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { ses } from "../../server/aws/ses/index";
 import Swal from "sweetalert2";
+import { sendEmailGrooming } from "../../helpers/email";
 
 type FormSchemaType = {
 	firstName: string,
@@ -119,7 +120,7 @@ const Grooming: NextPage = () => {
 			const id = petData && petData[0]?.id as string;
 
 			if (id || petId) {
-				formData.petId = petId ? petId : id;
+				formData.petId = petId ? petId as string : id as string;
 			}
 
 			formData.serviceName = "Grooming";
@@ -129,9 +130,9 @@ const Grooming: NextPage = () => {
 			// reset form
 			reset();
 
-			await sendEmail(
-				"matt.vinall7@gmail.com",
-				"matt.vinall7@gmail.com",
+			await sendEmailGrooming(
+				process.env.NEXT_PUBLIC_EMAIL_TO as string,
+				formData?.email,
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
