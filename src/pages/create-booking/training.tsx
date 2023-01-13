@@ -6,8 +6,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import { ses } from "../../server/aws/ses/index";
 import Swal from "sweetalert2";
+import { sendEmailTraining } from "../../helpers/email";
 
 type FormSchemaType = {
 	firstName: string,
@@ -127,9 +127,9 @@ const Training: NextPage = () => {
 			// reset form state
 			reset();
 
-			await sendEmail(
-				"matt.vinall7@gmail.com",
-				"matt.vinall7@gmail.com",
+			await sendEmailTraining(
+				process.env.NEXT_PUBLIC_EMAIL_TO as string,
+				formData?.email,
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
