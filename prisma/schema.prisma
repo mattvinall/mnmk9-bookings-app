@@ -103,6 +103,7 @@ model User {
   city          String?
   phoneNumber   String?
   postalCode    String?
+  role          String     @default("user")
   pets          Pet[]
   bookings      Bookings[]
   accounts      Account[]
