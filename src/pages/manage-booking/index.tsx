@@ -1,3 +1,5 @@
+"use-client";
+
 import { useEffect } from 'react'
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -25,7 +27,7 @@ const ManageBooking = () => {
 
 	if (isLoading) return (
 		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[5rem]">Loading....</h1>
 		</div>
 	);
 
