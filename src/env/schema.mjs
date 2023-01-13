@@ -33,6 +33,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_AWS_REGION: z.string(),
   NEXT_PUBLIC_AWS_ACCESS_KEY_ID: z.string(),
   NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: z.string(),
+  NEXT_PUBLIC_EMAIL_TO: z.string()
 });
 
 /**
