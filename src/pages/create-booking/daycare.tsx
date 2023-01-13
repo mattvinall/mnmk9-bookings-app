@@ -94,7 +94,7 @@ const Daycare: NextPage = () => {
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
-	const handleChange = (e: any) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const petName = e.target.value;
 
 		const petSelected = petData?.find(pet => pet.name === petName);
