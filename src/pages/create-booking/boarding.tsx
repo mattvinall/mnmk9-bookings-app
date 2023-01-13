@@ -136,8 +136,8 @@ const Boarding: NextPage = () => {
 
 			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailBoarding(
-				"matt.vinall7@gmail.com",
-				"matt.vinall7@gmail.com",
+				process.env.NEXT_PUBLIC_EMAIL_TO as string,
+				formData?.email,
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
