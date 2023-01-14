@@ -1,3 +1,5 @@
+"use-client";
+
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
@@ -129,8 +131,8 @@ const Training: NextPage = () => {
 			reset();
 
 			await sendEmailTraining(
-				process.env.NEXT_PUBLIC_EMAIL_TO as string,
 				formData?.email,
+				process.env.NEXT_PUBLIC_EMAIL_TO as string,
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
