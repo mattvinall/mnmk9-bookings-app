@@ -1,4 +1,4 @@
-import React from 'react'
+import Link from "next/link";
 
 
 const Footer = () => {
@@ -8,13 +8,13 @@ const Footer = () => {
 			</span>
 			<ul className="flex flex-wrap items-center mt-3 text-sm text-gray-100 dark:text-gray-100 sm:mt-0">
 				<li>
-					<a href="/about" className="mr-4 hover:underline md:mr-6 ">About</a>
+					<Link href="/about" className="mr-4 hover:underline md:mr-6 ">About</Link>
 				</li>
 				<li>
-					<a href="https://www.mnmk9.ca" target="_blank" rel="noreferrer" className="mr-4 hover:underline md:mr-6">MNMK-9 Website</a>
+					<Link href="https://www.mnmk9.ca" target="_blank" rel="noreferrer" className="mr-4 hover:underline md:mr-6">MNMK-9 Website</Link>
 				</li>
 				<li>
-					<a href="/contact-us" className="hover:underline">Contact</a>
+					<Link href="/contact-us" className="hover:underline">Contact</Link>
 				</li>
 			</ul>
 		</footer>
