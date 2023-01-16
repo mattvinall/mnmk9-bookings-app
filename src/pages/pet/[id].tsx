@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { trpc } from "../../utils/trpc";
@@ -27,7 +27,7 @@ const PetDetail = () => {
 		console.log("file state", file)
 	};
 
-	const handleUploadProfileImage = (e: SubmitEvent) => {
+	const handleUploadProfileImage = (e: ChangeEvent) => {
 		e.preventDefault();
 
 		// Instantiate an S3 client
@@ -56,7 +56,7 @@ const PetDetail = () => {
 				}
 
 				setUploadedProfileImageUrl(data.Location);
-				setImageFileNamePreview(null);
+				setImageFileNamePreview("");
 			})
 		}
 	};
@@ -67,12 +67,12 @@ const PetDetail = () => {
 		console.log("files", files);
 		const uploadedVaccinationDocuments = [...vaccinationDocuments];
 
-		files?.some((file: any) => {
-			if (uploadedVaccinationDocuments && uploadedVaccinationDocuments.findIndex((f) => f.name === file.name) === -1) {
+		files?.some((file: File) => {
+			if (uploadedVaccinationDocuments && uploadedVaccinationDocuments.findIndex((f: File) => File.name === f.name) === -1) {
 				file && uploadedVaccinationDocuments.push(file);
 				setVaccinationDocuments(uploadedVaccinationDocuments);
 			}
-		})
+		});
 		// Instantiate an S3 client
 		const s3 = new S3({
 			accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
