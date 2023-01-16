@@ -4,7 +4,6 @@ import Image from "next/image";
 import { trpc } from "../../utils/trpc";
 import { S3 } from 'aws-sdk';
 import Swal from "sweetalert2";
-import { FILE } from "dns";
 
 const PetDetail = () => {
 	const router = useRouter();
@@ -13,7 +12,7 @@ const PetDetail = () => {
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
 	console.log("pet detail: ", petDetail)
 
-	const [vaccinationDocuments, setVaccinationDocuments] = useState([]);
+	const [vaccinationDocument, setVaccinationDocument] = useState({});
 	const [file, setFile] = useState({});
 	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState("")
 	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState("");
@@ -61,30 +60,33 @@ const PetDetail = () => {
 		}
 	};
 
-	const handleUploadVaccinationDocuments = (files: any, e: SubmitEvent) => {
+	interface File {
+		lastModified: number,
+		name: string,
+		lastModidiedDate: Date,
+		size: number,
+		type: string,
+		webkitRelativePath: string,
+	}
+
+	const handleUploadVaccinationDocuments = (file: File, e: SubmitEvent) => {
 		e.preventDefault();
 
-		console.log("files", files);
-		const uploadedVaccinationDocuments = [...vaccinationDocuments];
-
-		files?.some((file: File) => {
-			if (uploadedVaccinationDocuments && uploadedVaccinationDocuments.findIndex((f: File) => File.name === f.name) === -1) {
-				file && uploadedVaccinationDocuments.push(file);
-				setVaccinationDocuments(uploadedVaccinationDocuments);
-			}
-		});
+		console.log("file", file);
 		// Instantiate an S3 client
 		const s3 = new S3({
 			accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
 			secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
 		});
 
-		if (files && files.length === 1) {
+		if (file) {
+			console.log("file not null", file);
+			setVaccinationDocument(file);
 			// 	// Upload the file to S3
 			const params = {
 				Bucket: 'mnmk9-bookings/documents',
-				Key: files[0].name,
-				Body: files[0],
+				Key: file.name,
+				Body: file,
 				// ACL: ' public-read-write',
 			}
 			s3.upload(params, (error: any, data: any) => {
@@ -96,16 +98,18 @@ const PetDetail = () => {
 						text: `Something went wrong uploading your pets profile image! ${error}`,
 					});
 				}
+
+				console.log("data from upload document", data);
 				// set url of file to state
 				setUploadedVaccinationDocumentUrl(data.Location);
 			})
 		}
+
 	};
 
 	const handleVaccinationDocumentFileChange = (event: any) => {
-		const chosenFiles = Array.from(event.target.files);
-		console.log("chosenFiles", chosenFiles);
-		handleUploadVaccinationDocuments(chosenFiles, event);
+		const chosenFile = event.currentTarget.files[0];
+		handleUploadVaccinationDocuments(chosenFile, event);
 	}
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
@@ -120,7 +124,7 @@ const PetDetail = () => {
 		// after 1 second, refetch from DB
 		setTimeout(() => {
 			refetch();
-		}, 1000);
+		}, 1200);
 	}, [uploadedProfileImageUrl])
 
 	useEffect(() => {
@@ -130,7 +134,7 @@ const PetDetail = () => {
 
 		setTimeout(() => {
 			refetch();
-		}, 1000);
+		}, 1200);
 	}, [uploadedVaccinationDocumentUrl]);
 
 	useEffect(() => {
