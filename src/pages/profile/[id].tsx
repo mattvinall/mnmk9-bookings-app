@@ -13,8 +13,8 @@ const UserDetail: () => void = () => {
 
 	console.log("user detail", userDetail);
 
-	const [showUserForm, setShowUserForm] = useState<Boolean>(false);
-	const [showPetForm, setShowPetForm] = useState<Boolean>(false);
+	const [showUserForm, setShowUserForm] = useState<boolean>(false);
+	const [showPetForm, setShowPetForm] = useState<boolean>(false);
 
 	const handleShowUserForm = () => {
 		setShowUserForm(true);
