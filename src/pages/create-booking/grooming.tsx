@@ -205,7 +205,7 @@ const Grooming: NextPage = () => {
 			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 				Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 			</p>
-			<GroomingForm petData={petData} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+			<GroomingForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 		</div >
 	)
 }
