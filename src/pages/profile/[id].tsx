@@ -32,7 +32,7 @@ const UserDetail: () => void = () => {
 
 	if (error) return (
 		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error getting user information...If you haven't logged in, please do so.</h1>
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error getting user information...If you have not logged in, please do so.</h1>
 		</div>
 	)
 	return (
