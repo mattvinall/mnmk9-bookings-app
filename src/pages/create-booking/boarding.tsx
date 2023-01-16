@@ -24,7 +24,15 @@ type FormSchemaType = {
 	serviceName: string,
 	userId: string,
 	serviceId: string,
-	petId: string
+	petId: string,
+	petData?: Array<{
+		id: string,
+		breed: string,
+		name: string,
+		ownerId: string,
+		profileImage: string,
+		vaccinated: boolean,
+	}>
 }
 
 // define schema for the form 

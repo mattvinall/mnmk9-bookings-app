@@ -26,6 +26,14 @@ type FormSchemaType = {
 	userId: string,
 	serviceId: string,
 	petId: string
+	petData?: Array<{
+		id: string,
+		breed: string,
+		name: string,
+		ownerId: string,
+		profileImage: string,
+		vaccinated: boolean,
+	}>
 }
 
 // define schema for the form 
@@ -162,7 +170,6 @@ const Daycare: NextPage = () => {
 				text: `Something went wrong! ${error}`,
 			});
 		}
-
 	}
 
 	if (isLoading) return (
