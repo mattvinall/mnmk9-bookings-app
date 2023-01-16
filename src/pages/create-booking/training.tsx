@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
-import { sendEmailTraining } from "../../helpers/email";
+import { sendEmailTraining } from "../../lib/email";
 import TrainingForm from "../../components/forms/TrainingForm";
 
 type FormSchemaType = {

@@ -8,7 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
-import { sendEmailBoarding } from "../../helpers/email";
+import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/forms/BoardingForm";
 
