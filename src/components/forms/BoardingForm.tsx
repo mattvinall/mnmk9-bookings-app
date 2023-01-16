@@ -1,7 +1,7 @@
 "use-client";
 
 type Props = {
-	petData: Array<{}>,
+	petData: Array<{ name: string }>,
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
