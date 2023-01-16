@@ -4,6 +4,7 @@ import Image from "next/image";
 import { trpc } from "../../utils/trpc";
 import { S3 } from 'aws-sdk';
 import Swal from "sweetalert2";
+import { FILE } from "dns";
 
 const PetDetail = () => {
 	const router = useRouter();
@@ -13,10 +14,10 @@ const PetDetail = () => {
 	console.log("pet detail: ", petDetail)
 
 	const [vaccinationDocuments, setVaccinationDocuments] = useState([]);
-	const [file, setFile] = useState(null);
-	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState(null)
-	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState(null);
-	const [imageFileNamePreview, setImageFileNamePreview] = useState(null);
+	const [file, setFile] = useState({});
+	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState("")
+	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState("");
+	const [imageFileNamePreview, setImageFileNamePreview] = useState("");
 
 	const handleProfileImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const imageFile = e.currentTarget.files && e.currentTarget.files[0];
@@ -40,7 +41,7 @@ const PetDetail = () => {
 			// Upload the file to S3
 			const params = {
 				Bucket: 'mnmk9-bookings/images',
-				Key: file.name,
+				Key: File.name,
 				Body: file,
 				// ACL: ' public-read-write',
 			}
@@ -159,7 +160,7 @@ const PetDetail = () => {
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
 
-								<Image className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
