@@ -12,9 +12,17 @@ import EditBookingForm from "../../components/forms/EditBookingForm";
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
-	const { data: bookingDetail, isLoading, error, refetch } = trpc.bookings.byId.useQuery({ id: bookingId });
+	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
 	console.log("booking detail", bookingDetail);
+	interface Detail {
+		checkOutDate: string,
+		checkInDate: string,
+		serviceName: string,
+		startTime: string,
+		endTime: string,
+		notes?: string
+	}
 
 	type FormSchemaType = {
 		checkInDate?: string,
@@ -22,6 +30,7 @@ const BookingDetail: NextPage = () => {
 		startTime?: string,
 		endTime?: string
 		notes?: string,
+		bookingDetail?: Detail
 	}
 
 	// define schema for the form 
@@ -31,7 +40,23 @@ const BookingDetail: NextPage = () => {
 		startTime: z.string().optional(),
 		endTime: z.string().optional(),
 		notes: z.string().optional(),
+		bookingDetail: z.object({
+			checkInDate: z.string().optional(),
+			checkOutDate: z.string().optional(),
+			startTime: z.string().optional(),
+			endTime: z.string().optional(),
+			notes: z.string().optional(),
+		}).optional()
 	})
+
+	interface Detail {
+		checkOutDate: string,
+		checkInDate: string,
+		serviceName: string,
+		startTime: string,
+		endTime: string,
+		notes?: string
+	}
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
