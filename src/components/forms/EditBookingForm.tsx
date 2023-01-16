@@ -1,23 +1,19 @@
 "use-client";
-interface Detail {
-	checkOutDate: string,
-	checkInDate: string,
-	serviceName: string,
-	startTime: string,
-	endTime: string,
-	notes?: string
-}
+import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router";
 
 type Props = {
-	bookingDetail: Detail,
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
 	onSubmit: any,
-	handleChange: any
 }
 
-const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, bookingDetail }: Props) => {
+const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting }: Props) => {
+	const router = useRouter();
+	const bookingId = router.query.id as string;
+	const { data: bookingDetail } = trpc.bookings.byId.useQuery({ id: bookingId });
+
 	return (
 		<form className="w-[80%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 
