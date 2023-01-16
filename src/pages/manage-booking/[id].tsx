@@ -80,7 +80,7 @@ const BookingDetail: NextPage = () => {
 		console.log("show form state", showForm);
 	}
 
-	const handleCancelBooking = (id: String) => {
+	const handleCancelBooking = (id: string) => {
 		try {
 			Swal.fire({
 				title: 'Are you sure you want to cancel?',
