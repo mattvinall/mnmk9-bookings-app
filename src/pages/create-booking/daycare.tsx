@@ -72,7 +72,7 @@ const Daycare: NextPage = () => {
 
 	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation();
 
-	const [petId, setPetID] = useState<String>("");
+	const [petId, setPetID] = useState<string>("");
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
