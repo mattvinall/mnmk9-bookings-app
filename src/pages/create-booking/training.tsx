@@ -175,7 +175,8 @@ const Training: NextPage = () => {
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
 		</div>
-	)
+	);
+
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
