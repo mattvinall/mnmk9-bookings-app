@@ -19,7 +19,6 @@
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
     "aws-sdk": "^2.1290.0",
-    "image-upload-react": "^1.4.5",
     "next": "13.0.2",
     "next-auth": "^4.18.3",
     "react": "18.2.0",
