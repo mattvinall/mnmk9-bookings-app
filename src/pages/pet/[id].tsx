@@ -26,7 +26,7 @@ const PetDetail = () => {
 		console.log("file state", file)
 	};
 
-	const handleUploadProfileImage = (e: ChangeEvent) => {
+	const handleUploadProfileImage = (e: any) => {
 		e.preventDefault();
 
 		// Instantiate an S3 client
