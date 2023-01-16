@@ -1,8 +1,15 @@
 "use-client";
 
-import { FC } from 'react';
+type Props = {
+	petData: Array<{}>,
+	isSubmitting: boolean,
+	register: any,
+	handleSubmit: any,
+	onSubmit: any,
+	handleChange: any
+}
 
-const BoardingForm: FC = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }) => {
+const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
 	return (
 		<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 			<div className="grid md:grid-cols-2 md:gap-6">
