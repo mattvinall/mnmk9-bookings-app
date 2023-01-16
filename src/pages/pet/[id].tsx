@@ -85,7 +85,7 @@ const PetDetail = () => {
 			// 	// Upload the file to S3
 			const params = {
 				Bucket: 'mnmk9-bookings/documents',
-				Key: file.name,
+				Key: File.name || file.name,
 				Body: file,
 				// ACL: ' public-read-write',
 			}
