@@ -49,6 +49,14 @@ const schema = z.object({
 	endTime: z.string(),
 	petName: z.string(),
 	notes: z.string(),
+	petData: z.object({
+		id: z.string(),
+		breed: z.string(),
+		name: z.string(),
+		ownerId: z.string(),
+		profileImage: z.string(),
+		vaccinated: z.boolean(),
+	})
 })
 
 
