@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
+import Link from 'next/link';
 import logo from "../../public/mnmk9-logo.jpg";
 
 const Logo = () => {
@@ -56,28 +57,36 @@ const Navbar: React.FC = () => {
 				<div className="flex justify-between align-start">
 					<div className="flex items-center h-32">
 						<div>
-							<a href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
+							<Link href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
 								<Logo />
-							</a>
+							</Link>
 						</div>
 						<div className="hidden md:flex items-center">
-							<a
+							<Link
 								href="/"
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">Home</a>
-							<a
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+								Home
+							</Link>
+							<Link
 								href={`/profile/${sessionData?.user?.id}`}
 								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
 								Profile
-							</a>
-							<a
+							</Link>
+							<Link
 								href="/create-booking"
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">Book Service</a>
-							<a
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+								Book Service
+							</Link>
+							<Link
 								href="/manage-booking"
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Manage Booking</a>
-							<a
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+								Manage Booking
+							</Link>
+							<Link
 								href="/contact-us"
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">Contact Us</a>
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+								Contact Us
+							</Link>
 						</div>
 						<AuthShowcase />
 						<div className="md:hidden flex items-center">
