@@ -146,8 +146,9 @@ const Daycare: NextPage = () => {
 			reset();
 
 			await sendEmailDaycare(
-				process.env.NEXT_PUBLIC_EMAIL_TO as string,
 				formData?.email,
+				// process.env.NEXT_PUBLIC_EMAIL_TO as string,
+				"matt.vinall7@gmail.com",
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
