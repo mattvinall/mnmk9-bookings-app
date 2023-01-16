@@ -45,11 +45,11 @@ const AuthShowcase: React.FC = () => {
 const Navbar: React.FC = () => {
 	const { data: sessionData } = useSession();
 	// const userId = data?.id;
-	const [menuToggled, setMenuToggled] = useState(false);
-	const handleClick = () => {
-		console.log("icon clicked", menuToggled);
-		setMenuToggled((prevState) => !prevState);
-	}
+	// const [menuToggled, setMenuToggled] = useState(false);
+	// const handleClick = () => {
+	// 	console.log("icon clicked", menuToggled);
+	// 	setMenuToggled((prevState) => !prevState);
+	// }
 
 	return (
 		<nav className="bg-white shadow-lg">
@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
 							</Link>
 						</div>
 						<AuthShowcase />
-						<div className="md:hidden flex items-center">
+						{/* <div className="md:hidden flex items-center">
 							<button className="outline-none mobile-menu-button" onClick={handleClick}>
 								<svg className=" w-6 h-6 text-gray-500 "
 									x-show="!showMenu"
@@ -103,17 +103,17 @@ const Navbar: React.FC = () => {
 									<path d="M4 6h16M4 12h16M4 18h16"></path>
 								</svg>
 							</button>
-						</div>
+						</div> */}
 					</div>
 				</div>
 				{/* mobile */}
-				<div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
+				{/* <div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
 					<ul className="">
 						<li className="active"><a href="/create-booking" className="block text-md px-2 py-4 text-white bg-green-500 font-semibold">Book a Service</a></li>
 						<li><a href="/manage-booking" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Manage A Service</a></li>
 						<li><a href="/contact" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Contact Us</a></li>
 					</ul>
-				</div>
+				</div> */}
 			</div>
 		</nav>
 	)
