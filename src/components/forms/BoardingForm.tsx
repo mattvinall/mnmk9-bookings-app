@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-const BoardingForm: FC = ({ register, handleSubmit, onSubmit, handleChange, petData, isSubmitting }) => {
+const BoardingForm: FC = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }) => {
 	return (
 		<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 			<div className="grid md:grid-cols-2 md:gap-6">
