@@ -56,7 +56,7 @@ const schema = z.object({
 		ownerId: z.string(),
 		profileImage: z.string(),
 		vaccinated: z.boolean(),
-	})
+	}).optional()
 })
 
 
