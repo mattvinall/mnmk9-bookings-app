@@ -1,7 +1,23 @@
 "use-client";
-import { FC } from 'react';
+interface Detail {
+	checkOutDate: string,
+	checkInDate: string,
+	serviceName: string,
+	startTime: string,
+	endTime: string,
+	notes?: string
+}
 
-const EditBookingForm: FC = ({ register, handleSubmit, onSubmit, isSubmitting, bookingDetail }) => {
+type Props = {
+	bookingDetail: Detail,
+	isSubmitting: boolean,
+	register: any,
+	handleSubmit: any,
+	onSubmit: any,
+	handleChange: any
+}
+
+const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, bookingDetail }: Props) => {
 	return (
 		<form className="w-[80%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 
@@ -82,7 +98,7 @@ const EditBookingForm: FC = ({ register, handleSubmit, onSubmit, isSubmitting, b
 						type="textarea"
 						rows="1"
 						name="notes"
-						defaultValue={bookingDetail?.notes || ""}
+						defaultValue={bookingDetail?.notes as string}
 						id="notes"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
