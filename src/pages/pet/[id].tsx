@@ -18,7 +18,7 @@ const PetDetail = () => {
 	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState("");
 	const [imageFileNamePreview, setImageFileNamePreview] = useState("");
 
-	const handleProfileImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleProfileImageFileChange = (e: any) => {
 		const imageFile = e.currentTarget.files && e.currentTarget.files[0];
 		console.log("image file: ", imageFile)
 		imageFile && setImageFileNamePreview(imageFile?.name)
