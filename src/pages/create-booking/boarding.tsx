@@ -69,7 +69,7 @@ const Boarding: NextPage = () => {
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation();
 
-	const [petId, setPetID] = useState<String>("");
+	const [petId, setPetID] = useState<string>("");
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
