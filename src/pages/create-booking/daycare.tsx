@@ -194,16 +194,22 @@ const Daycare: NextPage = () => {
 	)
 
 	return (
-		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
-				Book <span className="text-[hsl(280,100%,70%)]">Daycare</span>
-			</h1>
+		sessionData ? (
+			<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
+				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
+					Book <span className="text-[hsl(280,100%,70%)]">Daycare</span>
+				</h1>
 
-			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
-				Fill out the form below and someone from the MNMK-9 team will confirm your booking.
-			</p>
-			<DaycareForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
-		</div >
+				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
+					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
+				</p>
+				<DaycareForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+			</div >
+		) : (
+			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
+				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please Login to book a daycare appointment.</h1>
+			</div>
+		)
 	)
 }
 
