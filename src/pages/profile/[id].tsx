@@ -26,9 +26,11 @@ const UserDetail: () => void = () => {
 		setShowUserForm(false);
 	}
 
-	if (isLoading) return <h1 className="gap-12 px-4 py-16 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-		Loading...
-	</h1>
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
 
 	if (error) return (
 		<div className="container text-center">
