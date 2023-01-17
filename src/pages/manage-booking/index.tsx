@@ -27,7 +27,7 @@ const ManageBooking = () => {
 
 	if (isLoading) return (
 		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[5rem]">Loading....</h1>
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
 		</div>
 	);
 
@@ -35,7 +35,7 @@ const ManageBooking = () => {
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
 		</div>
-	)
+	);
 
 	return (
 		<>
