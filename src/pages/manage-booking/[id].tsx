@@ -108,9 +108,17 @@ const BookingDetail: NextPage = () => {
 		}
 	}
 
-	if (isLoading) return <p className="text-xl5 text-white flex align-center">Loading ...</p>;
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
 
-	if (error) return <p className="text-xl3 text-white flex align-center"> Error... {error.message}</p >
+	if (error) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		</div>
+	);
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
