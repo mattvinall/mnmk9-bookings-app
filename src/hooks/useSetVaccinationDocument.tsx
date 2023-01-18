@@ -32,7 +32,7 @@ const useSetVaccinationDocument = (name: any) => {
 			// 	// Upload the file to S3
 			const params = {
 				Bucket: `mnmk9-bookings/documents/${name}`,
-				Key: fileName,
+				Key: file.name,
 				Body: file,
 			}
 			s3.upload(params, (error: any, data: any) => {
@@ -64,7 +64,6 @@ const useSetVaccinationDocument = (name: any) => {
 	return {
 		uploadedVaccinationDocumentUrl,
 		handleVaccinationDocumentFileChange,
-		fileName
 	}
 }
 
