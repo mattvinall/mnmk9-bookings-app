@@ -1,117 +1,29 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import { trpc } from "../../utils/trpc";
-import { S3 } from 'aws-sdk';
-import Swal from "sweetalert2";
+import useSetProfileImage from "../../hooks/useSetProfileImage";
+import useSetVaccinationDocument from "../../hooks/useSetVaccinationDocument";
 
 const PetDetail = () => {
 	const router = useRouter();
-
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
 	console.log("pet detail: ", petDetail)
 
 	const name = petDetail?.map(pet => pet.name as string);
 
-	const [vaccinationDocument, setVaccinationDocument] = useState({});
-	const [file, setFile] = useState({});
-	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState("")
-	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState("");
-	const [imageFileNamePreview, setImageFileNamePreview] = useState("");
+	const {
+		uploadedProfileImageUrl,
+		imageFileNamePreview,
+		handleProfileImageFileChange,
+		handleUploadProfileImage
+	} = useSetProfileImage(name);
 
-	const handleProfileImageFileChange = (e: any) => {
-		const imageFile = e.currentTarget.files && e.currentTarget.files[0];
-		console.log("image file: ", imageFile)
-		imageFile && setImageFileNamePreview(imageFile?.name)
-		imageFile && setFile(imageFile);
-		console.log("file state", file)
-	};
-
-	const handleUploadProfileImage = (e: any) => {
-		e.preventDefault();
-
-		// Instantiate an S3 client
-		const s3 = new S3({
-			accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-			secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
-		});
-
-		if (file && imageFileNamePreview) {
-			console.log("file not null", file);
-			// Upload the file to S3
-			const params = {
-				Bucket: `mnmk9-bookings/images/${name}`,
-				Key: imageFileNamePreview,
-				Body: file,
-			}
-			s3.upload(params, (error: any, data: any) => {
-				// throw error popup if upload failed
-				if (error) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: `Something went wrong uploading your pets profile image! ${error}`,
-					});
-				}
-
-				setUploadedProfileImageUrl(data.Location);
-				setImageFileNamePreview("");
-			})
-		}
-	};
-
-	interface File {
-		lastModified: number,
-		name: string,
-		lastModidiedDate: Date,
-		size: number,
-		type: string,
-		webkitRelativePath: string,
-	}
-
-	const handleUploadVaccinationDocuments = (file: File, e: SubmitEvent) => {
-		e.preventDefault();
-
-		console.log("file", file);
-		// Instantiate an S3 client
-		const s3 = new S3({
-			accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-			secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
-		});
-
-		if (file) {
-			console.log("file not null", file);
-			setVaccinationDocument(file);
-			// 	// Upload the file to S3
-			const params = {
-				Bucket: 'mnmk9-bookings/documents',
-				Key: File.name || file.name,
-				Body: file,
-				// ACL: ' public-read-write',
-			}
-			s3.upload(params, (error: any, data: any) => {
-				// throw error popup if upload failed
-				if (error) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: `Something went wrong uploading your pets profile image! ${error}`,
-					});
-				}
-
-				console.log("data from upload document", data);
-				// set url of file to state
-				setUploadedVaccinationDocumentUrl(data.Location);
-			})
-		}
-
-	};
-
-	const handleVaccinationDocumentFileChange = (event: any) => {
-		const chosenFile = event.currentTarget.files[0];
-		handleUploadVaccinationDocuments(chosenFile, event);
-	}
+	const {
+		uploadedVaccinationDocumentUrl,
+		handleVaccinationDocumentFileChange,
+		fileName
+	} = useSetVaccinationDocument(name);
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
 	const uploadVaccinationDocument = trpc.documents.addVaccinationDocument.useMutation();
@@ -151,8 +63,8 @@ const PetDetail = () => {
 	);
 
 	if (error) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
+			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please login to manage your pets profile..</h1>
 		</div>
 	)
 
@@ -164,7 +76,7 @@ const PetDetail = () => {
 					return (
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
-								<img className="w-full rounded-t-lg" style={{ height: "auto" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "auto", maxHeight: "300px" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
@@ -198,7 +110,7 @@ const PetDetail = () => {
 									{imageFileNamePreview && <p className="font-medium">Image Selected: {imageFileNamePreview}. <br />Click Upload to set this image.</p>}
 									{pet?.documents && pet?.documents.length > 0 && <h2 className="text-gray-900 text-xl font-medium mb-2 mt-6">Documents</h2>}
 									{pet?.documents?.map(doc => {
-										const fileName = doc.fileName.split("/")[4];
+										fileName.split("/")[4];
 										const formattedName = fileName && fileName.split(".")[0];
 										console.log("file name in map: ", fileName)
 										return (
@@ -220,8 +132,8 @@ const PetDetail = () => {
 				})}
 			</div>
 		</div >
-	)
 
+	)
 }
 
 export default PetDetail
