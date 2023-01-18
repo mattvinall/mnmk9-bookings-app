@@ -16,7 +16,11 @@ const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting }: Pro
 
 	return (
 		<form className="w-[80%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
-
+			<p className="text-lg text-gray-100 underline">Details</p>
+			{bookingDetail?.checkInDate ? <p className="text-md text-gray-100">scheduled check-in date: {bookingDetail?.checkInDate}</p> : null}
+			{bookingDetail?.checkOutDate ? <p className="pb-8 text-md text-gray-100">scheduled check-out date: {bookingDetail?.checkOutDate}</p> : null}
+			{bookingDetail?.startTime ? <p className="text-md text-gray-100">scheduled start time/drop off time: {bookingDetail?.startTime}</p> : null}
+			{bookingDetail?.endTime ? <p className="pb-8 text-md text-gray-100">scheduled end time/pick up time: {bookingDetail?.endTime}</p> : null}
 			<div className={bookingDetail?.checkOutDate ? `grid md:grid-cols-2 md:gap-6` : `grid md:grid-cols-1 md:gap-6`}>
 				<div className="relative z-0 mb-6 w-full group">
 					<input
