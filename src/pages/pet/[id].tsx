@@ -12,6 +12,8 @@ const PetDetail = () => {
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
 	console.log("pet detail: ", petDetail)
 
+	const name = petDetail?.map(pet => pet.name as string);
+
 	const [vaccinationDocument, setVaccinationDocument] = useState({});
 	const [file, setFile] = useState({});
 	const [uploadedProfileImageUrl, setUploadedProfileImageUrl] = useState("")
@@ -35,14 +37,13 @@ const PetDetail = () => {
 			secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
 		});
 
-		if (file) {
+		if (file && imageFileNamePreview) {
 			console.log("file not null", file);
 			// Upload the file to S3
 			const params = {
-				Bucket: 'mnmk9-bookings/images',
-				Key: File.name,
+				Bucket: `mnmk9-bookings/images/${name}`,
+				Key: imageFileNamePreview,
 				Body: file,
-				// ACL: ' public-read-write',
 			}
 			s3.upload(params, (error: any, data: any) => {
 				// throw error popup if upload failed
