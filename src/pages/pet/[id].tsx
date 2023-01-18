@@ -164,15 +164,14 @@ const PetDetail = () => {
 					return (
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
-
-								<img className="w-full rounded-t-lg" style={{ height: "350px" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "auto" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
 									<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
 									<form className="mt-6">
 										<label style={{ cursor: "pointer" }} htmlFor="pet-profile-image" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-5">
-											Select Pet Profile Image
+											Select Profile Image to Upload
 											<input
 												style={{ cursor: "pointer" }}
 												type="file"
@@ -182,7 +181,7 @@ const PetDetail = () => {
 												onChange={handleProfileImageFileChange}
 											/>
 										</label>
-										<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={handleUploadProfileImage}>Upload Profile Image</button>
+										{imageFileNamePreview ? (<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={handleUploadProfileImage}>Upload Selected Profile Image</button>) : null}
 										<label style={{ cursor: "pointer" }} htmlFor="vaccination-documents" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
 											Upload Vaccination Document
 											<input
@@ -196,7 +195,7 @@ const PetDetail = () => {
 											/>
 										</label>
 									</form>
-									{imageFileNamePreview && <p>Image Selected: {imageFileNamePreview}</p>}
+									{imageFileNamePreview && <p className="font-medium">Image Selected: {imageFileNamePreview}. <br />Click Upload to set this image.</p>}
 									{pet?.documents && pet?.documents.length > 0 && <h2 className="text-gray-900 text-xl font-medium mb-2 mt-6">Documents</h2>}
 									{pet?.documents?.map(doc => {
 										const fileName = doc.fileName.split("/")[4];
