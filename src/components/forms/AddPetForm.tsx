@@ -46,7 +46,7 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 
 	const handleCloseForm = () => {
 		setShowPetForm(false);
-	}
+	};
 
 	return (
 		<form style={{ position: "relative" }} className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
