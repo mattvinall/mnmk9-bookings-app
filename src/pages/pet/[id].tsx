@@ -22,7 +22,6 @@ const PetDetail = () => {
 	const {
 		uploadedVaccinationDocumentUrl,
 		handleVaccinationDocumentFileChange,
-		fileName
 	} = useSetVaccinationDocument(name);
 
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
@@ -110,9 +109,8 @@ const PetDetail = () => {
 									{imageFileNamePreview && <p className="font-medium">Image Selected: {imageFileNamePreview}. <br />Click Upload to set this image.</p>}
 									{pet?.documents && pet?.documents.length > 0 && <h2 className="text-gray-900 text-xl font-medium mb-2 mt-6">Documents</h2>}
 									{pet?.documents?.map(doc => {
-										fileName.split("/")[4];
-										const formattedName = fileName && fileName.split(".")[0];
-										console.log("file name in map: ", fileName)
+										const fileName = doc.fileName.split("/")[5];
+										const formattedName = fileName && fileName.split(".")[0]?.replace(/^a-zA-Z0-9 ]/g, '');
 										return (
 											<div key={doc.id} style={{ position: "relative" }}>
 												<svg onClick={() => deleteVaccinationDocument.mutate({ id: doc.id })} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer", position: "absolute", right: "0px", top: "35%" }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -131,8 +129,7 @@ const PetDetail = () => {
 					)
 				})}
 			</div>
-		</div >
-
+		</div>
 	)
 }
 
