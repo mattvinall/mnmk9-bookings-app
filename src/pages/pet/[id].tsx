@@ -108,6 +108,7 @@ const PetDetail = () => {
 									</form>
 									{imageFileNamePreview && <p className="font-medium">Image Selected: {imageFileNamePreview}. <br />Click Upload to set this image.</p>}
 									{pet?.documents && pet?.documents.length > 0 && <h2 className="text-gray-900 text-xl font-medium mb-2 mt-6">Documents</h2>}
+									{pet?.documents && pet?.documents.length > 0 && <p className="pb-8 text-sm text-grey-100">*your vaccination document will not upload again if you have the same file name. If you have a revised version, delete the existing one and re-upload the file again.</p>}
 									{pet.documents?.map(doc => {
 										// definte file name based on position in the array of the file name in S3
 										const fileName = doc.fileName.split("/")[5];
