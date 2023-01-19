@@ -19,8 +19,8 @@ const UserDetailForm = ({ setShowUserForm }: Props) => {
 	const schema = z.object({
 		address: z.string().min(6).max(65),
 		city: z.string().min(1),
-		postalCode: z.string(),
-		phoneNumber: z.string()
+		postalCode: z.string().min(6).max(7),
+		phoneNumber: z.string().max(12)
 	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
