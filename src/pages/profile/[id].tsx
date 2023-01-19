@@ -1,15 +1,17 @@
 "use-client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/forms/UserDetailForm";
 import AddPetForm from "../../components/forms/AddPetForm";
+import Swal from "sweetalert2";
 
 const UserDetail: () => void = () => {
 	const router = useRouter();
 	const userId = router.query.id as string;
-	const { data: userDetail, isLoading, error } = trpc.user.byId.useQuery({ id: userId });
+	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
 
 	console.log("user detail", userDetail);
 
@@ -24,6 +26,38 @@ const UserDetail: () => void = () => {
 	const handleShowPetForm = () => {
 		setShowPetForm(true);
 		setShowUserForm(false);
+	}
+
+	const deletePet = trpc.pet.deletePet.useMutation();
+
+	const handleDeletePet = async (id: string, name: string) => {
+		try {
+			Swal.fire({
+				title: `Are you sure you want to Remove ${name} from your profile?`,
+				showDenyButton: true,
+				confirmButtonText: 'Yes',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// delete pet by id
+					deletePet.mutate({ id });
+
+					Swal.fire(`Successfully Deleted ${name} from your profile and our database.`, '', 'success').then(result => {
+						if (result) {
+							refetch();
+						}
+					});
+				}
+			});
+
+			refetch();
+		} catch (error) {
+			// error message
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			});
+		}
 	}
 
 	if (isLoading) return (
@@ -55,7 +89,7 @@ const UserDetail: () => void = () => {
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 mt-10">
 				{userDetail?.pets?.map((pet, i) => {
 					return (
-						<a key={pet.id} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20" href={`/pet/${pet.id}`}>
+						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
 									<img className="rounded-t-lg w-full h-[300px] w-[300px]" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt="" />
@@ -63,14 +97,23 @@ const UserDetail: () => void = () => {
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
 										<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
+										<div className="flex bg-white">
+											<Link href={`/pet/${pet.id}`} className="mt-6 inline-flex items-center justify-center w-10 h-10 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
+												<svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
+											</Link>
+											<button onClick={() => handleDeletePet(pet.id, pet.name)} className="mt-6 ml-4 inline-flex items-center justify-center w-10 h-10 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
+												<svg className="w-4 h-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+											</button>
+										</div>
 									</div>
 								</div>
+
 							</div>
-						</a>
+						</div>
 					)
 				})}
 			</div>
-		</div>
+		</div >
 	)
 }
 
