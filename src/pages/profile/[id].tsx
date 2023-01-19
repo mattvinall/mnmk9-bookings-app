@@ -86,7 +86,7 @@ const UserDetail: () => void = () => {
 			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
 			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
 			{userDetail?.pets && <h3 className="text-white text-left font-bold sm:text-[2.5rem]">Your Pets</h3>}
-			<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 mt-10">
+			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{userDetail?.pets?.map((pet, i) => {
 					return (
 						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
