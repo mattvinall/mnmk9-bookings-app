@@ -66,11 +66,7 @@ const UserDetail: () => void = () => {
 		</div>
 	);
 
-	if (error) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error getting user information...If you have not logged in, please do so.</h1>
-		</div>
-	)
+	if (error) router.push("/")
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
@@ -107,7 +103,6 @@ const UserDetail: () => void = () => {
 										</div>
 									</div>
 								</div>
-
 							</div>
 						</div>
 					)
