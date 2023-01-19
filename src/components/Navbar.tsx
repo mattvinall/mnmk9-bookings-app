@@ -58,8 +58,8 @@ const Navbar: React.FC = () => {
 	return (
 		<nav className="bg-white shadow-lg">
 			<div className="max-w-7xl mx-auto px-4">
-				<div className="flex justify-between align-start">
-					<div className="flex items-center h-32">
+				<div className={`flex ${sessionData ? 'justify-between' : 'justify-center'} align-start`}>
+					<div className={`flex items-center h-32`}>
 						<div>
 							<Link href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
 								<Logo />
