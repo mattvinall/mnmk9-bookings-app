@@ -36,7 +36,7 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 	const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
 
 		formData.ownerId = userData?.id;
-		// formData.vaccinated === "yes" ? true : false;
+		formData.vaccinated === "yes" ? true : false;
 		addPet.mutate(formData);
 
 		reset();
