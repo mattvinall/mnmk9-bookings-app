@@ -47,7 +47,11 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 				icon: 'success',
 				title: `🐶`,
 				text: `Successfully added a pet to your profile`,
-			});
+			}).then(result => {
+				if (result.isConfirmed) {
+					refetch();
+				}
+			});;
 			setShowPetForm(false);
 
 		} catch (error) {
@@ -55,10 +59,6 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 				icon: 'error',
 				title: 'Oops...',
 				text: `Something went wrong! ${error}`,
-			}).then(result => {
-				if (result.isConfirmed) {
-					refetch();
-				}
 			});
 		}
 	}
