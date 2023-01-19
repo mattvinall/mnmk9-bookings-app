@@ -87,5 +87,28 @@ export const petRouter = router({
 			} catch (error) {
 				console.log(`pet could not be deleted: ${error}`)
 			}
+		}),
+	updateVaccinatedStatus: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				vaccinated: z.boolean(),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, vaccinated } = input;
+
+			try {
+				if (!vaccinated) {
+					return await ctx.prisma.pet.update({
+						where: { id },
+						data: {
+							vaccinated: true
+						}
+					})
+				}
+			} catch (error) {
+				console.log(`failed to update vaccination status: ${error}`);
+			}
 		})
 });
