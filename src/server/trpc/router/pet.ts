@@ -70,6 +70,22 @@ export const petRouter = router({
 			} catch (error) {
 				console.log(`Cannot update profile image of the pet: ${error}`)
 			}
+		}),
+	deletePet: protectedProcedure
+		.input(
+			z.object({
+				id: z.string()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id } = input;
+
+			try {
+				return await ctx.prisma.pet.delete({
+					where: { id }
+				});
+			} catch (error) {
+				console.log(`pet could not be deleted: ${error}`)
+			}
 		})
-	
 });
