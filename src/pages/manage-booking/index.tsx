@@ -42,7 +42,7 @@ const ManageBooking = () => {
 			{
 				sessionData ? (
 					<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-						<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+						<h1 className="text-5xl font-extrabold tracking-tight text-center text-white sm:text-[5rem]">
 							Manage a  <span className="text-[hsl(280,100%,70%)]">Booking</span>
 						</h1>
 						{data?.bookings && data?.bookings.length > 1 ? <h2 className="text-3xl font-bold text-white text-center">To manage a service, click the actions. Clicking on the box will take you to the detail page.</h2> : null}
