@@ -1,9 +1,10 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 type Props = {
 	setShowPetForm: (bool: boolean) => void;
@@ -13,13 +14,13 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 	type AddPetFormSchema = {
 		name: string,
 		breed: string,
-		vaccinated: boolean
+		vaccinated: string | boolean
 	}
 
 	const schema = z.object({
 		name: z.string().min(1),
 		breed: z.string().min(1),
-		vaccinated: z.boolean().default(false),
+		vaccinated: z.string() || z.boolean()
 	});
 
 	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
@@ -28,25 +29,44 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 
 	const { data: sessionData } = useSession()
 	const id = sessionData?.user?.id as string;
-	const { data: userData } = trpc.user.byId.useQuery({ id });
+	const { data: userData, refetch } = trpc.user.byId.useQuery({ id });
 
 	const addPet = trpc.pet.addPet.useMutation();
 	console.log("add pet", addPet);
 
+
 	const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
+		try {
+			formData.ownerId = userData?.id;
+			formData.vaccinated === "yes" ? formData.vaccinated = true : formData.vaccinated = false
+			addPet.mutate(formData);
+			reset();
 
-		formData.ownerId = userData?.id;
-		formData.vaccinated === "yes" ? true : false;
-		addPet.mutate(formData);
+			// success message 
+			Swal.fire({
+				icon: 'success',
+				title: `🐶`,
+				text: `Successfully added a pet to your profile`,
+			});
+			setShowPetForm(false);
 
-		reset();
-
-		setShowPetForm(false);
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			}).then(result => {
+				if (result.isConfirmed) {
+					refetch();
+				}
+			});
+		}
 	}
 
 	const handleCloseForm = () => {
 		setShowPetForm(false);
 	};
+
 
 	return (
 		<form style={{ position: "relative" }} className="w-[80%] md:w-[50%] " onSubmit={handleSubmit(onSubmit)}>
