@@ -49,7 +49,7 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 	};
 
 	return (
-		<form style={{ position: "relative" }} className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
+		<form style={{ position: "relative" }} className="w-[80%] md:w-[50%] " onSubmit={handleSubmit(onSubmit)}>
 			<svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-20%", color: "white" }} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
 			<div className="grid md:grid-cols-1 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
@@ -83,12 +83,12 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 					</label>
 				</div>
 
-				{/* <p className="text-white font-bold">vaccinated</p>
-				<div className="flex items-center mr-4">
+				<p className="mt-[-5px] text-white font-bold">vaccinated</p>
+				<div className="flex items-center mr-4 mb-4">
 					<input
 						{...register("vaccinated")}
 						type="radio"
-						name="vaccinated-yes"
+						name="vaccinated"
 						value="yes"
 						id="floating_vaccinated-yes"
 						className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -101,7 +101,7 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 					<input
 						{...register("vaccinated")}
 						type="radio"
-						name="vaccinated-no"
+						name="vaccinated"
 						value="no"
 						id="floating_vaccinated-no"
 						className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -111,7 +111,7 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 						className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
 						No
 					</label>
-				</div> */}
+				</div>
 			</div>
 			<button
 				disabled={isSubmitting}
