@@ -12,11 +12,8 @@ type Props = {
 }
 
 const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
-	console.log("pet data", petData);
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
-
-	console.log("ownerId", id);
-	const { data: userData } = trpc.user.byId.useQuery({ id })
+	const { data: userData } = trpc.user.byId.useQuery({ id });
 
 	return (
 		<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>

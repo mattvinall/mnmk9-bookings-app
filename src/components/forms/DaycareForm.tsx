@@ -1,7 +1,9 @@
 "use-client";
 
+import { trpc } from "../../utils/trpc";
+
 type Props = {
-	petData: Array<{ name: string }>,
+	petData: Array<{ name: string, ownerId: string }>,
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
@@ -10,6 +12,9 @@ type Props = {
 }
 
 const DaycareForm = ({ register, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: Props) => {
+	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
+	const { data: userData } = trpc.user.byId.useQuery({ id });
+
 	return (
 		<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
 			<div className="grid md:grid-cols-2 md:gap-6">
@@ -18,6 +23,7 @@ const DaycareForm = ({ register, handleSubmit, onSubmit, handleChange, petData, 
 						{...register("firstName", { required: true })}
 						type="text"
 						name="firstName"
+						value={userData?.name.split(" ")[0] || ""}
 						id="floating_first_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
@@ -33,6 +39,7 @@ const DaycareForm = ({ register, handleSubmit, onSubmit, handleChange, petData, 
 						{...register("lastName", { required: true })}
 						type="text"
 						name="lastName"
+						value={userData?.name.split(" ")[1]}
 						id="floating_last_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
@@ -51,6 +58,7 @@ const DaycareForm = ({ register, handleSubmit, onSubmit, handleChange, petData, 
 						type="tel"
 						pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 						name="phoneNumber"
+						value={userData?.phoneNumber || ""}
 						id="floating_phone"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
@@ -66,6 +74,7 @@ const DaycareForm = ({ register, handleSubmit, onSubmit, handleChange, petData, 
 						{...register("email", { required: true })}
 						type="email"
 						name="email"
+						value={userData?.email || ""}
 						id="floating_email"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
