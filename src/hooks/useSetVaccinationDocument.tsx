@@ -50,7 +50,6 @@ const useSetVaccinationDocument = (name: any) => {
 				setUploadedVaccinationDocumentUrl(data.Location);
 			})
 		}
-
 	};
 
 	const handleVaccinationDocumentFileChange = (event: any) => {
