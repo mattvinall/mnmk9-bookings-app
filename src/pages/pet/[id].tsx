@@ -10,7 +10,10 @@ const PetDetail = () => {
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
 	console.log("pet detail: ", petDetail)
 
+	// get values of name, id and vaccinated to use for later
 	const name = petDetail?.map(pet => pet.name as string);
+	const petId = petDetail?.map(pet => pet.id as string)[0];
+	const vaccinated = petDetail?.map(pet => pet.vaccinated)[0];
 
 	const {
 		uploadedProfileImageUrl,
@@ -27,6 +30,7 @@ const PetDetail = () => {
 	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
 	const uploadVaccinationDocument = trpc.documents.addVaccinationDocument.useMutation();
 	const deleteVaccinationDocument = trpc.documents.deleteVaccinationDocument.useMutation();
+	const updateVaccinatedStaus = trpc.pet.updateVaccinatedStatus.useMutation();
 
 	useEffect(() => {
 		if (uploadedProfileImageUrl) {
@@ -42,6 +46,11 @@ const PetDetail = () => {
 	useEffect(() => {
 		if (uploadedVaccinationDocumentUrl) {
 			uploadVaccinationDocument.mutate({ petId: id, fileName: uploadedVaccinationDocumentUrl as string })
+		}
+
+		// if pet is not vaccinated and uploaded a document, update status to true/yes
+		if (petId && vaccinated === false) {
+			updateVaccinatedStaus.mutate({ id: petId, vaccinated })
 		}
 
 		setTimeout(() => {
