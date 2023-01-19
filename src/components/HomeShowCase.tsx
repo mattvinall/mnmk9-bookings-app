@@ -11,7 +11,7 @@ const HomeShowCase = () => {
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 				MNMK-9 <span className="text-[hsl(280,100%,70%)]">Bookings</span>
 			</h1>
-			<h2 className="text-2xl font-bold tracking-tight text-white text-center sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
+			<h2 className="text-4xl font-bold tracking-tight text-white text-center sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-8">
 				<Link
 					className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
