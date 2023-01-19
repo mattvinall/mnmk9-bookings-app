@@ -51,7 +51,8 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 				if (result.isConfirmed) {
 					refetch();
 				}
-			});;
+			});
+
 			setShowPetForm(false);
 
 		} catch (error) {
