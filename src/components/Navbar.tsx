@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from "../../public/mnmk9-logo.jpg";
+import { trpc } from "../utils/trpc"
 
 const Logo = () => {
 	return (
@@ -17,6 +18,9 @@ const Logo = () => {
 const AuthShowcase: React.FC = () => {
 	const { data: sessionData } = useSession();
 
+	const { data: userData } = trpc.user.byEmail.useQuery({ email: sessionData?.user?.email as string });
+	console.log("user", userData);
+
 	const userImage = useMemo(() => {
 		return sessionData && sessionData?.user?.image;
 	}, [sessionData?.user?.image])
@@ -28,7 +32,7 @@ const AuthShowcase: React.FC = () => {
 	return (
 		<div className="flex items-center">
 			<p className="text-small text-purple pl-24">
-				{sessionData && <span className="font-semibold">{userName}</span>}
+				{sessionData && userData && <Link href={`/profile/${userData.id}`}><span className="font-semibold">{userName}</span></Link>}
 			</p>
 			{userImage && <span><img className="rounded-full scale-50 float-right" src={userImage} /></span>}
 			<button
@@ -67,21 +71,26 @@ const Navbar: React.FC = () => {
 								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
 								Home
 							</Link>
-							<Link
-								href={`/profile/${sessionData?.user?.id}`}
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
-								Profile
-							</Link>
-							<Link
-								href="/create-booking"
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
-								Book Service
-							</Link>
-							<Link
-								href="/manage-booking"
-								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
-								Manage Booking
-							</Link>
+							{sessionData ? (
+								<>
+									<Link
+										href={`/profile/${sessionData?.user?.id}`}
+										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
+										Profile
+									</Link>
+									<Link
+										href="/create-booking"
+										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+										Book Service
+									</Link>
+									<Link
+										href="/manage-booking"
+										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+										Manage Booking
+									</Link>
+								</>
+
+							) : null}
 							<Link
 								href="/contact-us"
 								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
