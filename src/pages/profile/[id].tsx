@@ -88,7 +88,7 @@ const UserDetail: () => void = () => {
 						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
-									<img className="rounded-t-lg w-full h-[300px] w-[300px] object-cover" src={`https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
+									<img className="rounded-t-lg w-full h-[300px] w-[300px] object-cover" src={`${pet.profileImage}` || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
