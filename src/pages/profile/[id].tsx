@@ -65,7 +65,8 @@ const UserDetail: () => void = () => {
 		</div>
 	);
 
-	if (error) router.push("/")
+	if (error) router.push("/");
+
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
