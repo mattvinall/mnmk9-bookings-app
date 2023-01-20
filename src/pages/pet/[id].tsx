@@ -14,6 +14,7 @@ const PetDetail = () => {
 	const name = petDetail?.map(pet => pet.name as string);
 	const petId = petDetail?.map(pet => pet.id as string)[0];
 	const vaccinated = petDetail?.map(pet => pet.vaccinated)[0];
+	const ownerId = petDetail?.map(pet => pet.ownerId as string)[0];
 
 	const {
 		uploadedProfileImageUrl,
@@ -78,13 +79,14 @@ const PetDetail = () => {
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 max-w-8xl">
+			<a className="flex justify-start text-left text-white font-bold text-2xl" href={`/profile/${ownerId}`}>Go Back</a>
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[hsl(280,100%,70%)]">Details</span></h1>
 			<div className="m-auto">
 				{petDetail?.map((pet, i) => {
 					return (
 						<div key={pet?.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
-								<img className="w-full rounded-t-lg" style={{ height: "auto", maxHeight: "300px" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+								<img className="w-full rounded-t-lg" style={{ height: "auto" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
