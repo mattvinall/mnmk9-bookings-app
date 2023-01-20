@@ -1,34 +1,39 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import training from "../../../public/training.png"
+import boarding from "../../../public/boarding.jpg";
+import grooming from "../../../public/grooming.jpg";
+import daycare from "../../../public/daycare.webp";
 
 const cards = [
   {
     service: "Boarding",
     href: "/create-booking/boarding",
     text: "Some quick example text to build on the card title and make up the bulk of the card's content.",
-    imageSrc: "https://mdbootstrap.com/img/new/standard/nature/185.jpg",
+    imageSrc: boarding,
     price: "$30/night",
   },
   {
     service: "Daycare",
     href: "/create-booking/daycare",
     text: "Some quick example text to build on the card title and make up the bulk of the card's content.",
-    imageSrc: "https://mdbootstrap.com/img/new/standard/nature/186.jpg",
+    imageSrc: daycare,
     price: "$20/day",
   },
   {
     service: "Grooming",
     href: "/create-booking/grooming",
     text: "Some quick example text to build on the card title and make up the bulk of the card's content.",
-    imageSrc: "https://mdbootstrap.com/img/new/standard/nature/187.jpg",
+    imageSrc: grooming,
     price: "*varies per dog size/breed",
   },
   {
     service: "Training",
     href: "/create-booking/training",
     text: "Some quick example text to build on the card title and make up the bulk of the card's content.",
-    imageSrc: "https://mdbootstrap.com/img/new/standard/nature/188.jpg",
+    imageSrc: training,
     price: "$60/hr",
   }
 ]
@@ -55,7 +60,7 @@ const CreateBooking: NextPage = () => {
                     >
                       <div className="flex justify-center">
                         <div className="rounded-lg shadow-lg bg-white max-w-md">
-                          <img className="rounded-t-lg" src={card.imageSrc} alt="" />
+                          <Image className="rounded-t-lg" style={{ height: "300px", objectFit: "cover" }} src={card.imageSrc} alt="" />
                           <div className="p-6">
                             <h2 className="text-gray-900 text-xl font-medium mb-2">{card.service}</h2>
                             <p className="text-gray-700 text-base mb-4">
