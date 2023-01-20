@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,20 +20,13 @@ const AuthShowcase: React.FC = () => {
 	const { data: userData } = trpc.user.byEmail.useQuery({ email: sessionData?.user?.email as string });
 	console.log("user", userData);
 
-	const userImage = useMemo(() => {
-		return sessionData && sessionData?.user?.image;
-	}, [sessionData?.user?.image])
-
-	const userName = useMemo(() => {
-		return sessionData && sessionData?.user?.name
-	}, [sessionData?.user?.name])
 
 	return (
 		<div className="flex items-center">
 			<p className="text-small text-purple pl-24">
-				{sessionData && userData && <Link href={`/profile/${userData.id}`}><span className="font-semibold">{userName}</span></Link>}
+				{userData && <Link href={`/profile/${userData.id}`}><span className="font-semibold">{userData?.name}</span></Link>}
 			</p>
-			{userImage && <span><img className="rounded-full scale-50 float-right" src={userImage} alt={`profile image of ${userName}`} /></span>}
+			{sessionData && <span><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></span>}
 			<button
 				className="rounded-full bg-gradient-to-b from-[#2e026d] to-[#15162c] px-10 py-3 font-semibold text-white no-underline transition hover:bg-gradient-to-b from-[#15162c] to-[#2e026d]"
 				onClick={sessionData ? () => signOut() : () => signIn()}
