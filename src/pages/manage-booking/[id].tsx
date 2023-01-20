@@ -75,8 +75,8 @@ const BookingDetail: NextPage = () => {
 
 	const [showForm, setShowForm] = useState(false);
 
-	const handleEditBooking = () => {
-		setShowForm((prev) => !prev);
+	const handleShowEditBookingForm = () => {
+		setShowForm(true);
 		console.log("show form state", showForm);
 	}
 
@@ -133,7 +133,7 @@ const BookingDetail: NextPage = () => {
 			</p>
 			<div className="flex justify-center">
 				<button
-					onClick={handleEditBooking}
+					onClick={handleShowEditBookingForm}
 					className="mt-[25px] mr-3 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 					Edit Booking
 				</button>
@@ -149,6 +149,8 @@ const BookingDetail: NextPage = () => {
 					isSubmitting={isSubmitting}
 					onSubmit={onSubmit}
 					handleSubmit={handleSubmit}
+					showForm={showForm}
+					setShowForm={setShowForm}
 				/>
 			) : null}
 		</div>
