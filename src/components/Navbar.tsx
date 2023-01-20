@@ -34,7 +34,7 @@ const AuthShowcase: React.FC = () => {
 			<p className="text-small text-purple pl-24">
 				{sessionData && userData && <Link href={`/profile/${userData.id}`}><span className="font-semibold">{userName}</span></Link>}
 			</p>
-			{userImage && <span><img className="rounded-full scale-50 float-right" src={userImage} /></span>}
+			{userImage && <span><img className="rounded-full scale-50 float-right" src={userImage} alt={`profile image of ${userName}`} /></span>}
 			<button
 				className="rounded-full bg-gradient-to-b from-[#2e026d] to-[#15162c] px-10 py-3 font-semibold text-white no-underline transition hover:bg-gradient-to-b from-[#15162c] to-[#2e026d]"
 				onClick={sessionData ? () => signOut() : () => signIn()}
