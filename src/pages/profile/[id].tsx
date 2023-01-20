@@ -49,7 +49,6 @@ const UserDetail: () => void = () => {
 				}
 			});
 
-			refetch();
 		} catch (error) {
 			// error message
 			Swal.fire({
@@ -81,24 +80,26 @@ const UserDetail: () => void = () => {
 			</div>
 			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
 			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
-			{userDetail?.pets && <h3 className="text-white text-left font-bold sm:text-[2.5rem]">Your Pets</h3>}
+			{userDetail?.pets && <h2 className="text-white text-left font-bold sm:text-[2.5rem]">Your Pets</h2>}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{userDetail?.pets?.map((pet, i) => {
 					return (
 						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
-									<img className="rounded-t-lg w-full h-[300px] w-[300px]" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
+									<img className="rounded-t-lg w-full h-[300px] w-[300px] object-cover" src={`https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
 										<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
 										<div className="flex bg-white">
-											<Link href={`/pet/${pet.id}`} className="mt-6 inline-flex items-center justify-center w-10 h-10 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
+											<Link href={`/pet/${pet.id}`} className="mt-6 flex flex-col items-center justify-center w-12 h-12 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
 												<svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
+												<p className="text-xs text-gray-100">Edit</p>
 											</Link>
-											<button onClick={() => handleDeletePet(pet.id, pet.name)} className="mt-6 ml-4 inline-flex items-center justify-center w-10 h-10 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
+											<button name="delete-pet" onClick={() => handleDeletePet(pet.id, pet.name)} className="mt-6 ml-4 flex flex-col items-center justify-center w-12 h-12 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
 												<svg className="w-4 h-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+												<p className=" text-xs text-gray-100">Delete</p>
 											</button>
 										</div>
 									</div>
