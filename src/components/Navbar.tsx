@@ -132,6 +132,11 @@ const Navbar: React.FC = () => {
 							</Link>
 						</>
 					) : null}
+					<Link
+						href="/contact-us"
+						className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+						Contact Us
+					</Link>
 				</ul>
 			</div>
 		</nav>
