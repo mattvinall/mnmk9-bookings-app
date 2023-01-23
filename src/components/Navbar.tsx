@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
 	return (
 		<nav className="bg-white shadow-lg" role="navigation" aria-label="navigation">
 			<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0'}`}>
-				<div className={`flex ${sessionData ? 'justify-between' : 'justify-center'} align-start`}>
+				<div className="flex justify-center align-start">
 					<div className={`flex items-center h-32`}>
 						<Link href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
 							<Logo />
