@@ -85,8 +85,8 @@ const PetDetail = () => {
 				{petDetail?.map((pet, i) => {
 					return (
 						<div key={pet?.id} className="flex justify-center">
-							<div className="rounded-lg shadow-lg bg-white max-w-full w-[32rem]">
-								<img className="w-full rounded-t-lg" style={{ height: "auto" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
+							<div className="rounded-lg shadow-lg bg-white max-w-full w-[300px] md:w-[32rem]">
+								<img className="w-[auto] md:w-full rounded-t-lg" style={{ height: "auto" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
