@@ -10,7 +10,7 @@ const Logo = () => {
 		<Image
 			src={logo}
 			alt="MNMK-9 Logo"
-			className="rounded-full scale-50 w-[100px] h-[100px] "
+			className="rounded-full scale-50 w-[100px] h-[100px] md:w-auto md:h-auto"
 		/>
 	)
 }
@@ -23,14 +23,14 @@ const AuthShowcase: React.FC = () => {
 
 
 	return (
-		<div className="flex items-center">
-			{userData && <Link href={`/profile/${userData.id}`}><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></Link>}
+		<div className="flex items-center justify-between">
 			<button
 				className="rounded-full bg-gradient-to-b from-[#2e026d] to-[#15162c] px-10 py-3 font-semibold text-white no-underline transition hover:bg-gradient-to-b from-[#15162c] to-[#2e026d]"
 				onClick={sessionData ? () => signOut() : () => signIn()}
 			>
 				{sessionData ? "Sign out" : "Sign in"}
 			</button>
+			{userData && <Link href={`/profile/${userData.id}`}><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></Link>}
 		</div>
 	);
 };
