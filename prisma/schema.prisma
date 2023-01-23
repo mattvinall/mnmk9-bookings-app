@@ -41,6 +41,20 @@ model Services {
   @@index([serviceName])
 }
 
+// model to handle day and closed day for admin 
+model Day {
+  id        String @id @default(uuid())
+  name      String // monday, tuesday, ...
+  dayOfWeek Int // @see getDay() documentation, 0 for Sunday, 1 for Monday, ...
+  openTime  String
+  closeTime String
+}
+
+model ClosedDay {
+  id   String   @id @default(uuid())
+  date DateTime @unique
+}
+
 model Bookings {
   id               String    @id @default(uuid())
   firstName        String
