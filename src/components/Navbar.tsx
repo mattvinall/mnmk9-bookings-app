@@ -10,7 +10,7 @@ const Logo = () => {
 		<Image
 			src={logo}
 			alt="MNMK-9 Logo"
-			className="rounded-full scale-50"
+			className="rounded-full scale-50 w-[100px] h-[100px] "
 		/>
 	)
 }
@@ -24,10 +24,7 @@ const AuthShowcase: React.FC = () => {
 
 	return (
 		<div className="flex items-center">
-			<p className="text-small text-purple pl-0 md:pl-24">
-				{userData && <Link href={`/profile/${userData.id}`}><span className="font-semibold">{userData?.name}</span></Link>}
-			</p>
-			{sessionData && <span><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></span>}
+			{userData && <Link href={`/profile/${userData.id}`}><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></Link>}
 			<button
 				className="rounded-full bg-gradient-to-b from-[#2e026d] to-[#15162c] px-10 py-3 font-semibold text-white no-underline transition hover:bg-gradient-to-b from-[#15162c] to-[#2e026d]"
 				onClick={sessionData ? () => signOut() : () => signIn()}
@@ -51,11 +48,9 @@ const Navbar: React.FC = () => {
 			<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0'}`}>
 				<div className={`flex ${sessionData ? 'justify-between' : 'justify-center'} align-start`}>
 					<div className={`flex items-center h-32`}>
-						<div>
-							<Link href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
-								<Logo />
-							</Link>
-						</div>
+						<Link href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
+							<Logo />
+						</Link>
 						<div className="hidden md:flex items-center">
 							<Link
 								href="/"
