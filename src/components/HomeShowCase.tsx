@@ -7,10 +7,10 @@ const HomeShowCase = () => {
 	const id = sessionData?.user?.id;
 	return (
 		<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+			<h1 className="text-5xl text-center font-extrabold tracking-tight text-white sm:text-[5rem]">
 				MNMK-9 <span className="text-[hsl(280,100%,70%)]">Bookings</span>
 			</h1>
-			<h2 className="text-12xl font-bold tracking-tight text-white text-center sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
+			<h2 className="text-12xl font-bold tracking-tight text-white text-center text-[2rem] sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
 			{sessionData ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-8">
 					<Link
@@ -18,7 +18,7 @@ const HomeShowCase = () => {
 						href={`/profile/${id}`}
 					>
 						<h3 className="text-2xl font-bold">Manage Profile →</h3>
-						<p className="text-lg">
+						<p className="text-lg text">
 							Before booking a service, add your pet to your profile!
 						</p>
 					</Link>

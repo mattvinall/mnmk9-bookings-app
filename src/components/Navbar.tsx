@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
 
 	return (
 		<nav className="bg-white shadow-lg" role="navigation" aria-label="navigation">
-			<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0 position-sticky'}`}>
+			<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0'}`}>
 				<div className={`flex ${sessionData ? 'justify-between' : 'justify-center'} align-start`}>
 					<div className={`flex items-center h-32`}>
 						<div>
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
 					</div>
 				</div>
 				{/* mobile */}
-				<ul className={`${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center text-white bg-[black] mx-0 px-0`}>
+				<ul className={`md:hidden ${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center items-center text-white bg-[#060606] mx-0 px-0`}>
 					<Link
 						href="/"
 						className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
