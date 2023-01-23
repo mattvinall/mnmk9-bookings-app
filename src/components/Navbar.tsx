@@ -23,7 +23,7 @@ const AuthShowcase: React.FC = () => {
 
 
 	return (
-		<div className="flex items-center justify-between">
+		<div className="flex items-center justify-center">
 			<button
 				className="rounded-full bg-gradient-to-b from-[#2e026d] to-[#15162c] px-10 py-3 font-semibold text-white no-underline transition hover:bg-gradient-to-b from-[#15162c] to-[#2e026d]"
 				onClick={sessionData ? () => signOut() : () => signIn()}
