@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -40,16 +41,14 @@ const AuthShowcase: React.FC = () => {
 
 const Navbar: React.FC = () => {
 	const { data: sessionData } = useSession();
-	// const userId = data?.id;
-	// const [menuToggled, setMenuToggled] = useState(false);
-	// const handleClick = () => {
-	// 	console.log("icon clicked", menuToggled);
-	// 	setMenuToggled((prevState) => !prevState);
-	// }
+	const [menuToggled, setMenuToggled] = useState(false);
+	const handleClick = () => {
+		setMenuToggled((prevState) => !prevState);
+	}
 
 	return (
-		<nav className="bg-white shadow-lg">
-			<div className="max-w-7xl mx-auto px-4">
+		<nav className="bg-white shadow-lg" role="navigation" aria-label="navigation">
+			<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0 position-sticky'}`}>
 				<div className={`flex ${sessionData ? 'justify-between' : 'justify-center'} align-start`}>
 					<div className={`flex items-center h-32`}>
 						<div>
@@ -90,9 +89,9 @@ const Navbar: React.FC = () => {
 							</Link>
 						</div>
 						<AuthShowcase />
-						{/* <div className="md:hidden flex items-center">
-							<button className="outline-none mobile-menu-button" onClick={handleClick}>
-								<svg className=" w-6 h-6 text-gray-500 "
+						<div className="md:hidden flex items-center">
+							<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
+								<svg className=" w-8 h-8 text-gray-900 "
 									x-show="!showMenu"
 									fill="none"
 									strokeLinecap="round"
@@ -104,17 +103,36 @@ const Navbar: React.FC = () => {
 									<path d="M4 6h16M4 12h16M4 18h16"></path>
 								</svg>
 							</button>
-						</div> */}
+						</div>
 					</div>
 				</div>
 				{/* mobile */}
-				{/* <div className={`${!menuToggled ? "hidden" : ""} mobile-menu`}>
-					<ul className="">
-						<li className="active"><a href="/create-booking" className="block text-md px-2 py-4 text-white bg-green-500 font-semibold">Book a Service</a></li>
-						<li><a href="/manage-booking" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Manage A Service</a></li>
-						<li><a href="/contact" className="block text-md px-2 py-4 hover:bg-green-500 transition duration-300">Contact Us</a></li>
-					</ul>
-				</div> */}
+				<ul className={`${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center text-white bg-[black] mx-0 px-0`}>
+					<Link
+						href="/"
+						className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+						Home
+					</Link>
+					{sessionData ? (
+						<>
+							<Link
+								href={`/profile/${sessionData?.user?.id}`}
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
+								Profile
+							</Link>
+							<Link
+								href="/create-booking"
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+								Book Service
+							</Link>
+							<Link
+								href="/manage-booking"
+								className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+								Manage Booking
+							</Link>
+						</>
+					) : null}
+				</ul>
 			</div>
 		</nav>
 	)
