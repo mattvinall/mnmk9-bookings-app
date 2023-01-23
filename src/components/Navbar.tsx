@@ -10,7 +10,7 @@ const Logo = () => {
 		<Image
 			src={logo}
 			alt="MNMK-9 Logo"
-			className="rounded-full scale-50 w-[100px] h-[100px] md:w-auto md:h-auto"
+			className="rounded-full scale-50 w-[150px] h-[150px] md:w-[200px] md:h-[200px]"
 		/>
 	)
 }
