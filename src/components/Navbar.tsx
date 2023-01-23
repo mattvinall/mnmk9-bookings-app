@@ -24,7 +24,7 @@ const AuthShowcase: React.FC = () => {
 
 	return (
 		<div className="flex items-center">
-			<p className="text-small text-purple pl-24">
+			<p className="text-small text-purple pl-0 md:pl-24">
 				{userData && <Link href={`/profile/${userData.id}`}><span className="font-semibold">{userData?.name}</span></Link>}
 			</p>
 			{sessionData && <span><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></span>}
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
 					</div>
 				</div>
 				{/* mobile */}
-				<ul className={`md:hidden ${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center items-center text-white bg-[#060606] mx-0 px-0`}>
+				<ul className={`md:hidden flex-wrap ${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center items-center text-white bg-[#060606]`}>
 					<Link
 						href="/"
 						className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">

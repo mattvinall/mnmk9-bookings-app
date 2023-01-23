@@ -72,7 +72,7 @@ const UserDetail: () => void = () => {
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 				Manage  <span className="text-[hsl(280,100%,70%)]">Profile</span>
 			</h1>
-			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
+			<p className="text-white text-center w-[80%] font-bold text-[2rem] md:text-[2.5rem]">
 				Manage Your Information or Add Pets to your Profile
 			</p>
 			<div className="flex justify-center">
@@ -81,7 +81,7 @@ const UserDetail: () => void = () => {
 			</div>
 			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
 			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
-			{userDetail?.pets && <h2 className="text-white text-left font-bold sm:text-[2.5rem]">Your Pets</h2>}
+			{userDetail?.pets && <h2 className="text-white underline text-left font-bold text-[2rem] md:text-[2.5rem]">Your Pets:</h2>}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{userDetail?.pets?.map((pet, i) => {
 					return (

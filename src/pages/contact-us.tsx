@@ -6,7 +6,7 @@ const ContactUs: NextPage = () => {
 	const rows = 6;
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
+			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-8 md:py-16">
 				Contact <span className="text-[hsl(280,100%,70%)]">Us</span>
 			</h1>
 			<section className="px-4 mx-auto max-w-screen-md">
