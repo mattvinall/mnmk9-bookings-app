@@ -10,7 +10,7 @@ const Logo = () => {
 		<Image
 			src={logo}
 			alt="MNMK-9 Logo"
-			className="rounded-full scale-50 w-[150px] h-[150px] md:w-[200px] md:h-[200px]"
+			className="rounded-full scale-50 w-[100px] h-[100px] md:w-[200px] md:h-[200px]"
 		/>
 	)
 }
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
 			<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0'}`}>
 				<div className="flex justify-center align-start">
 					<div className={`flex items-center h-32`}>
-						<Link href="https://www.mnmk9.ca" className="flex items-center py-4 px-2">
+						<Link href="https://www.mnmk9.ca" className="flex items-center md:py-4 md:px-2">
 							<Logo />
 						</Link>
 						<div className="hidden md:flex items-center">
