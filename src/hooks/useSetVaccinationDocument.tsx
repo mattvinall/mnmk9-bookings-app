@@ -27,7 +27,6 @@ const useSetVaccinationDocument = (name: any) => {
 		});
 
 		if (file) {
-			console.log("file not null", file);
 			setVaccinationDocument(file);
 			// 	// Upload the file to S3
 			const params = {
@@ -44,8 +43,6 @@ const useSetVaccinationDocument = (name: any) => {
 						text: `Something went wrong uploading your pets profile image! ${error}`,
 					});
 				}
-
-				console.log("data from upload document", data);
 				// set url of file to state
 				setUploadedVaccinationDocumentUrl(data.Location);
 			})

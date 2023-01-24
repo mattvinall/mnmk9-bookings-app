@@ -8,7 +8,6 @@ const PetDetail = () => {
 	const router = useRouter();
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
-	console.log("pet detail: ", petDetail)
 
 	// get values of name, id and vaccinated to use for later
 	const name = petDetail?.map(pet => pet.name as string);

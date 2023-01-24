@@ -13,8 +13,6 @@ const UserDetail: () => void = () => {
 	const userId = router.query.id as string;
 	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
 
-	console.log("user detail", userDetail);
-
 	const [showUserForm, setShowUserForm] = useState<boolean>(false);
 	const [showPetForm, setShowPetForm] = useState<boolean>(false);
 

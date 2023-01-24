@@ -19,8 +19,6 @@ const AuthShowcase: React.FC = () => {
 	const { data: sessionData } = useSession();
 
 	const { data: userData } = trpc.user.byEmail.useQuery({ email: sessionData?.user?.email as string });
-	console.log("user", userData);
-
 
 	return (
 		<div className="flex items-center justify-center">

@@ -31,9 +31,9 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 	const id = sessionData?.user?.id as string;
 	const { data: userData, refetch } = trpc.user.byId.useQuery({ id });
 
-	const addPet = trpc.pet.addPet.useMutation();
-	console.log("add pet", addPet);
-
+	const addPet = trpc.pet.addPet.useMutation({
+		onSuccess: () => refetch()
+	});
 
 	const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
 		try {
@@ -47,10 +47,6 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 				icon: 'success',
 				title: `🐶`,
 				text: `Successfully added a pet to your profile`,
-			}).then(result => {
-				if (result.isConfirmed) {
-					refetch();
-				}
 			});
 
 			setShowPetForm(false);

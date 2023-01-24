@@ -69,18 +69,16 @@ const Training: NextPage = () => {
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
-	console.log("user data", data);
 
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
-	console.log("service data", data);
 
 	const training = serviceData?.find(service => service.serviceName === "Training");
+
 	const trainingId = training?.id;
 
 	// query the pets table and find the 
 	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
-	console.log("pet data", petData);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
@@ -95,7 +93,6 @@ const Training: NextPage = () => {
 			// store the pet ID of the first pet in the petData array as default
 			const initialPetId = petData && petData[0]?.id;
 
-
 			initialPetId && setPetID(initialPetId);
 		}
 	}, [])
@@ -104,7 +101,6 @@ const Training: NextPage = () => {
 		if (petData && petData?.length > 1) {
 			// store the pet ID of the first pet in the petData array as default
 			const initialPetId = petData && petData[0]?.id;
-
 
 			initialPetId && setPetID(initialPetId);
 		}
@@ -117,8 +113,8 @@ const Training: NextPage = () => {
 		const petName = e.target.value;
 
 		const petSelected = petData?.find(pet => pet.name === petName);
+
 		const petSelectedId = petSelected?.id;
-		console.log("pet selected ID", petSelectedId);
 
 		petSelectedId && setPetID(petSelectedId);
 	}

@@ -66,18 +66,15 @@ const Boarding: NextPage = () => {
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
-	console.log("user data", data);
 
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
-	console.log("service data", data);
 
 	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
 	const boardingId = boarding?.id as string;
 
 	// query the pets table and find the 
 	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
-	console.log("pet data", petData);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
@@ -118,7 +115,6 @@ const Boarding: NextPage = () => {
 
 		// store the ID of the pet
 		const petSelectedId = petSelected?.id;
-		console.log("pet selected ID", petSelectedId);
 
 		// if petSelectedId is truthy, set the state
 		petSelectedId && setPetID(petSelectedId);

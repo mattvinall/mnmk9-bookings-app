@@ -25,7 +25,6 @@ const useSetProfileImage = (name: any) => {
 		});
 
 		if (file && imageFileNamePreview) {
-			console.log("file not null", file);
 			// Upload the file to S3
 			const params = {
 				Bucket: `mnmk9-bookings/images/${name}`,

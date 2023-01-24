@@ -14,8 +14,6 @@ const BookingDetail: NextPage = () => {
 	const bookingId = router.query.id as string;
 	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
-	console.log("booking detail", bookingDetail);
-
 	type FormSchemaType = {
 		checkInDate?: string,
 		checkOutDate?: string,
@@ -77,7 +75,6 @@ const BookingDetail: NextPage = () => {
 
 	const handleShowEditBookingForm = () => {
 		setShowForm(true);
-		console.log("show form state", showForm);
 	}
 
 	const handleCancelBooking = (id: string) => {

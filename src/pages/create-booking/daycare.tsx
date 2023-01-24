@@ -69,18 +69,16 @@ const Daycare: NextPage = () => {
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
-	console.log("user data", data);
 
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
-	console.log("service data", data);
 
 	const training = serviceData?.find(service => service.serviceName === "Daycare");
+
 	const trainingId = training?.id;
 
 	// query the pets table and find the 
 	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
-	console.log("pet data", petData);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
@@ -118,7 +116,6 @@ const Daycare: NextPage = () => {
 
 		const petSelected = petData?.find(pet => pet.name === petName);
 		const petSelectedId = petSelected?.id;
-		console.log("pet selected ID", petSelectedId);
 
 		petSelectedId && setPetID(petSelectedId);
 	}
