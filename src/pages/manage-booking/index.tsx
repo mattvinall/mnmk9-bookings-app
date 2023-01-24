@@ -17,7 +17,6 @@ const ManageBooking = () => {
 	const { data, isLoading, error, refetch } = trpc.user.byId.useQuery({ id })
 
 	useEffect(() => {
-		console.log("run after changing routes")
 		// wait 1 second for page to load and refetch 
 		// handles edge case when user edits their booking and routes back - want most up to date data
 		setTimeout(() => {
