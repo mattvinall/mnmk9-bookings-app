@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import useSetProfileImage from "../../hooks/useSetProfileImage";
@@ -28,22 +28,28 @@ const PetDetail = () => {
 		handleVaccinationDocumentFileChange,
 	} = useSetVaccinationDocument(name);
 
-	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation();
-	const uploadVaccinationDocument = trpc.documents.addVaccinationDocument.useMutation();
-	const deleteVaccinationDocument = trpc.documents.deleteVaccinationDocument.useMutation();
-	const updateVaccinatedStaus = trpc.pet.updateVaccinatedStatus.useMutation();
+	// mutations to add profile image, vaccination document, delete document, and update vaccinated status
+	const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation({
+		onSuccess: () => refetch()
+	});
+	const uploadVaccinationDocument = trpc.documents.addVaccinationDocument.useMutation({
+		onSuccess: () => refetch()
+	});
+	const deleteVaccinationDocument = trpc.documents.deleteVaccinationDocument.useMutation({
+		onSuccess: () => refetch()
+	});
+	const updateVaccinatedStaus = trpc.pet.updateVaccinatedStatus.useMutation({
+		onSuccess: () => refetch()
+	});
 
+	// once profile image has been updated, add to Pet DB tale by passing in the pet id and the image url from S3
 	useEffect(() => {
 		if (uploadedProfileImageUrl) {
 			uploadPetProfileImage.mutate({ id, profileImage: uploadedProfileImageUrl as string });
 		}
-
-		// after 1 second, refetch from DB
-		setTimeout(() => {
-			refetch();
-		}, 1200);
 	}, [uploadedProfileImageUrl])
 
+	// if there is a vaccinated document url from S3, add to the Documents table by passing in the pet id and the file name
 	useEffect(() => {
 		if (uploadedVaccinationDocumentUrl) {
 			uploadVaccinationDocument.mutate({ petId: id, fileName: uploadedVaccinationDocumentUrl as string })
@@ -53,17 +59,8 @@ const PetDetail = () => {
 		if (petId && vaccinated === false) {
 			updateVaccinatedStaus.mutate({ id: petId, vaccinated })
 		}
-
-		setTimeout(() => {
-			refetch();
-		}, 1200);
 	}, [uploadedVaccinationDocumentUrl]);
 
-	useEffect(() => {
-		if (deleteVaccinationDocument.data) {
-			refetch();
-		}
-	}, [deleteVaccinationDocument]);
 
 	if (isLoading) return (
 		<div className="container text-center">
@@ -84,7 +81,7 @@ const PetDetail = () => {
 			<div className="m-auto">
 				{petDetail?.map((pet, i) => {
 					return (
-						<div key={pet?.id} className="flex justify-center">
+						<div key={pet.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[300px] md:w-[32rem]">
 								<img className="w-[auto] md:w-full rounded-t-lg" style={{ height: "auto" }} src={pet.profileImage || uploadedProfileImageUrl || `https://mdbootstrap.com/img/new/standard/nature/18${i}.jpg`} width="50" alt={pet.name} />
 								<div className="p-6">
