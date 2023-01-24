@@ -45,7 +45,7 @@ const ManageBooking = () => {
 						<h1 className="text-5xl font-extrabold tracking-tight text-center text-white sm:text-[5rem]">
 							Manage a  <span className="text-[hsl(280,100%,70%)]">Booking</span>
 						</h1>
-						{data?.bookings && data?.bookings.length > 1 ? <h2 className="text-3xl font-bold text-white text-center">To manage a service, click the actions. Clicking on the box will take you to the detail page.</h2> : null}
+						{data?.bookings && data?.bookings.length > 1 ? <h2 className="text-3xl font-bold text-white text-center">To manage a service, click on the booking appointment card that you want to manage.</h2> : null}
 						<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
 							{
 								data?.bookings.length ? (
