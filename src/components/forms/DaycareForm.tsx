@@ -16,7 +16,7 @@ const DaycareForm = ({ register, handleSubmit, onSubmit, handleChange, petData, 
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
 	return (
-		<form className="w-[60%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
+		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
 			<div className="grid md:grid-cols-2 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
 					<input
