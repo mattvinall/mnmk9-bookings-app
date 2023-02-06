@@ -81,6 +81,13 @@ model Bookings {
   @@index([userId, serviceId, petId])
 }
 
+model Contact {
+  id      String @id @default(uuid())
+  name    String
+  email   String
+  message String
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
