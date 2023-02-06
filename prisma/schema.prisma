@@ -16,8 +16,8 @@ model Pet {
   breed        String?
   vaccinated   Boolean?    @default(false)
   profileImage String?
-  documents    Documents[]
   petOwner     User        @relation(fields: [ownerId], references: [id])
+  documents    Documents[]
   Bookings     Bookings[]
 
   @@index([ownerId])
@@ -26,8 +26,8 @@ model Pet {
 model Documents {
   id       String  @id @default(uuid())
   fileName String
-  Pet      Pet?    @relation(fields: [petId], references: [id])
   petId    String?
+  Pet      Pet?    @relation(fields: [petId], references: [id])
 
   @@index([petId])
 }
@@ -41,51 +41,30 @@ model Services {
   @@index([serviceName])
 }
 
-// model to handle day and closed day for admin 
-model Day {
-  id        String @id @default(uuid())
-  name      String // monday, tuesday, ...
-  dayOfWeek Int // @see getDay() documentation, 0 for Sunday, 1 for Monday, ...
-  openTime  String
-  closeTime String
-}
-
-model ClosedDay {
-  id   String   @id @default(uuid())
-  date DateTime @unique
-}
-
 model Bookings {
   id               String    @id @default(uuid())
-  firstName        String
-  lastName         String
-  phoneNumber      String
+  petId            String
+  serviceId        String
+  createdAt        DateTime  @default(now())
   email            String
+  updatedAt        DateTime? @updatedAt
+  userId           String
+  notes            String?
+  phoneNumber      String
   checkInDate      String
   checkOutDate     String?
-  startTime        String?
   endTime          String?
+  firstName        String
+  lastName         String
   petName          String
-  notes            String?
-  confirmedBooking Boolean   @default(false)
   serviceName      String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime? @updatedAt()
+  startTime        String?
+  confirmedBooking Boolean   @default(false)
   pet              Pet       @relation(fields: [petId], references: [id])
-  petId            String
   service          Services  @relation(fields: [serviceId], references: [id])
-  serviceId        String
   user             User      @relation(fields: [userId], references: [id])
-  userId           String
 
   @@index([userId, serviceId, petId])
-}
-
-model Contact {
-  id      String @id @default(uuid())
-  name    String
-  email   String
-  message String
 }
 
 model Account {
