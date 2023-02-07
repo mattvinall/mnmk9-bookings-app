@@ -9,13 +9,6 @@ datasource db {
   relationMode      = "prisma"
 }
 
-model Contact {
-  id      String @id @default(uuid())
-  name    String
-  email   String
-  message String
-}
-
 model Pet {
   id           String      @id @default(uuid())
   name         String
