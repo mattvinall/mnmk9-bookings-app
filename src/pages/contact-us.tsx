@@ -1,9 +1,67 @@
 import React from 'react'
-import { type NextPage } from "next";
+import { useRouter } from "next/router";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { trpc } from "../utils/trpc";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import ContactForm from '../components/forms/ContactForm';
+import Swal from "sweetalert2";
+import { sendEmailContactForm } from "../lib/email";
 
+type FormSchemaType = {
+	name: string,
+	email: string,
+	message: string
+}
 
-const ContactUs: NextPage = () => {
-	const rows = 6;
+const schema = z.object({
+	name: z.string(),
+	email: z.string(),
+	message: z.string(),
+});
+
+const ContactUs = () => {
+	const router = useRouter();
+
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+		resolver: zodResolver(schema)
+	});
+
+	const addNewContactFormEntry = trpc.contact.newContactEmail.useMutation();
+
+	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+		try {
+			addNewContactFormEntry.mutate(formData);
+
+			reset();
+
+			// call send email function that leverages AWS SES to send the form data via email
+			await sendEmailContactForm(
+				formData?.email,
+				"matt.vinall7@gmail.com",
+				formData?.name,
+				formData?.message
+			);
+
+			// success message 
+			Swal.fire({
+				icon: 'success',
+				title: `Sent`,
+				text: `Successfully sent your request to our technical support team. We will try and get back to you in 24-48 hours. Thank you for your patience. `,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// navigate to home page on submit
+					router.push("/");
+				}
+			});
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			});
+		}
+	}
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-8 md:py-16">
@@ -11,21 +69,12 @@ const ContactUs: NextPage = () => {
 			</h1>
 			<section className="px-4 mx-auto max-w-screen-md">
 				<p className="mb-8 lg:mb-16 font-medium text-center dark:text-gray-100 sm:text-xl">Got a technical issue? Have trouble booking or managing a service? Let us know.</p>
-				<form action="#" className="space-y-8">
-					<div className="relative z-0 mb-6 w-full group">
-						<label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-100 dark:text-gray-100">Name</label>
-						<input type="text" id="name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer" placeholder="John Smith" required />
-					</div>
-					<div className="relative z-0 mb-6 w-full group">
-						<label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Your email</label>
-						<input type="email" id="email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer" placeholder="john@company.com" required />
-					</div>
-					<div className="sm:col-span-2 relative z-0 mb-6 w-full group">
-						<label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-100 dark:text-gray-100">Your message</label>
-						<textarea id="message" rows={rows} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer" placeholder="Please explain the issue that you are experiencing"></textarea>
-					</div>
-					<button type="submit" className="rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-10 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Send message</button>
-				</form>
+				<ContactForm
+					onSubmit={onSubmit}
+					handleSubmit={handleSubmit}
+					isSubmitting={isSubmitting}
+					register={register}
+				/>
 			</section>
 		</div>
 	)
