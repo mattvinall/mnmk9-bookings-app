@@ -205,3 +205,47 @@ export const sendEmailTraining = async (
 
 	return await ses.sendEmail(emailParams).promise();
 }
+
+export const sendEmailContactForm = async (
+	emailTo: string,
+	emailFrom: string,
+	name: string,
+	message: string
+) => {
+	const date = new Date();
+	const dateString = date.toLocaleDateString();
+	const timeString = date.toLocaleTimeString();
+	const htmlTemplate = `
+	<html>
+		<body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+			<h1 style="text-align: center; font-size: 24px;">Contact Form Request</h1>
+			<div style="border: 1px solid #ccc; padding: 20px;">
+				<p style="font-size: 18px;"><strong>Name:</strong> ${name}</p>
+				<p style="font-size: 18px;"><strong>Email:</strong> ${emailTo}</p>
+				<p style="font-size: 18px;"><strong>Message:</strong> ${message}</p>
+				<p style="font-size: 18px;"><strong>Date | Time:</strong> ${dateString + "|" + timeString}</p>
+			</div>
+		</body>
+	</html>
+`
+	const emailParams = {
+		Destination: {
+			ToAddresses: [emailTo]
+		},
+		Message: {
+			Body: {
+				Html: {
+					Charset: 'UTF-8',
+					Data: htmlTemplate
+				}
+			},
+			Subject: {
+				Charset: 'UTF-8',
+				Data: `MNMK-9 Contact Form Request`
+			}
+		},
+		Source: emailFrom
+	}
+
+	return await ses.sendEmail(emailParams).promise();
+}
