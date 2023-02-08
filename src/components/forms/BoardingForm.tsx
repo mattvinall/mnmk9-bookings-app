@@ -1,6 +1,8 @@
 "use-client";
 
 import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 type Props = {
 	petData: Array<{ name: string, ownerId: string }>,
@@ -12,8 +14,23 @@ type Props = {
 }
 
 const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
+	const router = useRouter();
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
+
+	if (id === undefined) {
+		Swal.fire({
+			icon: 'warning',
+			title: 'Warning',
+			text: 'Looks like you have not added a pet to your profile. Please click the manage profile box and click the add pet button!',
+		}).then(response => {
+			if (response.isConfirmed) {
+				router.push("/");
+			}
+		});
+	}
+
 	const { data: userData } = trpc.user.byId.useQuery({ id });
+	console.log("user data", userData);
 
 	return (
 		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
