@@ -1,4 +1,5 @@
 "use-client";
+
 type Props = {
 	isSubmitting: boolean,
 	register: any,
