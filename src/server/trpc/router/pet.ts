@@ -32,17 +32,19 @@ export const petRouter = router({
 				name: z.string(),
 				ownerId: z.string(),
 				breed: z.string(),
+				notes: z.string().optional(),
 				vaccinated: z.boolean()
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
-			const { ownerId, name, breed, vaccinated } = input;
+			const { ownerId, name, breed, notes, vaccinated } = input;
 			try {
 				return await ctx.prisma.pet.create({
 					data: {
 						ownerId,
 						name, 
-						breed, 
+						breed,
+						notes,
 						vaccinated
 					}
 				})
