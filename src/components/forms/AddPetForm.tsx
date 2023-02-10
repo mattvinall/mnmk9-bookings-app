@@ -14,12 +14,14 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 	type AddPetFormSchema = {
 		name: string,
 		breed: string,
+		notes: string,
 		vaccinated: string | boolean
 	}
 
 	const schema = z.object({
 		name: z.string().min(1),
 		breed: z.string().min(1),
+		notes: z.string().min(1),
 		vaccinated: z.string() || z.boolean()
 	});
 
@@ -64,7 +66,7 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 		setShowPetForm(false);
 	};
 
-
+	const rows = 2
 	return (
 		<form style={{ position: "relative" }} className="w-[80%] md:w-[50%] mt-6" onSubmit={handleSubmit(onSubmit)}>
 			<svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-20%", color: "white" }} className="w-6 h-6 mt-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -99,8 +101,23 @@ const AddPetForm = ({ setShowPetForm }: Props) => {
 						Breed
 					</label>
 				</div>
+				<div className="relative z-0 mb-6 w-full group">
+					<textarea
+						{...register("notes")}
+						rows={rows}
+						name="notes"
+						id="notes"
+						placeholder="Does your pet have any allergies? Special food? Aggressive behaviour? Let us know here"
+						className="mt-3 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+					/>
+					<label
+						htmlFor="notes"
+						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y--4 peer-focus:scale-80 peer-focus:-translate-y-6">
+						Notes
+					</label>
+				</div>
 
-				<p className="mt-[-5px] text-white font-bold">vaccinated</p>
+				<p className="mt-[-5px] text-white font-medium">Is your pet up to date with all of their vaccinations?</p>
 				<div className="flex items-center mr-4 mb-4">
 					<input
 						{...register("vaccinated")}
