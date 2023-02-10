@@ -17,17 +17,19 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 	const router = useRouter();
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 
-	if (id === undefined) {
-		Swal.fire({
-			icon: 'warning',
-			title: 'Warning',
-			text: 'Looks like you have not added a pet to your profile. Please click the manage profile box and click the add pet button!',
-		}).then(response => {
-			if (response.isConfirmed) {
-				router.push("/");
-			}
-		});
-	}
+	setTimeout(() => {
+		if (id === undefined) {
+			Swal.fire({
+				icon: 'warning',
+				title: 'Warning',
+				text: 'Looks like you have not added a pet to your profile. Please click the manage profile box and click the add pet button!',
+			}).then(response => {
+				if (response.isConfirmed) {
+					router.push("/");
+				}
+			});
+		}
+	}, 1000)
 
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 	console.log("user data", userData);
@@ -40,7 +42,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						{...register("firstName", { required: true })}
 						type="text"
 						name="firstName"
-						value={userData?.name.split(" ")[0] || ""}
+						defaultValue={userData?.name.split(" ")[0] || ""}
 						id="floating_first_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
@@ -56,7 +58,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						{...register("lastName", { required: true })}
 						type="text"
 						name="lastName"
-						value={userData?.name.split(" ")[1]}
+						defaultValue={userData?.name.split(" ")[1]}
 						id="floating_last_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
@@ -73,9 +75,8 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 					<input
 						{...register("phoneNumber", { required: true })}
 						type="tel"
-						pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 						name="phoneNumber"
-						value={userData?.phoneNumber || ""}
+						defaultValue={userData?.phoneNumber || ""}
 						id="floating_phone"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
@@ -83,7 +84,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 					<label
 						htmlFor="floating_phone"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-						Phone number (123-456-7890)
+						Phone number
 					</label>
 				</div>
 				<div className="relative z-0 mb-6 w-full group">
@@ -91,7 +92,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						{...register("email", { required: true })}
 						type="email"
 						name="email"
-						value={userData?.email || ""}
+						defaultValue={userData?.email || ""}
 						id="floating_email"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 						required
