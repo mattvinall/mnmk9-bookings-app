@@ -128,7 +128,6 @@ export const bookingRouter = router({
 						confirmedBooking: true
 					}
 				});
-
 			} catch (error) {
 				console.log(`error updating booking status to confirmed: ${error}`)
 			}
