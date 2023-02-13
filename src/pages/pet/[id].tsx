@@ -129,7 +129,7 @@ const PetDetail = () => {
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
-									<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
+									<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "❌" : "✅"}</p>
 									<form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
 										<label htmlFor="notes">Notes</label>
 										<textarea
