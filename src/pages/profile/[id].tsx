@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/forms/UserDetailForm";
 import AddPetForm from "../../components/forms/AddPetForm";
+import UserInfoTable from "../../components/UserInfoCard";
 import Swal from "sweetalert2";
 
 const UserDetail: () => void = () => {
@@ -15,21 +16,32 @@ const UserDetail: () => void = () => {
 	const [showUserForm, setShowUserForm] = useState<boolean>(false);
 	const [showPetForm, setShowPetForm] = useState<boolean>(false);
 	const [showPets, setShowPets] = useState<boolean>(false);
+	const [showProfileTable, setShowProfileTable] = useState<boolean>(false);
 
 	const handleShowUserForm = () => {
 		setShowUserForm(true);
 		setShowPetForm(false);
 		setShowPets(false);
+		setShowProfileTable(false);
 	}
 
 	const handleShowPetForm = () => {
 		setShowPetForm(true);
 		setShowUserForm(false);
 		setShowPets(false);
+		setShowProfileTable(false);
 	}
 
 	const handleShowPets = () => {
 		setShowPets(true);
+		setShowPetForm(false);
+		setShowUserForm(false);
+		setShowProfileTable(false);
+	}
+
+	const handleShowProfileTable = () => {
+		setShowProfileTable(true);
+		setShowPets(false);
 		setShowPetForm(false);
 		setShowUserForm(false);
 	}
@@ -86,10 +98,14 @@ const UserDetail: () => void = () => {
 				Manage Your Information or Add Pets to your Profile
 			</p>
 
+			{/* Tabs */}
 			<div className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
 				<ul className="flex flex-wrap">
 					<li>
 						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
+					</li>
+					<li>
+						<button onClick={handleShowProfileTable} className={`${showProfileTable === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Profile</button>
 					</li>
 					<li className="mr-2">
 						<button onClick={handleShowUserForm} className={`${showUserForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Profile</button>
@@ -103,8 +119,21 @@ const UserDetail: () => void = () => {
 				</ul>
 			</div>
 
+			{/* Content */}
 			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
 			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
+			<>
+				{userDetail && showProfileTable && (
+					<UserInfoTable
+						name={userDetail?.name as string}
+						address={userDetail?.address as string}
+						city={userDetail?.city as string}
+						postalCode={userDetail?.postalCode as string}
+						phoneNumber={userDetail?.phoneNumber as string}
+						image={userDetail?.image as string}
+					/>
+				)}
+			</>
 			{showPets && userDetail?.pets && <h2 className="text-white underline text-left font-bold text-[2rem] md:text-[2.5rem]">Your Pets:</h2>}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{showPets && userDetail?.pets?.map((pet, i) => {
