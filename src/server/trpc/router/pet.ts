@@ -73,6 +73,25 @@ export const petRouter = router({
 				console.log(`Cannot update profile image of the pet: ${error}`)
 			}
 		}),
+	editPetNotes: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				notes: z.string().min(1).max(250)	
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, notes } = input;
+			
+			try {
+				return await ctx.prisma.pet.update({
+					where: { id },
+					data: { notes },
+				})
+			} catch (error) {
+				console.log("error", error)
+			}
+		}),
 	deletePet: protectedProcedure
 		.input(
 			z.object({
