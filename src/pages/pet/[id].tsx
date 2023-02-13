@@ -1,10 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import useSetProfileImage from "../../hooks/useSetProfileImage";
 import useSetVaccinationDocument from "../../hooks/useSetVaccinationDocument";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from "zod";
+import Swal from "sweetalert2";
+
+type EditPetNotes = {
+	notes: string
+}
+const schema = z.object({
+	notes: z.string()
+})
 
 const PetDetail = () => {
+
 	const router = useRouter();
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
@@ -41,6 +53,10 @@ const PetDetail = () => {
 		onSuccess: () => refetch()
 	});
 
+	const updatePetNotes = trpc.pet.editPetNotes.useMutation({
+		onSuccess: () => refetch()
+	});
+
 	// once profile image has been updated, add to Pet DB tale by passing in the pet id and the image url from S3
 	useEffect(() => {
 		if (uploadedProfileImageUrl) {
@@ -60,6 +76,32 @@ const PetDetail = () => {
 		}
 	}, [uploadedVaccinationDocumentUrl]);
 
+	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<EditPetNotes>({
+		resolver: zodResolver(schema)
+	});
+
+	const onSubmit: SubmitHandler<EditPetNotes> = async (formData: any) => {
+		try {
+			formData.id = id as string
+
+			// success message 
+			Swal.fire({
+				icon: 'success',
+				title: `✅`,
+				text: `Successfully updated ${name}'s notes on file`,
+			});
+
+			updatePetNotes.mutate({ id, notes: formData.notes })
+
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			});
+		}
+	}
+
 
 	if (isLoading) return (
 		<div className="container text-center">
@@ -78,8 +120,8 @@ const PetDetail = () => {
 			<a className="flex justify-start text-left text-white font-bold text-2xl" href={`/profile/${ownerId}`}>Go Back</a>
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[hsl(280,100%,70%)]">Details</span></h1>
 			<div className="m-auto">
-				{petDetail?.map((pet, i) => {
-					const defaultImage = "https://mdbootstrap.com/img/new/standard/nature/180.jpg"
+				{petDetail?.map((pet, idx) => {
+					const defaultImage = `https://mdbootstrap.com/img/new/standard/nature/19${idx + 1}.jpg`
 					return (
 						<div key={pet.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[300px] md:w-[32rem]">
@@ -88,7 +130,20 @@ const PetDetail = () => {
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
 									<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
-									<form className="mt-6">
+									<form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
+										<label htmlFor="notes">Notes</label>
+										<textarea
+											{...register("notes")}
+											id="notes"
+											rows={1}
+											className="block mb-6 py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none border-gray-500 dark:focus:border-gray-900 focus:outline-none focus:ring-0 focus:border-gray-900 peer"
+											defaultValue={pet?.notes || ""}
+										/>
+										<button
+											className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+											Update
+										</button>
+										<p className="block font-medium py-6 text-md">Upload:</p>
 										<label style={{ cursor: "pointer" }} htmlFor="pet-profile-image" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-5">
 											Select Profile Image to Upload
 											<input
