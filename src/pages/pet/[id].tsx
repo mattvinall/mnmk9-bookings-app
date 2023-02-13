@@ -135,9 +135,9 @@ const PetDetail = () => {
 										<textarea
 											{...register("notes")}
 											id="notes"
-											rows={1}
+											rows={2}
 											className="block mb-6 py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none border-gray-500 dark:focus:border-gray-900 focus:outline-none focus:ring-0 focus:border-gray-900 peer"
-											defaultValue={pet?.notes || ""}
+											defaultValue={pet?.notes ?? ""}
 										/>
 										<button
 											className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
