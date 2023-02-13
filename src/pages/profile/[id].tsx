@@ -89,13 +89,13 @@ const UserDetail: () => void = () => {
 			<div className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
 				<ul className="flex flex-wrap">
 					<li>
-						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
+						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
 					</li>
 					<li className="mr-2">
-						<button onClick={handleShowUserForm} className={`${showUserForm === true ? "text-gray-100 border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Profile</button>
+						<button onClick={handleShowUserForm} className={`${showUserForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Profile</button>
 					</li>
 					<li className="mr-2">
-						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 border-gray-100 border-b-2" : ""} inline-block p-4 rounded-t-lg border-transparent hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
+						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 rounded-t-lg border-transparent hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
 					</li>
 					<li className="mr-2">
 						<button className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100">Download Waiver</button>
@@ -116,7 +116,7 @@ const UserDetail: () => void = () => {
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
-										<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "No" : "Yes"}</p>
+										<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "❌" : "✅"}</p>
 										<div className="flex bg-white">
 											<Link href={`/pet/${pet.id}`} className="mt-6 flex flex-col items-center justify-center w-12 h-12 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
 												<svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
