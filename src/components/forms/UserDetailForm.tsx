@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
+import { useRouter } from 'next/router';
 
 type Props = {
 	setShowUserForm: (bool: boolean) => void;
@@ -23,6 +25,8 @@ const UserDetailForm = ({ setShowUserForm }: Props) => {
 		phoneNumber: z.string().max(12)
 	});
 
+	const router = useRouter();
+
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
 		resolver: zodResolver(schema)
 	});
@@ -38,9 +42,28 @@ const UserDetailForm = ({ setShowUserForm }: Props) => {
 
 		editProfile.mutate(formData);
 
-		reset();
 
-		setShowUserForm(false);
+		try {
+			// success message 
+			Swal.fire({
+				icon: 'success',
+				title: `✅`,
+				text: `Successfully Added your profile information.`,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// navigate to previous page
+					router.reload()
+				}
+			});
+
+			reset();
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: `Something went wrong! ${error}`,
+			});
+		}
 	}
 
 	const handleCloseForm = () => {
