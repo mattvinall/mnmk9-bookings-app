@@ -42,7 +42,6 @@ const UserDetailForm = ({ setShowUserForm }: Props) => {
 
 		editProfile.mutate(formData);
 
-
 		try {
 			// success message 
 			Swal.fire({
