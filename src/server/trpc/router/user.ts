@@ -15,6 +15,21 @@ export const userRouter = router({
 			console.log(`All users cannot be fetched by email: ${err}`)
 		}
 	}),
+	getRoleById: protectedProcedure
+		.input(
+			z.object({
+				id: z.string()
+			})
+		)
+		.query(async ({ ctx, input }) => {
+			const { id } = input
+			return await ctx.prisma.user.findUnique({
+				where: { id },
+				select: {
+					role: true
+				}
+			});
+		}),
 	byEmail: protectedProcedure
 		.input(z.object({ email: z.string() }))
 		.query(async ({ ctx, input }) => {
