@@ -1,6 +1,6 @@
 "use-client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
@@ -14,16 +14,29 @@ const UserDetail: () => void = () => {
 	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
 	const [showUserForm, setShowUserForm] = useState<boolean>(false);
 	const [showPetForm, setShowPetForm] = useState<boolean>(false);
+	const [showPets, setShowPets] = useState<boolean>(false);
 
 	const handleShowUserForm = () => {
 		setShowUserForm(true);
 		setShowPetForm(false);
+		setShowPets(false);
 	}
 
 	const handleShowPetForm = () => {
 		setShowPetForm(true);
 		setShowUserForm(false);
+		setShowPets(false);
 	}
+
+	const handleShowPets = () => {
+		setShowPets(true);
+		setShowPetForm(false);
+		setShowUserForm(false);
+	}
+
+	useEffect(() => {
+		setShowPets(true);
+	}, [])
 
 	const deletePet = trpc.pet.deletePet.useMutation();
 
@@ -72,15 +85,29 @@ const UserDetail: () => void = () => {
 			<p className="text-white text-center w-[80%] font-bold text-[2rem] md:text-[2.5rem]">
 				Manage Your Information or Add Pets to your Profile
 			</p>
-			<div className="flex justify-center">
-				<button onClick={handleShowUserForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Manage Profile</button>
-				<button onClick={handleShowPetForm} className="mt-[25px] mx-6 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Pet(s)</button>
+
+			<div className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
+				<ul className="flex flex-wrap">
+					<li>
+						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
+					</li>
+					<li className="mr-2">
+						<button onClick={handleShowUserForm} className={`${showUserForm === true ? "text-gray-100 border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Profile</button>
+					</li>
+					<li className="mr-2">
+						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 border-gray-100 border-b-2" : ""} inline-block p-4 rounded-t-lg border-transparent hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
+					</li>
+					<li className="mr-2">
+						<button className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100">Download Waiver</button>
+					</li>
+				</ul>
 			</div>
+
 			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
 			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
-			{userDetail?.pets && <h2 className="text-white underline text-left font-bold text-[2rem] md:text-[2.5rem]">Your Pets:</h2>}
+			{showPets && userDetail?.pets && <h2 className="text-white underline text-left font-bold text-[2rem] md:text-[2.5rem]">Your Pets:</h2>}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-				{userDetail?.pets?.map((pet, i) => {
+				{showPets && userDetail?.pets?.map((pet, i) => {
 					return (
 						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
