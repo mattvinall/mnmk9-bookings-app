@@ -17,8 +17,8 @@ const UserInfoCard: React.FC<Props> = ({ name, address, city, phoneNumber, posta
 					<img className="rounded-full scale-50 float-right" src={image as string} />
 					<div className="p-6">
 						<h2 className="text-gray-900 text-xl font-bold mb-2">{name}</h2>
-						<p className="text-gray-700 font-medium text-base mb-4">{phoneNumber}</p>
-						<p className="text-gray-700 text-base mb-4">{address}, {city}. {postalCode}</p>
+						{phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{phoneNumber}</p> : <p>--</p>}
+						{address && city && postalCode && <p className="text-gray-700 text-base mb-4">{address}, {city}. {postalCode}</p>}
 					</div>
 				</div>
 			</div>
