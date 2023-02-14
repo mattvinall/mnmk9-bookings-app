@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from "sweetalert2";
-import EditBookingForm from "../../components/forms/EditBookingForm";
+import EditBookingForm from "../../components/client/forms/EditBookingForm";
 
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
