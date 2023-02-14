@@ -1,4 +1,4 @@
-import Image from "next/image";
+"use-client";
 
 type Props = {
 	name: string,
@@ -8,7 +8,6 @@ type Props = {
 	image: string,
 	postalCode: string,
 }
-
 
 const UserInfoCard: React.FC<Props> = ({ name, address, city, phoneNumber, postalCode, image }: Props) => {
 	return (

@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 

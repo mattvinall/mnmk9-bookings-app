@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-
 const Footer = () => {
 	return (
 		<footer className="p-4 bg-white rounded-lg text-center shadow md:text-left md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">

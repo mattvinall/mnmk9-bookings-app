@@ -1,5 +1,5 @@
 "use-client";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 
 type Props = {
