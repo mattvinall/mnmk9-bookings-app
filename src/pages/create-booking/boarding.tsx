@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
-import BoardingForm from "../../components/forms/BoardingForm";
+import BoardingForm from "../../components/client/forms/BoardingForm";
 
 type FormSchemaType = {
 	firstName: string,

@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailDaycare } from "../../lib/email";
-import DaycareForm from "../../components/forms/DaycareForm";
+import DaycareForm from "../../components/client/forms/DaycareForm";
 
 type FormSchemaType = {
 	firstName: string,
