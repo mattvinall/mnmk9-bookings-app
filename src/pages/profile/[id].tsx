@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/forms/UserDetailForm";
 import AddPetForm from "../../components/forms/AddPetForm";
-import UserInfoTable from "../../components/UserInfoCard";
+import UserInfoTable from "../../components/client/UserInfoCard";
 import Swal from "sweetalert2";
 
 const UserDetail: () => void = () => {

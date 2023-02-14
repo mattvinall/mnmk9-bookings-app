@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import Head from "next/head";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "./Footer";
 
 
 interface ILayoutProps {
