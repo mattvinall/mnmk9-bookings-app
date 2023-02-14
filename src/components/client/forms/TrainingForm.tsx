@@ -1,5 +1,6 @@
 "use-client";
 
+import { useEffect } from "react";
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
@@ -17,19 +18,19 @@ const TrainingForm = ({ register, handleSubmit, onSubmit, handleChange, petData,
 	const router = useRouter();
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 
-	setTimeout(() => {
-		if (!id) {
+	useEffect(() => {
+		if (!petData || petData.length === 0) {
 			Swal.fire({
 				icon: 'warning',
 				title: 'Warning',
-				text: 'Looks like you have not added a pet to your profile. Please click the manage profile box and click the add pet button!',
+				text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
 			}).then(response => {
 				if (response.isConfirmed) {
-					router.push("/");
+					router.push(`/profile/${id}`);
 				}
 			});
 		}
-	}, 2000);
+	}, []);
 
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
