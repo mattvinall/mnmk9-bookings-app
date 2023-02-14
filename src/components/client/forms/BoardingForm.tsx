@@ -18,7 +18,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 
 	setTimeout(() => {
-		if (id === undefined) {
+		if (!id) {
 			Swal.fire({
 				icon: 'warning',
 				title: 'Warning',
@@ -29,7 +29,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 				}
 			});
 		}
-	}, 1000)
+	}, 2000)
 
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 	console.log("user data", userData);

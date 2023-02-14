@@ -17,17 +17,19 @@ const TrainingForm = ({ register, handleSubmit, onSubmit, handleChange, petData,
 	const router = useRouter();
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 
-	if (id === undefined) {
-		Swal.fire({
-			icon: 'warning',
-			title: 'Warning',
-			text: 'Looks like you have not added a pet to your profile. Please click the manage profile box and click the add pet button!',
-		}).then(response => {
-			if (response.isConfirmed) {
-				router.push("/");
-			}
-		});
-	}
+	setTimeout(() => {
+		if (!id) {
+			Swal.fire({
+				icon: 'warning',
+				title: 'Warning',
+				text: 'Looks like you have not added a pet to your profile. Please click the manage profile box and click the add pet button!',
+			}).then(response => {
+				if (response.isConfirmed) {
+					router.push("/");
+				}
+			});
+		}
+	}, 2000);
 
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
