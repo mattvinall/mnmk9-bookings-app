@@ -1,0 +1,104 @@
+"use-client";
+
+import { useState, useEffect } from "react";
+import { trpc } from "../../utils/trpc";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import CheckInTable from "../../components/admin/tables/checkInTable";
+import CheckOutTable from "../../components/admin/tables/checkOutTable";
+
+const Bookings = () => {
+	const [date, setDate] = useState(new Date());
+	const [checkInBookings, setCheckInBookings] = useState([]);
+	const [checkOutBookings, setCheckOutBookings] = useState([])
+
+	const { data: bookingsData, isLoading, error } = trpc.bookings.getAllBookings.useQuery();
+	console.log("booking data", bookingsData);
+
+	const handleDateChange = (date: any) => {
+		console.log("date", date.toISOString().split("T")[0]);
+		setDate(date);
+	};
+
+	const checkInBookingsList = checkInBookings?.map((booking: any, idx: number) => {
+		return (
+			<tr
+				key={booking?.id}
+				className={`${idx % 2 === 0 ? "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700" : "bg-white border-b dark:bg-gray-900 dark:border-gray-700"} `}>
+				<td className="text-white px-6 py-4">{booking?.firstName} {booking?.lastName}</td>
+				<td className="text-white px-6 py-4">{booking?.serviceName}</td>
+				<td className="text-white px-6 py-4">{booking?.checkInDate ?? "--"}</td>
+				<td className="text-white px-6 py-4">{booking?.checkOutDate ?? "--"}</td>
+				<td className="text-white px-6 py-4">{booking?.startTime ?? "--"}</td>
+				<td className="text-white px-6 py-4">{booking?.endTime ?? "--"}</td>
+				{/* <td><button>Add to Google Calendar</button></td> */}
+			</tr>
+		);
+	});
+
+	const checkOutBookingsList = checkOutBookings?.map((booking: any, idx: number) => {
+		return (
+			<tr
+				key={booking?.id}
+				className={`${idx % 2 === 0 ? "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700" : "bg-white border-b dark:bg-gray-900 dark:border-gray-700"} `}>
+				<td className="text-white px-6 py-4">{booking?.firstName} {booking?.lastName}</td>
+				<td className="text-white px-6 py-4">{booking?.serviceName}</td>
+				<td className="text-white px-6 py-4">{booking?.checkInDate ?? "--"}</td>
+				<td className="text-white px-6 py-4">{booking?.checkOutDate ?? "--"}</td>
+				<td className="text-white px-6 py-4">{booking?.startTime ?? "--"}</td>
+				<td className="text-white px-6 py-4">{booking?.endTime ?? "--"}</td>
+				{/* <td><button>Add to Google Calendar</button></td> */}
+			</tr>
+		);
+	});
+
+	useEffect(() => {
+		const filteredCheckInBookings = bookingsData?.filter(booking => {
+			const checkInDate = new Date(booking?.checkInDate as string).toISOString();
+
+			const checkInBookings = new Date(checkInDate)
+				.toISOString()
+				.split("T")[0] === date.toISOString().split("T")[0];
+
+			return checkInBookings;
+		});
+
+		const filteredCheckOutBookings = bookingsData?.filter(booking => {
+			const checkOutDate = new Date(booking?.checkOutDate as string).toISOString();
+			const checkOutBookings = new Date(checkOutDate)
+				.toISOString()
+				.split("T")[0] === date.toISOString().split("T")[0];
+
+			return checkOutBookings;
+		})
+
+		console.log("filteredBookings", filteredCheckInBookings);
+		if (!filteredCheckInBookings) {
+			setCheckInBookings([])
+		}
+
+		if (!filteredCheckOutBookings) {
+			setCheckOutBookings([])
+		}
+
+		setCheckInBookings(filteredCheckInBookings as []);
+		setCheckOutBookings(filteredCheckOutBookings as []);
+
+	}, [date]);
+
+	return (
+		<div className="flex flex-col items-center">
+			<div className="mt-5">
+				<Calendar value={date} onChange={handleDateChange} />
+			</div>
+			<div className="mt-5 relative">
+				{/* Check In Table */}
+				{checkInBookings && <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} />}
+				{/* Check Out Table */}
+				<CheckOutTable checkOutBookings={checkOutBookings} checkOutBookingsList={checkOutBookingsList} />
+			</div>
+		</div>
+	)
+}
+
+export default Bookings;
