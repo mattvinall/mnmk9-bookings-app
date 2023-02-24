@@ -114,8 +114,6 @@ const Bookings = () => {
 		</div>
 	)
 
-
-
 	return (
 		<>
 			{userData?.role === "admin" && sessionData ? (
