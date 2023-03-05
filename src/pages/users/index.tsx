@@ -13,7 +13,7 @@ const Users = () => {
 	// fetch user by id 
 	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id });
 
-	// fetch bookings if user role is admin
+	// fetch all users
 	const { data: allUserData } = trpc.user.getAllUsers.useQuery();
 
 	if (!sessionData) return (
@@ -34,7 +34,7 @@ const Users = () => {
 		</div>
 	);
 
-	const [searchTerm, setSearchTerm] = useState("");
+	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState(allUserData);
 
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +68,7 @@ const Users = () => {
 					</div>
 					{/* display results */}
 					<ul>
-						<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
+						<li className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 							{(searchResults || allUserData)?.map((user, idx) => (
 								<a href={`/profile/${user.id}`} key={user?.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 									<div className="flex justify-center">
@@ -87,7 +87,7 @@ const Users = () => {
 									</div>
 								</a>
 							))}
-						</div>
+						</li>
 					</ul>
 				</div >
 			) : (
