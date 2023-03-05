@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { trpc } from "../../../utils/trpc";
 
 const DashboardOverview = () => {
@@ -38,7 +37,18 @@ const DashboardOverview = () => {
 	const totalGrooming = filteredCheckInBookings?.filter(booking => booking.serviceName === "Grooming").length;
 	const totalDaycare = filteredCheckInBookings?.filter(booking => booking.serviceName === "Daycare").length;
 
-	console.log("filteredCheckInBookings", filteredCheckInBookings);
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
+
+	if (error) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		</div>
+	);
+
 	return (
 		<>
 			<section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-4">
