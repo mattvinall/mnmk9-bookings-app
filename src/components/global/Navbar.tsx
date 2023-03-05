@@ -220,7 +220,6 @@ const Navbar: React.FC = () => {
 					</div>
 					{/* mobile */}
 					<ul className={`md:hidden flex-wrap ${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center items-center text-white bg-[#060606]`}>
-
 						<Link
 							href="/dashboard"
 							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
