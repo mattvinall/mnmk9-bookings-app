@@ -112,15 +112,13 @@ const BookingsCalendar = () => {
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
 		</div>
-	)
+	);
 
 	return (
 		<>
 			{userData?.role === "admin" && sessionData ? (
-				<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-					<div className="mt-5">
-						<Calendar value={date} onChange={handleDateChange} />
-					</div>
+				<div className="container flex flex-col items-center lg:flex-row lg:items-center justify-between gap-12 px-4 py-16">
+					<Calendar className="!lg:w-full" value={date} onChange={handleDateChange} />
 					<div className="mt-5 relative">
 						{/* Check In Table */}
 						{checkInBookings && <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} />}
