@@ -118,10 +118,6 @@ const BookingsCalendar = () => {
 		<>
 			{userData?.role === "admin" && sessionData ? (
 				<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
-					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-						MNMK-9  <span className="text-[hsl(280,100%,70%)]">Bookings</span>
-					</h1>
-					<h2 className="text-3xl font-bold text-white text-center">Select a date on the Calendar to see your bookings.</h2>
 					<div className="mt-5">
 						<Calendar value={date} onChange={handleDateChange} />
 					</div>
