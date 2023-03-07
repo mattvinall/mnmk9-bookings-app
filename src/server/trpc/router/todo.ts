@@ -59,5 +59,25 @@ export const todoRouter = router({
 		} catch (error) {
 			console.log(`todo could not be deleted: ${error}`);
 		}
+	}),
+	updateCompletedStatus: protectedProcedure
+	.input(
+		z.object({
+			id: z.string(),
+			completed: z.boolean(),
+		})
+	)
+	.mutation(async ({ ctx, input }) => {
+		const { id, completed } = input;
+		try {
+			return await ctx.prisma.todo.update({
+				where: { id },
+				data: {
+					completed: !completed
+				}
+			})
+		} catch (error) {
+			console.log(`completed status of todo could not be updated, ${error}`)
+		}
 	})
 });
