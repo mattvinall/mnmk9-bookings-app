@@ -7,7 +7,7 @@ type Props = {
 const CheckOutTable = ({ checkOutBookings, checkOutBookingsList }: Props) => {
 	return (
 		<>
-			<h2 className="text-white font-bold text-[3rem] my-8">Checking Out:</h2>
+			<h3 className="text-white font-bold text-[2rem] my-8">Checking Out:</h3>
 			<table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
 				<thead className={`text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400`}>
 					<tr>
