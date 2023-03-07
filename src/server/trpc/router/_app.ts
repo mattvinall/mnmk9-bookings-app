@@ -6,6 +6,7 @@ import { petRouter } from "./pet";
 import { bookingRouter } from "./booking";
 import { documentRouter } from "./document";
 import { contactRouter } from "./contact";
+import { todoRouter } from "./todo";
 
 export const appRouter = router({
   auth: authRouter,
@@ -14,7 +15,8 @@ export const appRouter = router({
   pet: petRouter,
   bookings: bookingRouter,
   documents: documentRouter,
-  contact: contactRouter
+  contact: contactRouter,
+  todo: todoRouter
 });
 
 // export type definition of API
