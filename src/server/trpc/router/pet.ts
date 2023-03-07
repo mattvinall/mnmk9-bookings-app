@@ -89,7 +89,7 @@ export const petRouter = router({
 					data: { notes },
 				})
 			} catch (error) {
-				console.log("error", error)
+				console.log(`pet notes could not be updated: ${error}`)
 			}
 		}),
 	deletePet: protectedProcedure
