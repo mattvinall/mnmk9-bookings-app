@@ -22,8 +22,9 @@ const Dashboard = () => {
 						MNMK-9  <span className="text-[hsl(280,100%,70%)]">Dashboard</span>
 					</h1>
 					<DashboardOverview />
+
 					<BookingsCalendar />
-					{/* <TodoList /> */}
+					<TodoList />
 				</div>
 			) : (
 				<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
