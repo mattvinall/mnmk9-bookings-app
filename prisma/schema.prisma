@@ -8,6 +8,14 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Todo {
+  id        String  @id @default(uuid())
+  title     String
+  completed Boolean @default(false)
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+}
+
 model Contact {
   id        String   @id @default(uuid())
   name      String
@@ -116,6 +124,7 @@ model User {
   bookings      Bookings[]
   accounts      Account[]
   sessions      Session[]
+  Todo          Todo[]
 
   @@index([email, id, phoneNumber])
 }
