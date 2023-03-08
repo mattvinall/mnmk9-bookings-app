@@ -1,9 +1,5 @@
-"use-client";
-
-import { useEffect } from "react";
+"use client";
 import { trpc } from "../../../utils/trpc";
-import { useRouter } from "next/router";
-import Swal from "sweetalert2";
 
 type Props = {
 	petData: Array<{ name: string, ownerId: string }>,
@@ -15,23 +11,7 @@ type Props = {
 }
 
 const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
-	const router = useRouter();
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
-
-	useEffect(() => {
-		if (!petData || petData.length === 0) {
-			Swal.fire({
-				icon: 'warning',
-				title: 'Warning',
-				text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
-			}).then(response => {
-				if (response.isConfirmed) {
-					router.push(`/profile/${id}`);
-				}
-			});
-		}
-	}, []);
-
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
 	return (
