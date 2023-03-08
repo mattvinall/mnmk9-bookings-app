@@ -134,7 +134,6 @@ const UserDetail: () => void = () => {
 					/>
 				)}
 			</>
-			{showPets && userDetail?.pets && <h2 className="text-white underline text-left font-bold text-[2rem] md:text-[2.5rem]">Your Pets:</h2>}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{showPets && userDetail?.pets?.map((pet, i) => {
 					return (
