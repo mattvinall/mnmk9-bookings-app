@@ -78,7 +78,21 @@ const Training: NextPage = () => {
 	const trainingId = training?.id;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id }, {
+		onSettled(data, error) {
+			if (!data || data.length === 0) {
+				Swal.fire({
+					icon: 'warning',
+					title: 'Warning',
+					text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
+				}).then(response => {
+					if (response.isConfirmed) {
+						router.push(`/profile/${id}`);
+					}
+				});
+			}
+		},
+	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
