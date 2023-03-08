@@ -6,56 +6,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
-
-type FormSchemaType = {
-	firstName: string,
-	lastName: string,
-	phoneNumber: string,
-	email: string,
-	checkInDate: string,
-	checkOutDate: string,
-	petName: string,
-	notes?: string,
-	serviceName: string,
-	userId: string,
-	serviceId: string,
-	petId: string,
-	petData?: Array<{
-		id: string,
-		breed: string,
-		name: string,
-		ownerId: string,
-		profileImage: string,
-		vaccinated: boolean,
-	}>
-}
-
-// define schema for the form 
-const schema = z.object({
-	firstName: z.string().min(1, { message: "First name is required" }),
-	lastName: z.string().min(1, { message: "Last name is required" }),
-	phoneNumber: z.string(),
-	email: z.string().min(1, { message: "Email is required" }).email({
-		message: "Must be a valid email",
-	}),
-	checkInDate: z.string(),
-	checkOutDate: z.string(),
-	petName: z.string(),
-	notes: z.string(),
-	petData: z.object({
-		id: z.string(),
-		breed: z.string(),
-		name: z.string(),
-		ownerId: z.string(),
-		profileImage: z.string(),
-		vaccinated: z.boolean(),
-	}).optional()
-})
+import { FormSchemaType } from "../../types/form-schema";
+import { schema } from "../../utils/schema";
 
 const Boarding: NextPage = () => {
 	// get email from session data
