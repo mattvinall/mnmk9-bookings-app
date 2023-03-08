@@ -11,54 +11,8 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailGrooming } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
-
-type FormSchemaType = {
-	firstName: string,
-	lastName: string,
-	phoneNumber: string,
-	email: string,
-	checkInDate: string,
-	startTime: string,
-	endTime: string,
-	petName: string,
-	notes?: string,
-	serviceName: string,
-	userId: string,
-	serviceId: string,
-	petId: string,
-	petData?: Array<{
-		id: string,
-		breed: string,
-		name: string,
-		ownerId: string,
-		profileImage: string,
-		vaccinated: boolean,
-	}>
-}
-
-// define schema for the form 
-const schema = z.object({
-	firstName: z.string().min(1, { message: "First name is required" }),
-	lastName: z.string().min(1, { message: "Last name is required" }),
-	phoneNumber: z.string(),
-	email: z.string().min(1, { message: "Email is required" }).email({
-		message: "Must be a valid email",
-	}),
-	checkInDate: z.string(),
-	startTime: z.string(),
-	endTime: z.string(),
-	petName: z.string(),
-	notes: z.string(),
-	petData: z.object({
-		id: z.string(),
-		breed: z.string(),
-		name: z.string(),
-		ownerId: z.string(),
-		profileImage: z.string(),
-		vaccinated: z.boolean(),
-	}).optional()
-})
-
+import { FormSchemaType } from "../../types/form-schema";
+import { schema } from "../../utils/schema";
 
 const Grooming: NextPage = () => {
 	const router = useRouter();
@@ -159,8 +113,8 @@ const Grooming: NextPage = () => {
 				formData?.phoneNumber,
 				formData?.petName,
 				formData?.checkInDate,
-				formData?.startTime,
-				formData?.endTime,
+				formData?.startTime || "",
+				formData?.endTime || "",
 				formData?.notes
 			);
 
