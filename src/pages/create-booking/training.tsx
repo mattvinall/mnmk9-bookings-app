@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailTraining } from "../../lib/email";
