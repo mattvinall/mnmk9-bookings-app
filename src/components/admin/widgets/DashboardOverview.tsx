@@ -17,6 +17,8 @@ const DashboardOverview = () => {
 		return checkInBookings;
 	});
 
+	console.log("check in bookings", filteredCheckInBookings);
+
 	const filteredCheckOutBookings = bookingsData?.filter(booking => {
 		const checkOutDate = new Date(booking?.checkOutDate as string).toISOString();
 		const today = new Date().toISOString().split("T")[0];
@@ -31,12 +33,13 @@ const DashboardOverview = () => {
 	});
 
 	const totalServicesToday = filteredCheckInBookings?.length;
-	const totalCheckInBoarding = filteredCheckInBookings?.map(booking => booking.serviceName === "Boarding").length;
-	const totalCheckOutBoarding = filteredCheckOutBookings?.map(booking => booking.serviceName === "Boading").length;
+	const totalCheckInBoarding = filteredCheckInBookings?.filter(booking => booking.serviceName === "Boarding").length;
+	const totalCheckOutBoarding = filteredCheckOutBookings?.filter(booking => booking.serviceName === "Boading").length;
 	const totalTraining = filteredCheckInBookings?.filter(booking => booking.serviceName === "Training").length;
 	const totalGrooming = filteredCheckInBookings?.filter(booking => booking.serviceName === "Grooming").length;
 	const totalDaycare = filteredCheckInBookings?.filter(booking => booking.serviceName === "Daycare").length;
 
+	console.log("total check in boarding", totalCheckInBoarding)
 	if (isLoading) return (
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
