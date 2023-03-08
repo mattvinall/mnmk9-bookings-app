@@ -1,6 +1,6 @@
 "use-client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 
