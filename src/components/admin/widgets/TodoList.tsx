@@ -44,8 +44,8 @@ const TodoList = () => {
 	}
 
 	return (
-		<div className="max-w- mx-auto mt-8">
-			<h1 className="text-center text-3xl font-bold mb-8 text-white">Todo List</h1>
+		<div className="w-[40%] mt-8">
+			<h1 className="text-left text-3xl font-bold mb-8 text-white">Todo List</h1>
 			<div className="flex items-start mb-4 w-full">
 				<input
 					type="text"
