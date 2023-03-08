@@ -32,7 +32,7 @@ const CheckInTable = ({ checkInBookings, checkInBookingsList }: Props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{checkInBookings && checkInBookings.length > 0 ? checkInBookingsList : <p className="text-white text-[1.2rem] overflow-none">No bookings for this date.</p>}
+					{checkInBookings && checkInBookings.length > 0 ? checkInBookingsList : <p className="text-white text-[1.2rem] overflow-none mt-4">Nobody checking in this date.</p>}
 				</tbody>
 			</table>
 
