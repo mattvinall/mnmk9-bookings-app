@@ -72,7 +72,7 @@ const Users = () => {
 							{(searchResults || allUserData)?.map((user, idx) => (
 								<a href={`/profile/${user.id}`} key={user?.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 									<div className="flex justify-center">
-										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full">
+										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
 											<img className="rounded-full scale-50 float-right" src={user?.image as string} />
 											<div className="p-6">
 												<h2 className="text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
