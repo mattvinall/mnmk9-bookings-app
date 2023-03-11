@@ -71,7 +71,7 @@ const Users = () => {
 								<a href={`/profile/${user.id}`} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 									<div className="flex justify-center">
 										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
-											<img className="rounded-full scale-50 float-right" src={user?.image as string} />
+											<img className="rounded-full scale-50 float-right" src={user?.image as string} alt={`profile image of ${user.name}`} />
 											<div className="p-6">
 												<h2 className="text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
 												{user?.phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{user?.phoneNumber}</p> : <p className="text-gray-700 font-medium mb-4">No phone number added...</p>}
