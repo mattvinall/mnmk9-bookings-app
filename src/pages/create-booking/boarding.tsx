@@ -10,8 +10,9 @@ import { trpc } from '../../utils/trpc';
 import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
+import type { Pet } from "@prisma/client";
 import { FormSchemaType } from "../../types/form-schema";
-import { schema } from "../../utils/schema";
+import { boardingSchema } from "../../utils/schema";
 
 const Boarding: NextPage = () => {
 	// get email from session data
@@ -47,7 +48,7 @@ const Boarding: NextPage = () => {
 	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(boardingSchema)
 	});
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation();
@@ -162,7 +163,7 @@ const Boarding: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<BoardingForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				<BoardingForm petData={petData as [Pet]} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
