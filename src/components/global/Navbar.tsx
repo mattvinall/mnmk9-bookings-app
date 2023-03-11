@@ -104,11 +104,11 @@ const Navbar: React.FC = () => {
 											className="w-8 h-8 text-gray-900 mr-4"
 											fill="none"
 											stroke="currentColor"
-											stroke-width="1.5"
+											strokeWidth="1.5"
 											viewBox="0 0 24 24"
 											xmlns="http://www.w3.org/2000/svg"
 											aria-hidden="true">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+											<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
 										</svg>
 									)
 									}
@@ -207,11 +207,11 @@ const Navbar: React.FC = () => {
 											className="w-8 h-8 text-gray-900 mr-4"
 											fill="none"
 											stroke="currentColor"
-											stroke-width="1.5"
+											strokeWidth="1.5"
 											viewBox="0 0 24 24"
 											xmlns="http://www.w3.org/2000/svg"
 											aria-hidden="true">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+											<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
 										</svg>
 									)}
 								</button>
