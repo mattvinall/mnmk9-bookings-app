@@ -25,18 +25,16 @@ const AdminBookings = () => {
 								<div className="bg-gray shadow-lg  overflow-hidden w-full max-w-md">
 									<div className="bg-gray-700 px-4 py-2">
 										<h2 className="text-lg font-bold">{booking.firstName} {booking.lastName}</h2>
-										<a href={`mailto:${booking.email}`} className="text-sm mb-2 hover:underline">{booking.email}</a>
+										<a href={`mailto:${booking.email}`} className="inline-blocktext-sm mb-2 hover:underline">{booking.email}</a>
+										<a href={`tel:${booking.phoneNumber}`} className="block text-sm mb-2 hover:underline">{booking.phoneNumber}</a>
 									</div>
 								</div>
 								<div className="p-6">
-
-									<a href={`tel:${booking.phoneNumber}`} className="text-sm hover:underline text-gray-500 mb-2"><span className="font-bold inline-block mb-2">Phone:</span> {booking.phoneNumber}</a>
+									<span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2">{booking.serviceName} | </span><span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2"> &nbsp;{booking.petName}</span>
 									<p className="text-sm text-gray-500 mb-2"><span className="font-bold">Confirmed:</span> {booking.confirmedBooking ? "Yes" : "No"}</p>
 									<p className="text-sm text-gray-500 mb-2"><span className="font-bold">Check In:</span> {booking.checkInDate} <span className="font-bold">Check Out:</span> {booking.checkOutDate}</p>
 									<p className="text-sm text-gray-500 mb-2"><span className="font-bold">Start Time:</span> {booking.startTime} <span className="font-bold">End Time:</span> {booking.endTime}</p>
 									<p className="text-sm text-gray-500 mb-2"><span className="font-bold">Notes:</span> {booking?.notes}</p>
-									<p className="text-sm text-gray-500 mb-2"><span className="font-bold">Pet Name:</span> {booking.petName}</p>
-									<p className="text-sm text-gray-500 mb-2"><span className="font-bold">Service:</span> {booking.serviceName}</p>
 									{!booking.confirmedBooking && (
 										<button
 											className="bg-purple-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
