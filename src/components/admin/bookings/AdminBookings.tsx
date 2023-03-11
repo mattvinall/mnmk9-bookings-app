@@ -3,7 +3,6 @@ import Link from "next/link"
 
 const AdminBookings = () => {
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
-	console.log("admin bookings", bookingsData)
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
 		onSuccess: () => {
 			refetch()
