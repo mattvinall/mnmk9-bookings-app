@@ -16,24 +16,6 @@ const Users = () => {
 	// fetch all users
 	const { data: allUserData } = trpc.user.getAllUsers.useQuery();
 
-	if (!sessionData) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
-		</div>
-	)
-
-	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
-	);
-
-	if (error) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
-		</div>
-	);
-
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState(allUserData);
 
@@ -51,7 +33,23 @@ const Users = () => {
 		setSearchResults(filteredUsers);
 	};
 
+	if (!sessionData) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
+		</div>
+	)
 
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
+
+	if (error) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		</div>
+	);
 	return (
 		<>
 			{userData?.role === "admin" && sessionData ? (
@@ -67,10 +65,10 @@ const Users = () => {
 						<input onChange={handleSearch} value={searchTerm} type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search by user or pet..." required />
 					</div>
 					{/* display results */}
-					<ul>
-						<li className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-							{(searchResults || allUserData)?.map((user, idx) => (
-								<a href={`/profile/${user.id}`} key={user?.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
+					<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
+						{(searchResults || allUserData)?.map((user, idx) => (
+							<li key={user?.id}>
+								<a href={`/profile/${user.id}`} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 									<div className="flex justify-center">
 										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
 											<img className="rounded-full scale-50 float-right" src={user?.image as string} />
@@ -80,14 +78,14 @@ const Users = () => {
 												{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
 												<h3 className="text-gray-900 font-bold">Pets:</h3>
 												<ul className="flex flex-wrap pl-[0px]">
-													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li><a href={`/pet/${pet.id}`}><img className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><img className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
 												</ul>
 											</div>
 										</div>
 									</div>
 								</a>
-							))}
-						</li>
+							</li>
+						))}
 					</ul>
 				</div >
 			) : (
