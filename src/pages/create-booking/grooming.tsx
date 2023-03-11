@@ -11,7 +11,8 @@ import Swal from "sweetalert2";
 import { sendEmailGrooming } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
 import { FormSchemaType } from "../../types/form-schema";
-import { schema } from "../../utils/schema";
+import { groomingSchema } from "../../utils/schema";
+import type { Pet } from "@prisma/client";
 
 const Grooming: NextPage = () => {
 	const router = useRouter();
@@ -48,7 +49,7 @@ const Grooming: NextPage = () => {
 	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(groomingSchema)
 	});
 
 	const addNewGroomingBooking = trpc.bookings.newBooking.useMutation();
@@ -161,9 +162,8 @@ const Grooming: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<GroomingForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				<GroomingForm petData={petData as [Pet]} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 			</div >
-
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
 				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please Login to book a grooming appointment.</h1>

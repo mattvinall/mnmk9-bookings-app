@@ -11,7 +11,8 @@ import Swal from "sweetalert2";
 import { sendEmailTraining } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
 import { FormSchemaType } from "../../types/form-schema";
-import { schema } from "../../utils/schema";
+import { trainingSchema } from "../../utils/schema";
+import type { Pet } from "@prisma/client"
 
 const Training: NextPage = () => {
 	const router = useRouter();
@@ -48,7 +49,7 @@ const Training: NextPage = () => {
 	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(trainingSchema)
 	});
 
 	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation();
@@ -167,7 +168,7 @@ const Training: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<TrainingForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				<TrainingForm petData={petData as [Pet]} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">

@@ -10,8 +10,9 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailDaycare } from "../../lib/email";
 import DaycareForm from "../../components/client/forms/DaycareForm";
+import type { Pet } from "@prisma/client";
 import { FormSchemaType } from "../../types/form-schema";
-import { schema } from "../../utils/schema";
+import { daycareSchema } from "../../utils/schema";
 
 const Daycare: NextPage = () => {
 	const router = useRouter();
@@ -48,13 +49,12 @@ const Daycare: NextPage = () => {
 	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(daycareSchema)
 	});
 
 	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation();
 
 	const [petId, setPetID] = useState<string>("");
-
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
@@ -65,7 +65,6 @@ const Daycare: NextPage = () => {
 			initialPetId && setPetID(initialPetId);
 		}
 	}, [petData])
-
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
@@ -158,7 +157,7 @@ const Daycare: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<DaycareForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				<DaycareForm petData={petData as [Pet]} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
