@@ -1,3 +1,5 @@
+import type { Pet } from "@prisma/client";
+
 export type FormSchemaType = {
 	firstName: string,
 	lastName: string,
@@ -13,12 +15,5 @@ export type FormSchemaType = {
 	userId: string,
 	serviceId: string,
 	petId: string,
-	petData?: Array<{
-		id: string,
-		breed: string,
-		name: string,
-		ownerId: string,
-		profileImage: string,
-		vaccinated: boolean,
-	}>
+	petData?: Pet
 }
