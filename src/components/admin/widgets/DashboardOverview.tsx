@@ -9,7 +9,7 @@ const DashboardOverview = () => {
 		const today = new Date().toISOString().split("T")[0];
 		const checkInBookings = new Date(checkInDate)
 			.toISOString()
-			.split("T")[0] === today;
+			.split("T")[0] === today && booking.confirmedBooking === true;
 
 		return checkInBookings;
 	});
@@ -21,7 +21,7 @@ const DashboardOverview = () => {
 		const today = new Date().toISOString().split("T")[0];
 		const checkOutBookings = new Date(checkOutDate)
 			.toISOString()
-			.split("T")[0] === today;
+			.split("T")[0] === today && booking.confirmedBooking === true;
 
 		return checkOutBookings;
 	});
