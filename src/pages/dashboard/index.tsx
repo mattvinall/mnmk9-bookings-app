@@ -24,7 +24,7 @@ const Dashboard = () => {
 					</h1>
 					<DashboardOverview />
 					<BookingsCalendar />
-					<div className="flex flex-col items-center lg:flex-row container lg:justify-between items-start px-4 py-16">
+					<div className="flex flex-col lg:flex-row container lg:justify-between items-start px-4 py-16">
 						<TodoList />
 						<ConfirmBookings />
 					</div>
