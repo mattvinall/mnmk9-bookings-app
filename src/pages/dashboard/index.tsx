@@ -5,6 +5,7 @@ import { trpc } from "../../utils/trpc";
 import BookingsCalendar from "../../components/admin/widgets/BookingsCalendar";
 import DashboardOverview from "../../components/admin/widgets/DashboardOverview";
 import TodoList from "../../components/admin/widgets/TodoList";
+import ConfirmBookings from "../../components/admin/widgets/ConfirmBookings";
 
 const Dashboard = () => {
 	// get user session
@@ -23,13 +24,14 @@ const Dashboard = () => {
 					</h1>
 					<DashboardOverview />
 					<BookingsCalendar />
-					<div className="flex container justify-between items-center px-4 py-16">
+					<div className="flex flex-col items-center lg:flex-row container lg:justify-between items-start px-4 py-16">
 						<TodoList />
+						<ConfirmBookings />
 					</div>
 				</div>
 			) : (
 				<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
-					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Error 403: Forbidden</h1>
+					<h3 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Error 403: Forbidden</h3>
 				</div>
 			)}
 		</>
