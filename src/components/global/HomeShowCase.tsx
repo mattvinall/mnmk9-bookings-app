@@ -69,7 +69,7 @@ const HomeShowCase = () => {
 				>
 					<h3 className="text-2xl font-bold">Manage a Booking →</h3>
 					<p className="text-lg">
-						need to update or cancel a clients' booking?
+						need to update or cancel a clients&lsquo; booking?
 					</p>
 				</Link>
 			</>
