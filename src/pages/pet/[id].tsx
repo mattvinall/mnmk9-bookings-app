@@ -93,6 +93,7 @@ const PetDetail = () => {
 			});
 
 			updatePetNotes.mutate({ id, notes: formData.notes })
+			reset()
 
 		} catch (error) {
 			Swal.fire({
