@@ -43,7 +43,6 @@ const BookingsCalendar = () => {
 				<td className="text-white px-6 py-4">{booking?.checkOutDate ?? "--"}</td>
 				<td className="text-white px-6 py-4">{booking?.startTime ? formatTime(booking?.startTime) : "--"}</td>
 				<td className="text-white px-6 py-4">{booking?.endTime ? formatTime(booking?.endTime) : "--"}</td>
-				{/* <td><button>Add to Google Calendar</button></td> */}
 			</tr>
 		);
 	});
@@ -59,7 +58,6 @@ const BookingsCalendar = () => {
 				<td className="text-white px-6 py-4">{booking?.checkOutDate ?? "--"}</td>
 				<td className="text-white px-6 py-4">{booking?.startTime ? formatTime(booking?.startTime) : "--"}</td>
 				<td className="text-white px-6 py-4">{booking?.endTime ? formatTime(booking?.endTime) : "--"}</td>
-				{/* <td><button>Add to Google Calendar</button></td> */}
 			</tr>
 		);
 	});
