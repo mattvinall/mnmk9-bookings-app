@@ -14,18 +14,19 @@ const ConfirmBookings = () => {
 
 	const filteredBookingsByNotConfirmed = bookingsData?.filter(booking => booking.confirmedBooking === false);
 
-	const ref = useRef();
+	const ref = useRef<any>(null);
 	const [showArrows, setShowArrows] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (ref.current && ref.current?.splide?.length === 0) {
-			setShowArrows(false);
+		if (ref.current && ref.current?.splide?.length > 0) {
+			setShowArrows(true);
 		}
 
-		setShowArrows(true);
+		setShowArrows(false);
+		return;
 	}, [showArrows])
 	return (
-		<div className="flex flex-col pl-0 lg:pl-24">
+		<div className="w-[50%] flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" ref={ref as any} options={{ arrows: showArrows }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map(booking => (
@@ -48,16 +49,16 @@ const ConfirmBookings = () => {
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">Start Time:</span> {booking.startTime ? (booking.startTime) : "--"}</p>
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">End Time:</span> {booking.endTime ? (booking.endTime) : "--"}</p>
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">Notes:</span> {booking?.notes ? booking.notes : "--"}</p>
-										<div className="flex flex-wrap justify-between md:justify-start lg:justify-between">
+										<div className="flex flex-col flex-wrap justify-between md:justify-start lg:justify-between">
 											{!booking.confirmedBooking && (
 												<button
-													className="bg-purple-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+													className="text-center bg-purple-900 w-[175px] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
 													onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: booking.confirmedBooking })}
 												>
 													Confirm Booking
 												</button>
 											)}
-											<Link className="block w-[160px] bg-purple-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
+											<Link className="block w-[175px] text-center bg-purple-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 												Booking Details
 											</Link>
 										</div>
