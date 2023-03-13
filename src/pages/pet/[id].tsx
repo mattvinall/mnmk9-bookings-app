@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import { trpc } from "../../utils/trpc";
 import useSetProfileImage from "../../hooks/useSetProfileImage";
 import useSetVaccinationDocument from "../../hooks/useSetVaccinationDocument";
@@ -125,7 +126,7 @@ const PetDetail = () => {
 					return (
 						<div key={pet.id} className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-full w-[300px] md:w-[32rem]">
-								<img className="w-[auto] md:w-full rounded-t-lg h-[350px] object-cover object-center" src={pet.profileImage || uploadedProfileImageUrl || defaultImage} width="50" alt={pet.name} />
+								<Image width={550} height={350} className="w-full md:w-full rounded-t-lg h-[350px] object-cover object-center" src={pet.profileImage || uploadedProfileImageUrl || defaultImage} alt={pet.name} />
 								<div className="p-6">
 									<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 									<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
