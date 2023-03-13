@@ -18,7 +18,7 @@ const ConfirmBookings = () => {
 	const [showArrows, setShowArrows] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (ref.current && ref.current?.splide?.length > 0) {
+		if (ref.current && ref.current?.splide?.length > 1) {
 			setShowArrows(true);
 		}
 
