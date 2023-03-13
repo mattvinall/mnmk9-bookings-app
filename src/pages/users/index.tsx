@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const Users = () => {
 	// get user session
@@ -71,14 +72,14 @@ const Users = () => {
 								<a href={`/profile/${user.id}`} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 									<div className="flex justify-center">
 										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
-											<img className="rounded-full scale-50 float-right" src={user?.image as string} alt={`profile image of ${user.name}`} />
+											<Image className="rounded-full scale-50 float-right" width={150} height={150} src={user?.image as string} alt={`profile image of ${user.name}`} />
 											<div className="p-6">
 												<h2 className="text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
 												{user?.phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{user?.phoneNumber}</p> : <p className="text-gray-700 font-medium mb-4">No phone number added...</p>}
 												{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
 												<h3 className="text-gray-900 font-bold">Pets:</h3>
 												<ul className="flex flex-wrap pl-[0px]">
-													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><img className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><img className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
 												</ul>
 											</div>
 										</div>
