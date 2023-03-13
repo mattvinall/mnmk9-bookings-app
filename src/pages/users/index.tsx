@@ -79,7 +79,7 @@ const Users = () => {
 												{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
 												<h3 className="text-gray-900 font-bold">Pets:</h3>
 												<ul className="flex flex-wrap pl-[0px]">
-													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><img className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
 												</ul>
 											</div>
 										</div>
