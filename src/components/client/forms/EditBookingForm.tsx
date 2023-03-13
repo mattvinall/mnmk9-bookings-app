@@ -18,7 +18,7 @@ const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, showF
 
 	return (
 		<form className="w-[80%] md:w-[90%]" style={{ position: "relative" }} onSubmit={handleSubmit(onSubmit)}>
-			<svg onClick={() => setShowForm(false)} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer", position: "absolute", right: "0px", top: "0%", color: "white" }}><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+			<svg onClick={() => setShowForm(false)} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer", position: "absolute", right: "0px", top: "0%", color: "white" }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
 			<p className="text-lg text-gray-100 underline">Details</p>
 			{bookingDetail?.checkInDate ? <p className="text-md text-gray-100">scheduled check-in date: {bookingDetail?.checkInDate}</p> : null}
 			{bookingDetail?.checkOutDate ? <p className="pb-8 text-md text-gray-100">scheduled check-out date: {bookingDetail?.checkOutDate}</p> : null}

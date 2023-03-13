@@ -6,56 +6,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { trpc } from '../../utils/trpc';
 import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
-
-type FormSchemaType = {
-	firstName: string,
-	lastName: string,
-	phoneNumber: string,
-	email: string,
-	checkInDate: string,
-	checkOutDate: string,
-	petName: string,
-	notes?: string,
-	serviceName: string,
-	userId: string,
-	serviceId: string,
-	petId: string,
-	petData?: Array<{
-		id: string,
-		breed: string,
-		name: string,
-		ownerId: string,
-		profileImage: string,
-		vaccinated: boolean,
-	}>
-}
-
-// define schema for the form 
-const schema = z.object({
-	firstName: z.string().min(1, { message: "First name is required" }),
-	lastName: z.string().min(1, { message: "Last name is required" }),
-	phoneNumber: z.string(),
-	email: z.string().min(1, { message: "Email is required" }).email({
-		message: "Must be a valid email",
-	}),
-	checkInDate: z.string(),
-	checkOutDate: z.string(),
-	petName: z.string(),
-	notes: z.string(),
-	petData: z.object({
-		id: z.string(),
-		breed: z.string(),
-		name: z.string(),
-		ownerId: z.string(),
-		profileImage: z.string(),
-		vaccinated: z.boolean(),
-	}).optional()
-})
+import type { Pet } from "@prisma/client";
+import { FormSchemaType } from "../../types/form-schema";
+import { boardingSchema } from "../../utils/schema";
 
 const Boarding: NextPage = () => {
 	// get email from session data
@@ -74,25 +31,29 @@ const Boarding: NextPage = () => {
 	const boardingId = boarding?.id as string;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id });
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id }, {
+		onSettled(data, error) {
+			if (!data || data.length === 0) {
+				Swal.fire({
+					icon: 'warning',
+					title: 'Warning',
+					text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
+				}).then(response => {
+					if (response.isConfirmed) {
+						router.push(`/profile/${id}`);
+					}
+				});
+			}
+		},
+	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(boardingSchema)
 	});
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation();
 
 	const [petId, setPetID] = useState<string>("");
-
-	useEffect(() => {
-		if (petData && petData?.length > 1) {
-			// store the pet ID of the first pet in the petData array as default
-			const initialPetId = petData && petData[0]?.id;
-
-
-			initialPetId && setPetID(initialPetId);
-		}
-	}, [])
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
@@ -202,7 +163,7 @@ const Boarding: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<BoardingForm petData={petData || []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				<BoardingForm petData={petData ?? []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">

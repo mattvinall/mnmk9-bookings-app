@@ -134,7 +134,6 @@ const UserDetail: () => void = () => {
 					/>
 				)}
 			</>
-			{showPets && userDetail?.pets && <h2 className="text-white underline text-left font-bold text-[2rem] md:text-[2.5rem]">Your Pets:</h2>}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{showPets && userDetail?.pets?.map((pet, i) => {
 					return (
@@ -152,7 +151,7 @@ const UserDetail: () => void = () => {
 												<p className="text-xs text-gray-100">Edit</p>
 											</Link>
 											<button name="delete-pet" onClick={() => handleDeletePet(pet.id, pet.name)} className="mt-6 ml-4 flex flex-col items-center justify-center w-12 h-12 mr-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-full focus:shadow-outline hover:bg-indigo-800">
-												<svg className="w-4 h-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+												<svg className="w-4 h-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
 												<p className="text-xs text-gray-100">Remove</p>
 											</button>
 										</div>

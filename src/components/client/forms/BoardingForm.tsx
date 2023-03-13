@@ -1,12 +1,9 @@
-"use-client";
-
-import { useEffect } from "react";
+"use client";
 import { trpc } from "../../../utils/trpc";
-import { useRouter } from "next/router";
-import Swal from "sweetalert2";
+import type { Pet } from "@prisma/client";
 
 type Props = {
-	petData: Array<{ name: string, ownerId: string }>,
+	petData: Array<Pet>,
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
@@ -15,23 +12,7 @@ type Props = {
 }
 
 const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
-	const router = useRouter();
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
-
-	useEffect(() => {
-		if (!petData || petData.length === 0) {
-			Swal.fire({
-				icon: 'warning',
-				title: 'Warning',
-				text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
-			}).then(response => {
-				if (response.isConfirmed) {
-					router.push(`/profile/${id}`);
-				}
-			});
-		}
-	}, []);
-
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
 	return (
@@ -45,7 +26,6 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						defaultValue={userData?.name.split(" ")[0] || ""}
 						id="floating_first_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-						required
 					/>
 					<label
 						htmlFor="floating_first_name"
@@ -58,10 +38,9 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						{...register("lastName", { required: true })}
 						type="text"
 						name="lastName"
-						defaultValue={userData?.name.split(" ")[1]}
+						defaultValue={userData?.name.split(" ")[1] || ""}
 						id="floating_last_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-						required
 					/>
 					<label
 						htmlFor="floating_last_name"
@@ -79,7 +58,6 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						defaultValue={userData?.phoneNumber || ""}
 						id="floating_phone"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-						required
 					/>
 					<label
 						htmlFor="floating_phone"
@@ -95,7 +73,6 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 						defaultValue={userData?.email || ""}
 						id="floating_email"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-						required
 					/>
 					<label
 						htmlFor="floating_email"

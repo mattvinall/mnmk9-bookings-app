@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import Head from "next/head";
-import Navbar from "../client/Navbar";
+import Navbar from "./Navbar";
 import Footer from "./Footer";
 interface ILayoutProps {
 	children: NonNullable<ReactNode>;
