@@ -30,8 +30,8 @@ const ConfirmBookings = () => {
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" ref={ref as any} options={{ arrows: showArrows }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map(booking => (
-					<SplideSlide>
-						<li key={booking?.id} className="flex flex-col gap-4 rounded-xl  p-2 text-white ">
+					<SplideSlide key={booking?.id} >
+						<li className="flex flex-col gap-4 rounded-xl  p-2 text-white ">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
 									<div className="bg-gray shadow-lg  overflow-hidden w-full max-w-md">

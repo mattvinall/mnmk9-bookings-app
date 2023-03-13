@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/client/forms/UserDetailForm";
@@ -140,7 +141,7 @@ const UserDetail: () => void = () => {
 						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
-									<img className="rounded-t-lg h-[300px] w-[300px] object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
+									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-[300px] object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
