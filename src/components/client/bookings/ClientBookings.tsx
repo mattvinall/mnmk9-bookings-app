@@ -23,12 +23,12 @@ const ClientBookings = () => {
 	);
 
 	return (
-		<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
+		<ul className="flex grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
 			{userData?.bookings && userData?.bookings?.length > 0 ? userData?.bookings?.map(booking => {
 				return (
-					<li key={booking?.id} className="w-full flex flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
+					<li key={booking?.id} className="flex w-[350px] justify-center flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 						<div className="flex justify-center">
-							<div className="w-full rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
+							<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[350px]">
 								<div className="p-6">
 									<span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2">{booking.serviceName} | </span><span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2"> &nbsp;{booking.petName}</span>
 									<p className="text-md text-gray-700 mb-2"><span className="font-bold">Confirmed:</span> {booking.confirmedBooking ? "✅" : "❌"}</p>
