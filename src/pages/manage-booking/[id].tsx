@@ -29,7 +29,7 @@ const BookingDetail: NextPage = () => {
 		startTime: z.string().optional(),
 		endTime: z.string().optional(),
 		notes: z.string().optional(),
-	})
+	});
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(schema)
@@ -71,7 +71,7 @@ const BookingDetail: NextPage = () => {
 		reset();
 	}
 
-	const [showForm, setShowForm] = useState(false);
+	const [showForm, setShowForm] = useState(true);
 
 	const handleShowEditBookingForm = () => {
 		setShowForm(true);
@@ -93,8 +93,7 @@ const BookingDetail: NextPage = () => {
 					// redirect to home page after cancelling
 					router.push("/");
 				}
-			})
-			console.log("cancel booking", cancelBooking);
+			});
 		} catch (error) {
 			// error message
 			Swal.fire({
@@ -124,22 +123,16 @@ const BookingDetail: NextPage = () => {
 				Manage Booking: <span className="text-[hsl(280,100%,70%)]">{bookingDetail?.serviceName}</span>
 			</h1>
 
-			<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
-				Need to switch your booking date or time?<br />
-				Click the buttons if you want to edit or cancel your booking.
-			</p>
-			<div className="flex justify-center">
-				<button
-					onClick={handleShowEditBookingForm}
-					className="mt-[25px] mr-3 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-					Edit Booking
-				</button>
-				<button
-					onClick={() => handleCancelBooking(bookingDetail?.id as string)}
-					className="mt-[25px] ml-3 rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-					Cancel Booking
-				</button>
-			</div>
+			<nav className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
+				<ul className="flex flex-wrap">
+					<li>
+						<button onClick={handleShowEditBookingForm} className={`${showForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Booking</button>
+					</li>
+					<li>
+						<button onClick={() => handleCancelBooking(bookingDetail?.id as string)} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Cancel Booking</button>
+					</li>
+				</ul>
+			</nav>
 			{showForm ? (
 				<EditBookingForm
 					register={register}
