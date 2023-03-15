@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
@@ -14,21 +14,20 @@ const ConfirmBookings = () => {
 
 	const filteredBookingsByNotConfirmed = bookingsData?.filter(booking => booking.confirmedBooking === false);
 
-	const ref = useRef<any>(null);
 	const [showArrows, setShowArrows] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (ref.current && ref.current?.splide?.length > 1) {
+		if (filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 1) {
 			setShowArrows(true);
+			return;
 		}
 
 		setShowArrows(false);
-		return;
-	}, [showArrows])
+	}, [showArrows, filteredBookingsByNotConfirmed?.length])
 	return (
 		<div className="w-[50%] flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
-			<Splide aria-label="MNMK-9 Bookings that have not confirmed" ref={ref as any} options={{ arrows: showArrows }}>
+			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map(booking => (
 					<SplideSlide key={booking?.id} >
 						<li className="flex flex-col gap-4 rounded-xl  p-2 text-white ">
