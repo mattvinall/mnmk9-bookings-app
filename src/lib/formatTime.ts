@@ -5,11 +5,14 @@ export const formatTime = (time: string) => {
 	const hourAsNumber = parseInt(hour, 10);
 
 	// if hour is less or equal to 12, return the time as is
-	if (hourAsNumber <= 12) {
+	if (hourAsNumber <= 11) {
 		return `${hour}:${minute} AM`;
 	}
 
 	switch (hourAsNumber) {
+		case 12:
+			return `12:${minute} PM`;
+		
 		case 13:
 			return `1:${minute} PM`;
 
