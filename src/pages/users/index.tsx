@@ -4,6 +4,7 @@ import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Users = () => {
 	// get user session
@@ -15,7 +16,15 @@ const Users = () => {
 	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id });
 
 	// fetch all users
-	const { data: allUserData } = trpc.user.getAllUsers.useQuery();
+	const { data: allUserData, refetch } = trpc.user.getAllUsers.useQuery();
+
+	const handleMakeUserAdmin = trpc.user.makeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
+
+	const handleRemoveUserAdmin = trpc.user.removeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
 
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState(allUserData);
@@ -68,23 +77,38 @@ const Users = () => {
 					{/* display results */}
 					<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 						{(searchResults || allUserData)?.map((user, idx) => (
-							<li key={user?.id}>
-								<a href={`/profile/${user.id}`} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
-									<div className="flex justify-center">
-										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
-											<Image className="rounded-full scale-50 float-right" width={150} height={150} src={user?.image as string} alt={`profile image of ${user.name}`} />
-											<div className="p-6">
-												<h2 className="text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
-												{user?.phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{user?.phoneNumber}</p> : <p className="text-gray-700 font-medium mb-4">No phone number added...</p>}
-												{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
-												<h3 className="text-gray-900 font-bold">Pets:</h3>
-												<ul className="flex flex-wrap pl-[0px]">
-													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
-												</ul>
-											</div>
+							<li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
+								<div className="flex justify-center">
+									<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[375px]">
+										<Image className="rounded-full scale-50 float-right" width={150} height={150} src={user?.image as string} alt={`profile image of ${user.name}`} />
+										<div className="p-6">
+											<h2 className="mt-6 text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
+											{user?.phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{user?.phoneNumber}</p> : <p className="text-gray-700 font-medium mb-4">No phone number added...</p>}
+											{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
+											<h3 className="text-gray-900 font-bold">Pets:</h3>
+											<ul className="flex flex-wrap pl-[0px]">
+												{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+											</ul>
+											{user?.role === "user" ? (
+												<button
+													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+													onClick={() => handleMakeUserAdmin.mutate({ id: user.id as string })}
+												>
+													Make Admin
+												</button>
+											) : (
+												<button
+													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+													onClick={() => handleRemoveUserAdmin.mutate({ id: user.id as string })}
+												>
+													Remove Admin
+												</button>
+											)
+											}
+											<Link className="absolute top-[-25px] left-0 bg-gray-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/profile/${user.id}`}>User Details</Link>
 										</div>
 									</div>
-								</a>
+								</div>
 							</li>
 						))}
 					</ul>
@@ -93,7 +117,8 @@ const Users = () => {
 				<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
 					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Error 403: Forbidden</h1>
 				</div>
-			)}
+			)
+			}
 		</>
 	)
 }

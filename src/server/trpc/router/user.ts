@@ -73,5 +73,43 @@ export const userRouter = router({
 					phoneNumber
 				}
 		})
+	}),
+	makeUserAdmin: protectedProcedure
+	.input(
+		z.object({
+			id: z.string()
+		})
+	)
+	.mutation(async ({ ctx, input }) => {
+		const { id } = input;
+		try {
+			return await ctx.prisma.user.update({
+				where: { id },
+				data: {
+					role: "admin"
+				}
+			})
+		} catch (error) {
+			console.log(`error: could not update user role - ${error}`)
+		}
+	}),
+	removeUserAdmin: protectedProcedure
+	.input(
+		z.object({
+			id: z.string()
+		})
+	)
+	.mutation(async ({ ctx, input }) => {
+		const { id } = input;
+		try {
+			return await ctx.prisma.user.update({
+				where: { id },
+				data: {
+					role: "user"
+				}
+			})
+		} catch (error) {
+			console.log(`error: could not update user role - ${error}`)
+		}
 	})
 })
