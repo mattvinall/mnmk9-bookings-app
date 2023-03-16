@@ -43,7 +43,7 @@ model Documents {
   id       String  @id @default(uuid())
   fileName String
   petId    String?
-  Pet      Pet?    @relation(fields: [petId], references: [id])
+  Pet      Pet?    @relation(fields: [petId], references: [id], onDelete: Cascade)
 
   @@index([petId])
 }
@@ -76,7 +76,7 @@ model Bookings {
   serviceName      String
   startTime        String?
   confirmedBooking Boolean   @default(false)
-  pet              Pet       @relation(fields: [petId], references: [id])
+  pet              Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
   service          Services  @relation(fields: [serviceId], references: [id])
   user             User      @relation(fields: [userId], references: [id])
 
