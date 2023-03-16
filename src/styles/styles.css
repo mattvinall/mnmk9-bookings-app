@@ -122,3 +122,9 @@
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
 }
+
+.MuiPaginationItem-root {
+  border: 1px solid #fff !important;
+  color: #fff !important;
+  padding: 0 10px !important;
+}
