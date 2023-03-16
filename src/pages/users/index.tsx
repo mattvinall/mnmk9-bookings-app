@@ -28,11 +28,11 @@ const Users = () => {
 		onSuccess: () => refetch()
 	});
 
-	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, 3)
+	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, 6)
 	const currentData = getCurrentData();
 
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [searchResults, setSearchResults] = useState(allUserData);
+	const [searchResults, setSearchResults] = useState<[]>([]);
 
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const query = event.target.value;
@@ -45,10 +45,15 @@ const Users = () => {
 				userPets.includes(query.toLowerCase())
 			);
 		});
-		setSearchResults(filteredUsers);
+		setSearchResults(filteredUsers as []);
 	};
 
-	const onPageChange = (event: any, value: any) => changePage(value);
+	const onPageChange = (event: any, value: any) => {
+		changePage(value);
+
+		setSearchResults([]);
+		setSearchTerm("");
+	}
 
 	if (!sessionData) return (
 		<div className="container text-center">
@@ -83,7 +88,7 @@ const Users = () => {
 					</div>
 					{/* display results */}
 					<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-						{(searchResults || currentData)?.map((user: any, idx: number) => (
+						{searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, idx: number) => (
 							<li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 								<div className="flex justify-center">
 									<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[375px]">
@@ -94,7 +99,7 @@ const Users = () => {
 											{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
 											<h3 className="text-gray-900 font-bold">Pets:</h3>
 											<ul className="flex flex-wrap pl-[0px]">
-												{user?.pets && user?.pets?.length > 0 ? user?.pets?.map(pet => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+												{user && user?.pets?.length > 0 ? user?.pets?.map((pet: any) => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
 											</ul>
 											{user?.role === "user" ? (
 												<button
@@ -117,7 +122,43 @@ const Users = () => {
 									</div>
 								</div>
 							</li>
-						))}
+						)) : (
+							currentData?.map((user: any, idx: number) => (
+								<li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
+									<div className="flex justify-center">
+										<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[375px]">
+											<Image className="rounded-full scale-50 float-right" width={150} height={150} src={user?.image as string} alt={`profile image of ${user.name}`} />
+											<div className="p-6">
+												<h2 className="mt-6 text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
+												{user?.phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{user?.phoneNumber}</p> : <p className="text-gray-700 font-medium mb-4">No phone number added...</p>}
+												{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
+												<h3 className="text-gray-900 font-bold">Pets:</h3>
+												<ul className="flex flex-wrap pl-[0px]">
+													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map((pet: any) => <li key={pet.id as string}><a href={`/pet/${pet.id as string}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${idx}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+												</ul>
+												{user?.role === "user" ? (
+													<button
+														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+														onClick={() => handleMakeUserAdmin.mutate({ id: user.id as string })}
+													>
+														Make Admin
+													</button>
+												) : (
+													<button
+														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+														onClick={() => handleRemoveUserAdmin.mutate({ id: user.id as string })}
+													>
+														Remove Admin
+													</button>
+												)
+												}
+												<Link className="absolute top-[-25px] left-0 bg-gray-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/profile/${user.id}`}>User Details</Link>
+											</div>
+										</div>
+									</div>
+								</li>
+							))
+						)}
 					</ul>
 					<Pagination
 						count={pageCount}
