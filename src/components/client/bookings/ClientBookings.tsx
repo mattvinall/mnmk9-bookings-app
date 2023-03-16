@@ -12,6 +12,15 @@ const ClientBookings = () => {
 	// query user table by email to get user data
 	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id });
 
+	// Pagination Logic
+	const ITEMS_PER_PAGE = 3;
+	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(userData?.bookings, ITEMS_PER_PAGE)
+	const currentBookingsData = getCurrentData();
+
+	const onPageChange = (event: any, value: number) => {
+		changePage(value);
+	}
+
 	if (isLoading) return (
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
@@ -23,15 +32,6 @@ const ClientBookings = () => {
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
 		</div>
 	);
-
-	// Pagination Logic
-	const ITEMS_PER_PAGE = 3;
-	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(userData?.bookings, ITEMS_PER_PAGE)
-	const currentBookingsData = getCurrentData();
-
-	const onPageChange = (event: any, value: number) => {
-		changePage(value);
-	}
 
 	return (
 		<div className="flex flex-col items-center">
