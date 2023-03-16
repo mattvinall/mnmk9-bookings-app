@@ -1,10 +1,12 @@
-"use-client";
+"use client";
 
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import usePagination from "../../hooks/usePagination";
+import Pagination from "@mui/material/Pagination";
 
 const Users = () => {
 	// get user session
@@ -26,6 +28,9 @@ const Users = () => {
 		onSuccess: () => refetch()
 	});
 
+	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, 3)
+	const currentData = getCurrentData();
+
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState(allUserData);
 
@@ -42,6 +47,8 @@ const Users = () => {
 		});
 		setSearchResults(filteredUsers);
 	};
+
+	const onPageChange = (event: any, value: any) => changePage(value);
 
 	if (!sessionData) return (
 		<div className="container text-center">
@@ -76,7 +83,7 @@ const Users = () => {
 					</div>
 					{/* display results */}
 					<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-						{(searchResults || allUserData)?.map((user, idx) => (
+						{(searchResults || currentData)?.map((user: any, idx: number) => (
 							<li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 								<div className="flex justify-center">
 									<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[375px]">
@@ -112,7 +119,16 @@ const Users = () => {
 							</li>
 						))}
 					</ul>
-				</div >
+					<Pagination
+						count={pageCount}
+						size="large"
+						page={currentPage}
+						variant="outlined"
+						color="secondary"
+						shape="rounded"
+						onChange={onPageChange}
+					/>
+				</div>
 			) : (
 				<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
 					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Error 403: Forbidden</h1>
