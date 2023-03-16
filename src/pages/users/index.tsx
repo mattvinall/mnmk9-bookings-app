@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -28,7 +28,8 @@ const Users = () => {
 		onSuccess: () => refetch()
 	});
 
-	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, 6)
+	const ITEMS_PER_PAGE = 6;
+	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, ITEMS_PER_PAGE)
 	const currentData = getCurrentData();
 
 	const [searchTerm, setSearchTerm] = useState<string>("");
@@ -88,7 +89,7 @@ const Users = () => {
 					</div>
 					{/* display results */}
 					<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-						{searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, idx: number) => (
+						{searchTerm && searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, idx: number) => (
 							<li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 								<div className="flex justify-center">
 									<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[375px]">
