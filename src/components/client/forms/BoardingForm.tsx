@@ -1,22 +1,50 @@
 "use client";
+import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
 import type { Pet } from "@prisma/client";
+import {
+	useGoogleReCaptcha,
+	GoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
+
 
 type Props = {
 	petData: Array<Pet>,
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
-	onSubmit: any,
+	onSubmit: any
 	handleChange: any
+	setToken: any
 }
 
-const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
+const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
+	const { executeRecaptcha } = useGoogleReCaptcha()
+	// Create an event handler so you can call the verification on button click event or form submit
+	const handleReCaptchaVerify = useCallback(async () => {
+		if (!executeRecaptcha) {
+			console.log('Execute recaptcha not yet available');
+			return;
+		}
+
+		const token = await executeRecaptcha('boardingForm');
+		setToken(token)
+		console.log("token", token);
+		// Do whatever you want with the token
+	}, [executeRecaptcha]);
+
+	// You can use useEffect to trigger the verification as soon as the component being loaded
+	useEffect(() => {
+		handleReCaptchaVerify();
+	}, [handleReCaptchaVerify]);
+
+
 	return (
 		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
+			<GoogleReCaptcha onVerify={handleReCaptchaVerify} />
 			<div className="grid md:grid-cols-2 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
 					<input
@@ -171,7 +199,7 @@ const BoardingForm = ({ petData, isSubmitting, register, handleSubmit, onSubmit,
 				className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 				Submit
 			</button>
-		</form >
+		</form>
 	)
 }
 

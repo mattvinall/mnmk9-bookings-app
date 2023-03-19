@@ -7,7 +7,7 @@ import 'react-calendar/dist/Calendar.css';
 import CheckInTable from "../../../components/admin/tables/checkInTable";
 import CheckOutTable from "../../../components/admin/tables/checkOutTable";
 import { useSession } from "next-auth/react";
-import { formatTime } from "../../../lib/formatTime";
+import { formatTime } from "../../../utils/formatTime";
 
 const BookingsCalendar = () => {
 	// get user session
