@@ -23,11 +23,13 @@
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
     "aws-sdk": "^2.1290.0",
+    "ioredis": "^5.3.1",
     "next": "13.0.2",
     "next-auth": "^4.18.3",
     "react": "18.2.0",
     "react-calendar": "^4.0.0",
     "react-dom": "18.2.0",
+    "react-google-recaptcha-v3": "^1.10.1",
     "react-hook-form": "^7.41.0",
     "superjson": "1.9.1",
     "zod": "^3.20.2"
