@@ -146,25 +146,25 @@ const Boarding: NextPage = () => {
 			formData.serviceName = "Boarding";
 
 			// mutate / POST request to bookings api endpoint and submit the form data
-			// addNewBooking.mutate(formData);
+			addNewBooking.mutate(formData);
 
 			// reset the form state
 			reset();
 
 			// call send email function that leverages AWS SES to send the form data via email
-			// await sendEmailBoarding(
-			// 	formData?.email,
-			// 	// process.env.NEXT_PUBLIC_EMAIL_TO as string,
-			// 	"matt.vinall7@gmail.com",
-			// 	formData?.firstName,
-			// 	formData?.lastName,
-			// 	formData?.email,
-			// 	formData?.phoneNumber,
-			// 	formData?.petName,
-			// 	formData?.checkInDate,
-			// 	formData?.checkOutDate,
-			// 	formData?.notes
-			// );
+			await sendEmailBoarding(
+				formData?.email,
+				// process.env.NEXT_PUBLIC_EMAIL_TO as string,
+				"matt.vinall7@gmail.com",
+				formData?.firstName,
+				formData?.lastName,
+				formData?.email,
+				formData?.phoneNumber,
+				formData?.petName,
+				formData?.checkInDate,
+				formData?.checkOutDate,
+				formData?.notes
+			);
 
 			// success message 
 			Swal.fire({
