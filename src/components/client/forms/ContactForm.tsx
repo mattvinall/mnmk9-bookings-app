@@ -1,17 +1,44 @@
-"use-client";
+"use client";
+
+import { useEffect, useCallback } from "react";
+import {
+	useGoogleReCaptcha,
+	GoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 
 type Props = {
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
 	onSubmit: any,
+	setToken: any
 }
 
-const ContactForm = ({ handleSubmit, register, onSubmit, isSubmitting }: Props) => {
+const ContactForm = ({ handleSubmit, setToken, register, onSubmit, isSubmitting }: Props) => {
 	const rows = 6;
+	const { executeRecaptcha } = useGoogleReCaptcha()
+	// Create an event handler so you can call the verification on button click event or form submit
+	const handleReCaptchaVerify = useCallback(async () => {
+		if (!executeRecaptcha) {
+			console.log('Execute recaptcha not yet available');
+			return;
+		}
+
+		const token = await executeRecaptcha('contactForm');
+		setToken(token)
+		console.log("token", token);
+		// Do whatever you want with the token
+	}, [executeRecaptcha]);
+
+	// You can use useEffect to trigger the verification as soon as the component being loaded
+	useEffect(() => {
+		handleReCaptchaVerify();
+	}, [handleReCaptchaVerify]);
+
 	return (
 		<>
 			<form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+				<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="contactForm" />
 				<div className="relative z-0 mb-6 w-full group">
 					<label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-100 dark:text-gray-100">Name</label>
 					<input

@@ -1,6 +1,6 @@
-"use-client";
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
@@ -12,10 +12,29 @@ import { sendEmailGrooming } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
 import { FormSchemaType } from "../../types/form-schema";
 import { groomingSchema } from "../../utils/schema";
-import type { Pet } from "@prisma/client";
+import {
+	GoogleReCaptchaProvider,
+} from 'react-google-recaptcha-v3';
 
 const Grooming: NextPage = () => {
 	const router = useRouter();
+
+	const [token, setToken] = useState<string>("");
+	const [key, setKey] = useState<string>("");
+	const [secret, setSecret] = useState<string>("");
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, []);
 
 	// get email from session data
 	const { data: sessionData } = useSession();
@@ -65,7 +84,6 @@ const Grooming: NextPage = () => {
 		}
 	}, [petData])
 
-
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +96,30 @@ const Grooming: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData): Promise<void> => {
+	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
+		try {
+			if (token && secret) {
+				console.log("secret before fetch", secret)
+				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: `secret=${secret}&response=${token}`,
+				});
+
+				console.log("response from fetch", response);
+			}
+		} catch (err) {
+			console.log("error", err)
+		}
+	}, [token])
+
+	const onSubmit: SubmitHandler<FormSchemaType> = async (formData) => {
+		if (!token || token === "") return;
+
+		const result = await verifyRecaptcha(token, secret);
+		console.log("result from calling verify recaptcha", result)
+
+		// TODO: logic to handle response and evaluate score
 
 		try {
 			if (trainingId) {
@@ -98,7 +139,7 @@ const Grooming: NextPage = () => {
 
 			formData.serviceName = "Grooming";
 
-			formData && addNewGroomingBooking.mutate(formData);
+			addNewGroomingBooking.mutate(formData);
 
 			// reset form
 			reset();
@@ -162,7 +203,11 @@ const Grooming: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<GroomingForm petData={petData ?? []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				{key && key !== undefined ? (
+					<GoogleReCaptchaProvider reCaptchaKey={key}>
+						<GroomingForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+					</GoogleReCaptchaProvider>
+				) : null}
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">

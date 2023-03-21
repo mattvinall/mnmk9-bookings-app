@@ -1,6 +1,6 @@
-"use-client";
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
@@ -12,13 +12,32 @@ import { sendEmailTraining } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
 import { FormSchemaType } from "../../types/form-schema";
 import { trainingSchema } from "../../utils/schema";
-import type { Pet } from "@prisma/client"
+import {
+	GoogleReCaptchaProvider,
+} from 'react-google-recaptcha-v3';
 
 const Training: NextPage = () => {
 	const router = useRouter();
 
-	// get email from session data
+	const [token, setToken] = useState<string>("");
+	const [key, setKey] = useState<string>("");
+	const [secret, setSecret] = useState<string>("");
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, []);
+
 	const { data: sessionData } = useSession();
+	// get id from session data
 	const id = sessionData?.user?.id as string;
 
 	// query user table by email to get user data
@@ -87,7 +106,32 @@ const Training: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
+	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
+		try {
+			if (token && secret) {
+				console.log("secret before fetch", secret)
+				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: `secret=${secret}&response=${token}`,
+				});
+
+				console.log("response from fetch", response);
+			}
+		} catch (err) {
+			console.log("error", err)
+		}
+	}, [token])
+
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+		if (!token || token === "") return;
+
+		console.log("token in on submit", token)
+
+		const result = await verifyRecaptcha(token, secret);
+		console.log("result from calling verify recaptcha", result)
+
+		// TODO: logic to handle response and evaluate score
 
 		try {
 			if (trainingId) {
@@ -168,7 +212,11 @@ const Training: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<TrainingForm petData={petData ?? []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				{key && key !== undefined ? (
+					<GoogleReCaptchaProvider reCaptchaKey={key}>
+						<TrainingForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+					</GoogleReCaptchaProvider>
+				) : null}
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">

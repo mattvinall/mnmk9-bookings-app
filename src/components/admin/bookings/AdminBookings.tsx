@@ -1,6 +1,6 @@
 import { trpc } from "../../../utils/trpc";
 import Link from "next/link"
-import { formatTime } from "../../../lib/formatTime";
+import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 

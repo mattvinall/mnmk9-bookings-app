@@ -15,5 +15,5 @@ export type FormSchemaType = {
 	userId: string,
 	serviceId: string,
 	petId: string,
-	petData?: Pet
+	petData?: [Pet]
 }
