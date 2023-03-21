@@ -13,6 +13,9 @@ import BoardingForm from "../../components/client/forms/BoardingForm";
 import type { Pet } from "@prisma/client";
 import { FormSchemaType } from "../../types/form-schema";
 import { boardingSchema } from "../../utils/schema";
+import {
+	GoogleReCaptchaProvider,
+} from 'react-google-recaptcha-v3';
 
 const Boarding: NextPage = () => {
 	// get email from session data
