@@ -139,25 +139,25 @@ const Grooming: NextPage = () => {
 
 			formData.serviceName = "Grooming";
 
-			formData && addNewGroomingBooking.mutate(formData);
+			// formData && addNewGroomingBooking.mutate(formData);
 
 			// reset form
 			reset();
 
-			await sendEmailGrooming(
-				formData?.email,
-				// process.env.NEXT_PUBLIC_EMAIL_TO as string,
-				"matt.vinall7@gmail.com",
-				formData?.firstName,
-				formData?.lastName,
-				formData?.email,
-				formData?.phoneNumber,
-				formData?.petName,
-				formData?.checkInDate,
-				formData?.startTime || "",
-				formData?.endTime || "",
-				formData?.notes
-			);
+			// await sendEmailGrooming(
+			// 	formData?.email,
+			// 	// process.env.NEXT_PUBLIC_EMAIL_TO as string,
+			// 	"matt.vinall7@gmail.com",
+			// 	formData?.firstName,
+			// 	formData?.lastName,
+			// 	formData?.email,
+			// 	formData?.phoneNumber,
+			// 	formData?.petName,
+			// 	formData?.checkInDate,
+			// 	formData?.startTime || "",
+			// 	formData?.endTime || "",
+			// 	formData?.notes
+			// );
 
 			// success message 
 			Swal.fire({
