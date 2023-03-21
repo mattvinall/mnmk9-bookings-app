@@ -1,7 +1,12 @@
-"use-client";
+"use client";
 
+import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
 import type { Pet } from "@prisma/client";
+import {
+	useGoogleReCaptcha,
+	GoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 
 type Props = {
 	petData: Array<Pet>,
@@ -10,14 +15,35 @@ type Props = {
 	handleSubmit: any,
 	onSubmit: any,
 	handleChange: any
+	setToken: any
 }
 
-const GroomingForm = ({ register, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: Props) => {
+const GroomingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: Props) => {
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
+	const { executeRecaptcha } = useGoogleReCaptcha()
+	// Create an event handler so you can call the verification on button click event or form submit
+	const handleReCaptchaVerify = useCallback(async () => {
+		if (!executeRecaptcha) {
+			console.log('Execute recaptcha not yet available');
+			return;
+		}
+
+		const token = await executeRecaptcha('groomingForm');
+		setToken(token)
+		console.log("token", token);
+		// Do whatever you want with the token
+	}, [executeRecaptcha]);
+
+	// You can use useEffect to trigger the verification as soon as the component being loaded
+	useEffect(() => {
+		handleReCaptchaVerify();
+	}, [handleReCaptchaVerify]);
+
 	return (
 		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
+			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="groomingForm" />
 			<div className="grid md:grid-cols-2 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
 					<input

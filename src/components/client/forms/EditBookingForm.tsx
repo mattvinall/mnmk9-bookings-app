@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 

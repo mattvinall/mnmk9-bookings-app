@@ -41,10 +41,9 @@ const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit,
 		handleReCaptchaVerify();
 	}, [handleReCaptchaVerify]);
 
-
 	return (
 		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
-			<GoogleReCaptcha onVerify={handleReCaptchaVerify} />
+			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="boardingForm" />
 			<div className="grid md:grid-cols-2 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
 					<input
