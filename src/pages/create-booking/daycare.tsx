@@ -19,18 +19,22 @@ import {
 const Daycare: NextPage = () => {
 	const router = useRouter();
 
-	const [token, setToken] = useState<string>("")
-	const [key, setKey] = useState<string>("")
+	const [token, setToken] = useState<string>("");
+	const [key, setKey] = useState<string>("");
+	const [secret, setSecret] = useState<string>("");
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
 
 		if (key && key !== undefined) {
 			setKey(key);
-
-			console.log("key in state", key)
 		}
-	}, [])
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, []);
 
 	// get email from session data
 	const { data: sessionData } = useSession();
@@ -112,7 +116,7 @@ const Daycare: NextPage = () => {
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
 		if (!token || token === "") return;
 
-		const result = await verifyRecaptcha(token, "6LfgumMkAAAAAHqV2tiifsX4V6W82UZYNkmBr8MQ");
+		const result = await verifyRecaptcha(token, secret);
 		console.log("result from calling verify recaptcha", result)
 
 		// TODO: logic to handle response and evaluate score
