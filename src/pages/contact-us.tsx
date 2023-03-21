@@ -1,4 +1,6 @@
-import React from 'react'
+"use client";
+
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { trpc } from "../utils/trpc";
@@ -7,6 +9,9 @@ import { z } from 'zod';
 import ContactForm from '../components/client/forms/ContactForm';
 import Swal from "sweetalert2";
 import { sendEmailContactForm } from "../lib/email";
+import {
+	GoogleReCaptchaProvider,
+} from 'react-google-recaptcha-v3';
 
 type FormSchemaType = {
 	name: string,
@@ -45,6 +50,24 @@ const ContactUs = () => {
 	});
 
 	const addNewContactFormEntry = trpc.contact.newContactEmail.useMutation();
+
+	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
+
+		try {
+			if (token && secret) {
+				console.log("secret before fetch", secret)
+				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: `secret=${secret}&response=${token}`,
+				});
+
+				console.log("response from fetch", response);
+			}
+		} catch (err) {
+			console.log("error", err)
+		}
+	}, [token])
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
 		if (!token || token === "") return;
@@ -93,12 +116,17 @@ const ContactUs = () => {
 			</h1>
 			<section className="px-4 mx-auto max-w-screen-md">
 				<p className="mb-8 lg:mb-16 font-medium text-center dark:text-gray-100 sm:text-xl">Got a technical issue? Have trouble booking or managing a service? Let us know.</p>
-				<ContactForm
-					onSubmit={onSubmit}
-					handleSubmit={handleSubmit}
-					isSubmitting={isSubmitting}
-					register={register}
-				/>
+				{key && key !== undefined ? (
+					<GoogleReCaptchaProvider reCaptchaKey={key}>
+						<ContactForm
+							setToken={setToken}
+							onSubmit={onSubmit}
+							handleSubmit={handleSubmit}
+							isSubmitting={isSubmitting}
+							register={register}
+						/>
+					</GoogleReCaptchaProvider>
+				) : null}
 			</section>
 		</div>
 	)

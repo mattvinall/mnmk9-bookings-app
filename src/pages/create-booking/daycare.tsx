@@ -1,6 +1,6 @@
-"use-client";
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
@@ -10,9 +10,11 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailDaycare } from "../../lib/email";
 import DaycareForm from "../../components/client/forms/DaycareForm";
-import type { Pet } from "@prisma/client";
 import { FormSchemaType } from "../../types/form-schema";
 import { daycareSchema } from "../../utils/schema";
+import {
+	GoogleReCaptchaProvider,
+} from 'react-google-recaptcha-v3';
 
 const Daycare: NextPage = () => {
 	const router = useRouter();
@@ -93,6 +95,23 @@ const Daycare: NextPage = () => {
 
 		petSelectedId && setPetID(petSelectedId);
 	}
+
+	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
+		try {
+			if (token && secret) {
+				console.log("secret before fetch", secret)
+				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: `secret=${secret}&response=${token}`,
+				});
+
+				console.log("response from fetch", response);
+			}
+		} catch (err) {
+			console.log("error", err)
+		}
+	}, [token])
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
 		if (!token || token === "") return;
@@ -181,7 +200,11 @@ const Daycare: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<DaycareForm petData={petData ?? []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				{key && key !== undefined ? (
+					<GoogleReCaptchaProvider reCaptchaKey={key}>
+						<DaycareForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+					</GoogleReCaptchaProvider>
+				) : null}
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">

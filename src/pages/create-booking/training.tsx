@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
@@ -12,7 +12,9 @@ import { sendEmailTraining } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
 import { FormSchemaType } from "../../types/form-schema";
 import { trainingSchema } from "../../utils/schema";
-import type { Pet } from "@prisma/client"
+import {
+	GoogleReCaptchaProvider,
+} from 'react-google-recaptcha-v3';
 
 const Training: NextPage = () => {
 	const router = useRouter();
@@ -35,6 +37,7 @@ const Training: NextPage = () => {
 	}, []);
 
 	const { data: sessionData } = useSession();
+	// get id from session data
 	const id = sessionData?.user?.id as string;
 
 	// query user table by email to get user data
@@ -103,6 +106,23 @@ const Training: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
+	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
+		try {
+			if (token && secret) {
+				console.log("secret before fetch", secret)
+				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: `secret=${secret}&response=${token}`,
+				});
+
+				console.log("response from fetch", response);
+			}
+		} catch (err) {
+			console.log("error", err)
+		}
+	}, [token])
+
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
 		if (!token || token === "") return;
 
@@ -129,25 +149,25 @@ const Training: NextPage = () => {
 
 			formData.serviceName = "Training";
 
-			addNewTrainingBooking.mutate(formData);
+			// addNewTrainingBooking.mutate(formData);
 
 			// reset form state
 			reset();
 
-			await sendEmailTraining(
-				formData?.email,
-				// process.env.NEXT_PUBLIC_EMAIL_TO as string,
-				"matt.vinall7@gmail.com",
-				formData?.firstName,
-				formData?.lastName,
-				formData?.email,
-				formData?.phoneNumber,
-				formData?.petName,
-				formData?.checkInDate,
-				formData?.startTime,
-				formData?.endTime,
-				formData?.notes
-			);
+			// await sendEmailTraining(
+			// 	formData?.email,
+			// 	// process.env.NEXT_PUBLIC_EMAIL_TO as string,
+			// 	"matt.vinall7@gmail.com",
+			// 	formData?.firstName,
+			// 	formData?.lastName,
+			// 	formData?.email,
+			// 	formData?.phoneNumber,
+			// 	formData?.petName,
+			// 	formData?.checkInDate,
+			// 	formData?.startTime,
+			// 	formData?.endTime,
+			// 	formData?.notes
+			// );
 
 			// success message 
 			Swal.fire({
@@ -192,7 +212,11 @@ const Training: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<TrainingForm petData={petData ?? []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				{key && key !== undefined ? (
+					<GoogleReCaptchaProvider reCaptchaKey={key}>
+						<TrainingForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+					</GoogleReCaptchaProvider>
+				) : null}
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">

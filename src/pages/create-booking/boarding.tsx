@@ -1,6 +1,6 @@
-'use client';
+// 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
@@ -10,7 +10,6 @@ import { trpc } from '../../utils/trpc';
 import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
-import type { Pet } from "@prisma/client";
 import { FormSchemaType } from "../../types/form-schema";
 import { boardingSchema } from "../../utils/schema";
 import {
@@ -18,10 +17,8 @@ import {
 } from 'react-google-recaptcha-v3';
 
 const Boarding: NextPage = () => {
-	// get email from session data
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
-
 	const router = useRouter();
 
 	const [petId, setPetID] = useState<string>("");
@@ -100,6 +97,29 @@ const Boarding: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
+	const verifyRecaptcha = async (token: string, secret: string) => {
+		const url = 'https://www.google.com/recaptcha/api/siteverify';
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+					"Access-Control-Allow-Origin": "*"
+				},
+				body: `secret=${secret}&response=${token}`,
+			});
+
+			const json = await response.json();
+			console.log("json", json)
+
+			// setToken("")
+
+		} catch (err) {
+			console.log("error", err)
+			// setToken("")
+		}
+	}
+
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
 		if (!token || token === "") return;
 		const result = await verifyRecaptcha(token, secret);
@@ -126,31 +146,31 @@ const Boarding: NextPage = () => {
 			formData.serviceName = "Boarding";
 
 			// mutate / POST request to bookings api endpoint and submit the form data
-			addNewBooking.mutate(formData);
+			// addNewBooking.mutate(formData);
 
 			// reset the form state
 			reset();
 
 			// call send email function that leverages AWS SES to send the form data via email
-			await sendEmailBoarding(
-				formData?.email,
-				// process.env.NEXT_PUBLIC_EMAIL_TO as string,
-				"matt.vinall7@gmail.com",
-				formData?.firstName,
-				formData?.lastName,
-				formData?.email,
-				formData?.phoneNumber,
-				formData?.petName,
-				formData?.checkInDate,
-				formData?.checkOutDate,
-				formData?.notes
-			);
+			// await sendEmailBoarding(
+			// 	formData?.email,
+			// 	// process.env.NEXT_PUBLIC_EMAIL_TO as string,
+			// 	"matt.vinall7@gmail.com",
+			// 	formData?.firstName,
+			// 	formData?.lastName,
+			// 	formData?.email,
+			// 	formData?.phoneNumber,
+			// 	formData?.petName,
+			// 	formData?.checkInDate,
+			// 	formData?.checkOutDate,
+			// 	formData?.notes
+			// );
 
 			// success message 
 			Swal.fire({
 				icon: 'success',
 				title: `PAWesome 🐶`,
-				text: `Successfully Booked ${formData.petName} for Boarding. An email confirmation with your booking details will be sent to your email.`,
+				text: `Successfully Booked ${formData.petName} for Boarding.An email confirmation with your booking details will be sent to your email.`,
 			}).then((result) => {
 				if (result.isConfirmed) {
 					// navigate to home page on submit
@@ -161,7 +181,7 @@ const Boarding: NextPage = () => {
 			Swal.fire({
 				icon: 'error',
 				title: 'Oops...',
-				text: `Something went wrong! ${error}`,
+				text: `Something went wrong! ${error} `,
 			});
 		}
 	}
@@ -176,7 +196,7 @@ const Boarding: NextPage = () => {
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
 		</div>
-	)
+	);
 
 	return (
 		sessionData ? (
@@ -187,7 +207,11 @@ const Boarding: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				<BoardingForm petData={petData ?? []} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+				{key && key !== undefined ? (
+					<GoogleReCaptchaProvider reCaptchaKey={key}>
+						<BoardingForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+					</GoogleReCaptchaProvider>
+				) : null}
 			</div >
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
