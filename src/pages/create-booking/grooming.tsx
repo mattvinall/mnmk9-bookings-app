@@ -17,6 +17,23 @@ import type { Pet } from "@prisma/client";
 const Grooming: NextPage = () => {
 	const router = useRouter();
 
+	const [token, setToken] = useState<string>("");
+	const [key, setKey] = useState<string>("");
+	const [secret, setSecret] = useState<string>("");
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, []);
+
 	// get email from session data
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
@@ -78,7 +95,30 @@ const Grooming: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData): Promise<void> => {
+	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
+		try {
+			if (token && secret) {
+				console.log("secret before fetch", secret)
+				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: `secret=${secret}&response=${token}`,
+				});
+
+				console.log("response from fetch", response);
+			}
+		} catch (err) {
+			console.log("error", err)
+		}
+	}, [token])
+
+	const onSubmit: SubmitHandler<FormSchemaType> = async (formData) => {
+		if (!token || token === "") return;
+
+		const result = await verifyRecaptcha(token, secret);
+		console.log("result from calling verify recaptcha", result)
+
+		// TODO: logic to handle response and evaluate score
 
 		try {
 			if (trainingId) {

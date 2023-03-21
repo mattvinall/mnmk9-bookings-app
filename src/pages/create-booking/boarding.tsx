@@ -21,6 +21,24 @@ const Boarding: NextPage = () => {
 
 	const router = useRouter();
 
+	const [petId, setPetID] = useState<string>("");
+	const [token, setToken] = useState<string>("");
+	const [key, setKey] = useState<string>("")
+	const [secret, setSecret] = useState<string>("")
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, []);
+
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
 
@@ -53,8 +71,6 @@ const Boarding: NextPage = () => {
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation();
 
-	const [petId, setPetID] = useState<string>("");
-
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
 			// store the pet ID of the first pet in the petData array as default
@@ -82,6 +98,11 @@ const Boarding: NextPage = () => {
 	}
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+		if (!token || token === "") return;
+		const result = await verifyRecaptcha(token, secret);
+		console.log("result from calling verify recaptcha", result)
+
+		// TODO: logic to handle response and evaluate score
 
 		try {
 			// check if boardingId is truthy and then set the id of the service
