@@ -15,8 +15,6 @@ import { boardingSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
-// import verifyRecaptcha from "../../utils/verifyRecaptcha";
-
 
 const Boarding: NextPage = () => {
 	const { data: sessionData } = useSession();
