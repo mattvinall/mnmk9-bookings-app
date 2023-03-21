@@ -22,7 +22,6 @@ export const serverSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   REDIS_DB_URL: z.string().url(),
-  RECAPTCHA_SECRET: z.string()
 });
 
 /**
@@ -36,7 +35,8 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_AWS_ACCESS_KEY_ID: z.string(),
   NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: z.string(),
   NEXT_PUBLIC_EMAIL_TO: z.string(),
-  NEXT_PUBLIC_RECAPTCHA_SITEKEY: z.string()
+  NEXT_PUBLIC_RECAPTCHA_SITEKEY: z.string(),
+  NEXT_PUBLIC_RECAPTCHA_SECRET: z.string()
 });
 
 /**
@@ -51,5 +51,6 @@ export const clientEnv = {
   NEXT_PUBLIC_AWS_ACCESS_KEY_ID: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
   NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   NEXT_PUBLIC_EMAIL_TO: process.env.NEXT_PUBLIC_EMAIL_TO,
-  NEXT_PUBLIC_RECAPTCHA_SITEKEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY
+  NEXT_PUBLIC_RECAPTCHA_SITEKEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY,
+  NEXT_PUBLIC_RECAPTCHA_SECRET: process.env.NEXT_PUBLIC_RECAPTCHA_SECRET
 }
