@@ -10,15 +10,16 @@ import {
 
 type Props = {
 	petData: Array<Pet>,
-	isSubmitting: boolean,
-	register: any,
-	handleSubmit: any,
+	isSubmitting: boolean
+	register: any
+	handleSubmit: any
 	onSubmit: any
 	handleChange: any
 	setToken: any
+	setValue: any
 }
 
-const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
+const BoardingForm = ({ petData, setValue, setToken, isSubmitting, register, handleSubmit, onSubmit, handleChange }: Props) => {
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
@@ -41,6 +42,12 @@ const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit,
 		handleReCaptchaVerify();
 	}, [handleReCaptchaVerify]);
 
+	// set form values with the userData
+	setValue("firstName", userData?.name.split(" ")[0] as string);
+	setValue("lastName", userData?.name.split(" ")[1] as string);
+	setValue("email", userData?.email as string);
+	setValue("phoneNumber", userData?.phoneNumber as string)
+
 	return (
 		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
 			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="boardingForm" />
@@ -50,12 +57,11 @@ const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit,
 						{...register("firstName", { required: true })}
 						type="text"
 						name="firstName"
-						defaultValue={userData?.name.split(" ")[0] as string}
-						id="floating_first_name"
+						id="first_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
 					<label
-						htmlFor="floating_first_name"
+						htmlFor="first_name"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 						First name
 					</label>
@@ -65,12 +71,11 @@ const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit,
 						{...register("lastName", { required: true })}
 						type="text"
 						name="lastName"
-						defaultValue={userData?.name.split(" ")[1] as string}
-						id="floating_last_name"
+						id="last_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
 					<label
-						htmlFor="floating_last_name"
+						htmlFor="last_name"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 						Last name
 					</label>
@@ -82,12 +87,11 @@ const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit,
 						{...register("phoneNumber", { required: true })}
 						type="tel"
 						name="phoneNumber"
-						defaultValue={userData?.phoneNumber as string}
-						id="floating_phone"
+						id="phone"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
 					<label
-						htmlFor="floating_phone"
+						htmlFor="phone"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 						Phone number
 					</label>
@@ -97,12 +101,11 @@ const BoardingForm = ({ petData, setToken, isSubmitting, register, handleSubmit,
 						{...register("email", { required: true })}
 						type="email"
 						name="email"
-						defaultValue={userData?.email as string}
-						id="floating_email"
+						id="email"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
 					<label
-						htmlFor="floating_email"
+						htmlFor="email"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 						Email address
 					</label>

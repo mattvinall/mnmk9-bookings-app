@@ -16,11 +16,16 @@ type Props = {
 	onSubmit: any,
 	handleChange: any
 	setToken: any
+	setValue: any
 }
 
-const TrainingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: Props) => {
+const TrainingForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: Props) => {
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
+
+	if (userData) {
+
+	}
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
@@ -41,6 +46,12 @@ const TrainingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange
 		handleReCaptchaVerify();
 	}, [handleReCaptchaVerify]);
 
+	// set form values with the userData
+	setValue("firstName", userData?.name.split(" ")[0] as string);
+	setValue("lastName", userData?.name.split(" ")[1] as string);
+	setValue("email", userData?.email as string);
+	setValue("phoneNumber", userData?.phoneNumber as string);
+
 	return (
 		<form className="w-full md:w-[80%]" onSubmit={handleSubmit(onSubmit)}>
 			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="trainingForm" />
@@ -50,7 +61,6 @@ const TrainingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange
 						{...register("firstName", { required: true })}
 						type="text"
 						name="firstName"
-						defaultValue={userData?.name.split(" ")[0] as string}
 						id="floating_first_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
@@ -65,7 +75,6 @@ const TrainingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange
 						{...register("lastName", { required: true })}
 						type="text"
 						name="lastName"
-						defaultValue={userData?.name.split(" ")[1] as string}
 						id="floating_last_name"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
@@ -83,7 +92,6 @@ const TrainingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange
 						type="tel"
 						pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 						name="phoneNumber"
-						defaultValue={userData?.phoneNumber as string}
 						id="floating_phone"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
@@ -98,7 +106,6 @@ const TrainingForm = ({ register, setToken, handleSubmit, onSubmit, handleChange
 						{...register("email", { required: true })}
 						type="email"
 						name="email"
-						defaultValue={userData?.email as string}
 						id="floating_email"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
 					/>
