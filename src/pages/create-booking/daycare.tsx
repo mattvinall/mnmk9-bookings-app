@@ -36,6 +36,19 @@ const Daycare: NextPage = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, [key, secret]);
+
 	// get email from session data
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
@@ -67,7 +80,7 @@ const Daycare: NextPage = () => {
 		},
 	});
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(daycareSchema)
 	});
 
@@ -87,7 +100,7 @@ const Daycare: NextPage = () => {
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const petName = e.target.value;
 
 		const petSelected = petData?.find(pet => pet.name === petName);
@@ -202,7 +215,7 @@ const Daycare: NextPage = () => {
 				</p>
 				{key && key !== undefined ? (
 					<GoogleReCaptchaProvider reCaptchaKey={key}>
-						<DaycareForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+						<DaycareForm petData={petData ?? []} setToken={setToken} setValue={setValue} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 					</GoogleReCaptchaProvider>
 				) : null}
 			</div >

@@ -39,6 +39,19 @@ const Boarding: NextPage = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, [key, secret]);
+
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
 
@@ -65,7 +78,7 @@ const Boarding: NextPage = () => {
 		},
 	});
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(boardingSchema)
 	});
 
@@ -83,7 +96,7 @@ const Boarding: NextPage = () => {
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		// get the pet name from the target value
 		const petName = e.target.value;
 
@@ -209,10 +222,10 @@ const Boarding: NextPage = () => {
 				</p>
 				{key && key !== undefined ? (
 					<GoogleReCaptchaProvider reCaptchaKey={key}>
-						<BoardingForm petData={petData ?? []} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
+						<BoardingForm petData={petData ?? []} setValue={setValue} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 					</GoogleReCaptchaProvider>
 				) : null}
-			</div >
+			</div>
 		) : (
 			<div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
 				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Please Login to book a boarding appointment</h1>
