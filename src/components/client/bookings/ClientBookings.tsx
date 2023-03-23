@@ -4,8 +4,10 @@ import { trpc } from "../../../utils/trpc";
 import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
+import { Booking, IndividualBooking } from "../../../types/router";
 
 const ClientBookings = () => {
+
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
 
@@ -36,7 +38,7 @@ const ClientBookings = () => {
 	return (
 		<div className="flex flex-col items-center">
 			<ul className="flex grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
-				{currentBookingsData && currentBookingsData?.length > 0 ? currentBookingsData?.map((booking: any) => {
+				{currentBookingsData as Booking && currentBookingsData?.length > 0 ? currentBookingsData?.map((booking: IndividualBooking) => {
 					return (
 						<li key={booking?.id} className="flex w-[350px] justify-center flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 							<div className="flex justify-center">
