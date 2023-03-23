@@ -9,15 +9,17 @@ datasource db {
 }
 
 model Todo {
-  id        String  @id @default(uuid())
+  id        String  @id @default(cuid())
   title     String
   completed Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
+
+  @@index([authorId])
 }
 
 model Contact {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   email     String
   message   String
@@ -25,7 +27,7 @@ model Contact {
 }
 
 model Pet {
-  id           String      @id @default(uuid())
+  id           String      @id @default(cuid())
   name         String
   ownerId      String
   breed        String?
@@ -40,7 +42,7 @@ model Pet {
 }
 
 model Documents {
-  id       String  @id @default(uuid())
+  id       String  @id @default(cuid())
   fileName String
   petId    String?
   Pet      Pet?    @relation(fields: [petId], references: [id], onDelete: Cascade)
@@ -49,7 +51,7 @@ model Documents {
 }
 
 model Services {
-  id          String     @id @default(uuid())
+  id          String     @id @default(cuid())
   price       Int
   serviceName String     @unique
   bookings    Bookings[]
@@ -58,7 +60,7 @@ model Services {
 }
 
 model Bookings {
-  id               String    @id @default(uuid())
+  id               String    @id @default(cuid())
   petId            String
   serviceId        String
   createdAt        DateTime  @default(now())
@@ -80,7 +82,7 @@ model Bookings {
   service          Services  @relation(fields: [serviceId], references: [id])
   user             User      @relation(fields: [userId], references: [id])
 
-  @@index([userId, serviceId, petId])
+  @@index([userId, petId])
 }
 
 model Account {
@@ -126,7 +128,7 @@ model User {
   sessions      Session[]
   Todo          Todo[]
 
-  @@index([email, id, phoneNumber])
+  @@index([id])
 }
 
 model VerificationToken {
