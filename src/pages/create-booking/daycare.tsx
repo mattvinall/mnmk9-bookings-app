@@ -10,7 +10,7 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailDaycare } from "../../lib/email";
 import DaycareForm from "../../components/client/forms/DaycareForm";
-import { FormSchemaType } from "../../types/form-schema";
+import { FormSchemaType } from "../../types/form-shema";
 import { daycareSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,

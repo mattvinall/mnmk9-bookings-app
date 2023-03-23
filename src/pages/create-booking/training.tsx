@@ -10,7 +10,7 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailTraining } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
-import { FormSchemaType } from "../../types/form-schema";
+import { FormSchemaType } from "../../types/form-shema";
 import { trainingSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,

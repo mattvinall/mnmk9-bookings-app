@@ -10,7 +10,7 @@ import { trpc } from '../../utils/trpc';
 import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
-import { FormSchemaType } from "../../types/form-schema";
+import { FormSchemaType } from "../../types/form-shema";
 import { boardingSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
