@@ -6,18 +6,12 @@ import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
+import { UserFormSchema } from '../../../types/form-shema';
 
 type Props = {
 	setShowUserForm: (bool: boolean) => void;
 }
 const UserDetailForm = ({ setShowUserForm }: Props) => {
-	type UserFormSchema = {
-		address: string,
-		city: string,
-		postalCode: string,
-		phoneNumber: string,
-	}
-
 	const schema = z.object({
 		address: z.string().min(6).max(65),
 		city: z.string().min(1),
