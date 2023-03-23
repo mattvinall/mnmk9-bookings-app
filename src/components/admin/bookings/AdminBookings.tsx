@@ -3,6 +3,7 @@ import Link from "next/link"
 import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
+import { Booking, IndividualBooking } from "../../../types/router";
 
 const AdminBookings = () => {
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
@@ -30,7 +31,7 @@ const AdminBookings = () => {
 	return (
 		<div className="flex flex-col items-center">
 			<ul className="w-full grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
-				{currentData && currentData?.length > 0 ? currentData?.map((booking: any) => (
+				{currentData as Booking && currentData?.length > 0 ? currentData?.map((booking: IndividualBooking) => (
 					<li key={booking?.id} className="flex flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 						<div className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[350px]">
