@@ -93,3 +93,9 @@ export const addPetFormSchema	= z.object({
 	notes: z.string().min(1),
 	vaccinated: z.string() || z.boolean()
 });
+
+export const contactFormSchema = z.object({
+	name: z.string(),
+	email: z.string(),
+	message: z.string(),
+});
