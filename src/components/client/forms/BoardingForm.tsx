@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
-import type { Pet } from "@prisma/client";
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
+import { PetsArray, Pet } from "../../../types/router";
 
 
 type Props = {
-	petData: Array<Pet>,
+	petData: PetsArray
 	isSubmitting: boolean
 	register: any
 	handleSubmit: any
@@ -156,7 +156,7 @@ const BoardingForm = ({ petData, setValue, setToken, isSubmitting, register, han
 						id="pet-select"
 						onChange={handleChange}
 					>
-						{petData && petData?.map((pet) => {
+						{petData && petData?.map((pet: Pet) => {
 							const { name } = pet;
 							return (
 								<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>

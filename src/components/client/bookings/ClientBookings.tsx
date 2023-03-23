@@ -4,7 +4,7 @@ import { trpc } from "../../../utils/trpc";
 import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
-import { Booking, IndividualBooking } from "../../../types/router";
+import { BookingsArray, Booking } from "../../../types/router";
 
 const ClientBookings = () => {
 
@@ -38,7 +38,7 @@ const ClientBookings = () => {
 	return (
 		<div className="flex flex-col items-center">
 			<ul className="flex grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
-				{currentBookingsData as Booking && currentBookingsData?.length > 0 ? currentBookingsData?.map((booking: IndividualBooking) => {
+				{currentBookingsData as BookingsArray && currentBookingsData?.length > 0 ? currentBookingsData?.map((booking: Booking) => {
 					return (
 						<li key={booking?.id} className="flex w-[350px] justify-center flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 							<div className="flex justify-center">

@@ -1,6 +1,6 @@
 // 'use client';
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
