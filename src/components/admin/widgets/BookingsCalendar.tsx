@@ -64,7 +64,7 @@ const BookingsCalendar = () => {
 	});
 
 	useEffect(() => {
-		const filteredCheckInBookings = filteredBookingsByConfirmedStatus?.filter(booking => {
+		const filteredCheckInBookings = filteredBookingsByConfirmedStatus?.filter((booking: Booking) => {
 			const checkInDate = new Date(booking?.checkInDate as string).toISOString();
 
 			const checkInBookings = new Date(checkInDate)
@@ -74,7 +74,7 @@ const BookingsCalendar = () => {
 			return checkInBookings;
 		});
 
-		const filteredCheckOutBookings = filteredBookingsByConfirmedStatus?.filter(booking => {
+		const filteredCheckOutBookings = filteredBookingsByConfirmedStatus?.filter((booking: Booking) => {
 			const checkOutDate = new Date(booking?.checkOutDate as string).toISOString();
 			const checkOutBookings = new Date(checkOutDate)
 				.toISOString()
@@ -85,11 +85,11 @@ const BookingsCalendar = () => {
 
 		console.log("filteredBookings", filteredCheckInBookings);
 		if (!filteredCheckInBookings) {
-			setCheckInBookings([])
+			setCheckInBookings([]);
 		}
 
 		if (!filteredCheckOutBookings) {
-			setCheckOutBookings([])
+			setCheckOutBookings([]);
 		}
 
 		setCheckInBookings(filteredCheckInBookings as []);
