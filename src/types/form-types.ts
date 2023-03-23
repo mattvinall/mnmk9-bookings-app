@@ -1,5 +1,5 @@
 import { PetsArray } from "./router";
-import { UseFormSetValue, UseFormRegister } from "react-hook-form/dist/types";
+import { UseFormSetValue } from "react-hook-form/dist/types";
 import { FormSchemaType } from "./form-shema";
 import { SubmitHandler } from "react-hook-form";
 
@@ -26,6 +26,12 @@ export type ContactFormTypeProps = {
 	isSubmitting: boolean,
 	register: any,
 	handleSubmit: any,
-	onSubmit: SubmitHandler<FormSchemaType>
+	onSubmit: SubmitHandler<ContactFormType>
 	setToken: (token: string) => void
+}
+
+export type ContactFormType = {
+	name: string,
+	email: string,
+	message: string
 }
