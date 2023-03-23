@@ -1,17 +1,10 @@
 "use client";
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
+import { EditBookingFormTypeProps } from "../../../types/form-types";
 
-type Props = {
-	isSubmitting: boolean,
-	register: any,
-	handleSubmit: any,
-	onSubmit: any,
-	showForm: boolean,
-	setShowForm: any
-}
 
-const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, showForm, setShowForm }: Props) => {
+const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm }: EditBookingFormTypeProps) => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 	const { data: bookingDetail } = trpc.bookings.byId.useQuery({ id: bookingId });
@@ -111,8 +104,7 @@ const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, showF
 				<div className="relative z-0 mb-6 w-full group">
 					<textarea
 						{...register("notes")}
-						type="textarea"
-						rows="1"
+						rows={1}
 						name="notes"
 						defaultValue={bookingDetail?.notes as string}
 						id="notes"
