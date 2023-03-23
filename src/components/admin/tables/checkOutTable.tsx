@@ -1,4 +1,5 @@
-"use-client";
+"use client";
+
 type Props = {
 	checkOutBookings: any
 	checkOutBookingsList: any
