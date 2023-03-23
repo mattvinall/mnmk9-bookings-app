@@ -86,3 +86,10 @@ export const trainingSchema = z.object({
 		vaccinated: z.boolean(),
 	}).optional()
 });
+
+export const addPetFormSchema	= z.object({
+	name: z.string().min(1),
+	breed: z.string().min(1),
+	notes: z.string().min(1),
+	vaccinated: z.string() || z.boolean()
+});
