@@ -5,16 +5,9 @@ import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
+import { ContactFormTypeProps } from "../../../types/form-types";
 
-type Props = {
-	isSubmitting: boolean,
-	register: any,
-	handleSubmit: any,
-	onSubmit: any,
-	setToken: any
-}
-
-const ContactForm = ({ handleSubmit, setToken, register, onSubmit, isSubmitting }: Props) => {
+const ContactForm = ({ handleSubmit, setToken, register, onSubmit, isSubmitting }: ContactFormTypeProps) => {
 	const rows = 6;
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
