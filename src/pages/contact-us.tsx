@@ -9,21 +9,11 @@ import { z } from 'zod';
 import ContactForm from '../components/client/forms/ContactForm';
 import Swal from "sweetalert2";
 import { sendEmailContactForm } from "../lib/email";
+import type { ContactFormType } from '../types/form-types';
+import { contactFormSchema } from '../utils/schema';
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
-
-type FormSchemaType = {
-	name: string,
-	email: string,
-	message: string
-}
-
-const schema = z.object({
-	name: z.string(),
-	email: z.string(),
-	message: z.string(),
-});
 
 const ContactUs = () => {
 	const router = useRouter();
@@ -45,8 +35,8 @@ const ContactUs = () => {
 		}
 	}, []);
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<ContactFormType>({
+		resolver: zodResolver(contactFormSchema)
 	});
 
 	const addNewContactFormEntry = trpc.contact.newContactEmail.useMutation();
@@ -69,7 +59,7 @@ const ContactUs = () => {
 		}
 	}, [token])
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<ContactFormType> = async (formData: any) => {
 		if (!token || token === "") return;
 
 		const result = await verifyRecaptcha(token, secret);
