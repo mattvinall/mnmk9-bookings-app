@@ -82,16 +82,16 @@ const AdminBookings = () => {
 					</div>
 				)}
 			</ul>
-			{bookingsData && bookingsData.length > ITEMS_PER_PAGE && <Pagination
-				count={pageCount}
-				size="large"
-				page={currentPage}
-				variant="outlined"
-				color="secondary"
-				shape="rounded"
-				onChange={onPageChange}
-			/>}
-
+			{bookingsData && bookingsData.length > ITEMS_PER_PAGE &&
+				<Pagination
+					count={pageCount}
+					size="large"
+					page={currentPage}
+					variant="outlined"
+					color="secondary"
+					shape="rounded"
+					onChange={onPageChange}
+				/>}
 		</div>
 	)
 }
