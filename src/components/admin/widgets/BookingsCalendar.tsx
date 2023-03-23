@@ -48,7 +48,7 @@ const BookingsCalendar = () => {
 		);
 	});
 
-	const checkOutBookingsList = checkOutBookings?.map((booking: any, idx: number) => {
+	const checkOutBookingsList = checkOutBookings?.map((booking: Booking, idx: number) => {
 		return (
 			<tr
 				key={booking?.id}
