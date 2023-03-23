@@ -6,8 +6,7 @@ import { SubmitHandler } from "react-hook-form";
 export type FormTypeProps = {
 	petData: PetsArray,
 	isSubmitting: boolean
-	register: UseFormRegister<FormSchemaType>
-	// register: any
+	register: any
 	handleSubmit: any
 	onSubmit: SubmitHandler<FormSchemaType>
 	handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
@@ -17,7 +16,6 @@ export type FormTypeProps = {
 
 export type EditBookingFormTypeProps = {
 	isSubmitting: boolean
-	// register: UseFormRegister<FormSchemaType>
 	register: any
 	handleSubmit: any,
 	onSubmit: SubmitHandler<FormSchemaType>
