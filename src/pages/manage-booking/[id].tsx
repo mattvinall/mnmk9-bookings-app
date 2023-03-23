@@ -139,7 +139,6 @@ const BookingDetail: NextPage = () => {
 					isSubmitting={isSubmitting}
 					onSubmit={onSubmit}
 					handleSubmit={handleSubmit}
-					showForm={showForm}
 					setShowForm={setShowForm}
 				/>
 			) : null}
