@@ -8,6 +8,7 @@ import CheckInTable from "../../../components/admin/tables/checkInTable";
 import CheckOutTable from "../../../components/admin/tables/checkOutTable";
 import { useSession } from "next-auth/react";
 import { formatTime } from "../../../utils/formatTime";
+import { Booking } from "../../../types/router";
 
 const BookingsCalendar = () => {
 	// get user session
@@ -27,12 +28,12 @@ const BookingsCalendar = () => {
 	const [checkInBookings, setCheckInBookings] = useState([]);
 	const [checkOutBookings, setCheckOutBookings] = useState([])
 
-	const handleDateChange = (date: any) => {
+	const handleDateChange = (date: Date) => {
 		console.log("date", date.toISOString().split("T")[0]);
 		setDate(date);
 	};
 
-	const checkInBookingsList = checkInBookings?.map((booking: any, idx: number) => {
+	const checkInBookingsList = checkInBookings?.map((booking: Booking, idx: number) => {
 		return (
 			<tr
 				key={booking?.id}
@@ -121,9 +122,9 @@ const BookingsCalendar = () => {
 					<Calendar className="!lg:w-full" value={date} onChange={handleDateChange} />
 					<div className="mt-5 relative">
 						{/* Check In Table */}
-						{checkInBookings ? <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} /> : <p className="text-[rem] text-gray-100 text-left">Please click on a date to see your bookings</p>}
+						{checkInBookings.length > 0 ? <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} /> : <p className="text-[rem] text-gray-100 text-left">Please click on a date to see your bookings</p>}
 						{/* Check Out Table */}
-						{checkOutBookings && <CheckOutTable checkOutBookings={checkOutBookings} checkOutBookingsList={checkOutBookingsList} />}
+						{checkOutBookings.length > 0 && <CheckOutTable checkOutBookings={checkOutBookings} checkOutBookingsList={checkOutBookingsList} />}
 					</div>
 
 				</div>
