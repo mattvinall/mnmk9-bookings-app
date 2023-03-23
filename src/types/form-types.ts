@@ -21,3 +21,11 @@ export type EditBookingFormTypeProps = {
 	onSubmit: SubmitHandler<FormSchemaType>
 	setShowForm: (showForm: boolean) => void
 }
+
+export type ContactFormTypeProps = {
+	isSubmitting: boolean,
+	register: any,
+	handleSubmit: any,
+	onSubmit: SubmitHandler<FormSchemaType>
+	setToken: (token: string) => void
+}
