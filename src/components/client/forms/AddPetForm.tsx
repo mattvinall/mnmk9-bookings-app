@@ -4,18 +4,13 @@ import { z } from 'zod';
 import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
+import { AddPetFormSchema } from "../../../types/form-shema";
 
 type Props = {
 	setShowPetForm: (bool: boolean) => void;
 }
 
 const AddPetForm = ({ setShowPetForm }: Props) => {
-	type AddPetFormSchema = {
-		name: string,
-		breed: string,
-		notes: string,
-		vaccinated: string | boolean
-	}
 
 	const schema = z.object({
 		name: z.string().min(1),
