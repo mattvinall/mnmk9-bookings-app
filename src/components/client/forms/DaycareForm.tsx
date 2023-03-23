@@ -1,24 +1,14 @@
 "use client";
 import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
-import type { Pet } from "@prisma/client";
+import { FormTypeProps } from "../../../types/form-types";
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 
-type Props = {
-	petData: Array<Pet>,
-	isSubmitting: boolean,
-	register: any,
-	handleSubmit: any,
-	onSubmit: any,
-	handleChange: any
-	setToken: any
-	setValue: any
-}
 
-const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: Props) => {
+const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps) => {
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
@@ -202,8 +192,7 @@ const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, han
 				<div className="relative z-0 mb-6 w-full group">
 					<textarea
 						{...register("notes")}
-						type="textarea"
-						rows="1"
+						rows={1}
 						name="notes"
 						id="notes"
 						className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
