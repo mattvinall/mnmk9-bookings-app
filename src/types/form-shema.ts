@@ -1,4 +1,4 @@
-import type { Pet } from "@prisma/client";
+import { PetsArray } from "./router";
 
 export type FormSchemaType = {
 	firstName: string,
@@ -15,5 +15,19 @@ export type FormSchemaType = {
 	userId: string,
 	serviceId: string,
 	petId: string,
-	petData?: [Pet]
+	petData?: PetsArray
+}
+
+export type AddPetFormSchema = {
+	name: string,
+	breed: string,
+	notes: string,
+	vaccinated: boolean
+}
+
+export type UserFormSchema = {
+	address: string,
+	city: string,
+	postalCode: string,
+	phoneNumber: string,
 }
