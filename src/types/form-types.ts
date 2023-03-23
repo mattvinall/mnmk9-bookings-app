@@ -7,6 +7,7 @@ export type FormTypeProps = {
 	petData: PetsArray,
 	isSubmitting: boolean
 	register: UseFormRegister<FormSchemaType>
+	// register: any
 	handleSubmit: any
 	onSubmit: SubmitHandler<FormSchemaType>
 	handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
@@ -16,7 +17,8 @@ export type FormTypeProps = {
 
 export type EditBookingFormTypeProps = {
 	isSubmitting: boolean
-	register: UseFormRegister<FormSchemaType>
+	// register: UseFormRegister<FormSchemaType>
+	register: any
 	handleSubmit: any,
 	onSubmit: SubmitHandler<FormSchemaType>
 	setShowForm: (showForm: boolean) => void
