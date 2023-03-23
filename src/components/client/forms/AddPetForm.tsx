@@ -1,26 +1,18 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { AddPetFormSchema } from "../../../types/form-shema";
+import { addPetFormSchema } from "../../../utils/schema";
 
 type Props = {
 	setShowPetForm: (bool: boolean) => void;
 }
 
 const AddPetForm = ({ setShowPetForm }: Props) => {
-
-	const schema = z.object({
-		name: z.string().min(1),
-		breed: z.string().min(1),
-		notes: z.string().min(1),
-		vaccinated: z.string() || z.boolean()
-	});
-
 	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(addPetFormSchema)
 	});
 
 	const { data: sessionData } = useSession()
