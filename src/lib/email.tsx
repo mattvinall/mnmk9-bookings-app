@@ -1,7 +1,7 @@
 import { ses } from "../server/aws/ses/index";
 
 export const sendEmailDaycare = async (
-	emailTo: string,
+	emailTo: Array<string>,
 	emailFrom: string,
 	firstName: string,
 	lastName: string,
@@ -32,7 +32,7 @@ export const sendEmailDaycare = async (
 `
 	const emailParams = {
 		Destination: {
-			ToAddresses: [emailTo]
+			ToAddresses: emailTo
 		},
 		Message: {
 			Body: {
@@ -53,7 +53,7 @@ export const sendEmailDaycare = async (
 }
 
 export const sendEmailBoarding = async (
-	emailTo: string,
+	emailTo: Array<string>,
 	emailFrom: string,
 	firstName: string,
 	lastName: string,
@@ -82,7 +82,7 @@ export const sendEmailBoarding = async (
 `
 	const emailParams = {
 		Destination: {
-			ToAddresses: [emailTo]
+			ToAddresses: emailTo
 		},
 		Message: {
 			Body: {
@@ -103,7 +103,7 @@ export const sendEmailBoarding = async (
 }
 
 export const sendEmailGrooming = async (
-	emailTo: string,
+	emailTo: Array<string>,
 	emailFrom: string,
 	firstName: string,
 	lastName: string,
@@ -134,7 +134,7 @@ export const sendEmailGrooming = async (
 `
 	const emailParams = {
 		Destination: {
-			ToAddresses: [emailTo]
+			ToAddresses: emailTo
 		},
 		Message: {
 			Body: {
@@ -155,7 +155,7 @@ export const sendEmailGrooming = async (
 }
 
 export const sendEmailTraining = async (
-	emailTo: string,
+	emailTo: Array<string>,
 	emailFrom: string,
 	firstName: string,
 	lastName: string,
@@ -186,7 +186,7 @@ export const sendEmailTraining = async (
 `
 	const emailParams = {
 		Destination: {
-			ToAddresses: [emailTo]
+			ToAddresses: emailTo
 		},
 		Message: {
 			Body: {
