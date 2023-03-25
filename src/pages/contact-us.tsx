@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { trpc } from "../utils/trpc";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import ContactForm from '../components/client/forms/ContactForm';
 import Swal from "sweetalert2";
 import { sendEmailContactForm } from "../lib/email";
@@ -111,9 +110,9 @@ const ContactUs = () => {
 						<ContactForm
 							setToken={setToken}
 							onSubmit={onSubmit}
-							handleSubmit={handleSubmit}
+							handleSubmit={handleSubmit as any}
 							isSubmitting={isSubmitting}
-							register={register}
+							register={register as any}
 						/>
 					</GoogleReCaptchaProvider>
 				) : null}
