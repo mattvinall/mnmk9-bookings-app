@@ -168,9 +168,8 @@ const Training: NextPage = () => {
 			reset();
 
 			await sendEmailTraining(
-				formData?.email,
-				// process.env.NEXT_PUBLIC_EMAIL_TO as string,
-				"matt.vinall7@gmail.com",
+				[formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				`${process.env.NEXT_PUBLIC_EMAIL_TO}`,
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
