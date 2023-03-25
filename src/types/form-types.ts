@@ -1,33 +1,31 @@
 import { PetsArray } from "./router";
 import { UseFormSetValue } from "react-hook-form/dist/types";
 import { FormSchemaType } from "./form-shema";
-import { SubmitHandler } from "react-hook-form";
-import { FieldValues } from "react-hook-form/dist/types/fields";
-import { UseFormHandleSubmit, UseFormRegister } from "react-hook-form/dist/types/form";
+import { SubmitHandler, UseFormHandleSubmit } from "react-hook-form/dist/types/form";
 
-export type FormTypeProps<TFieldValues extends FieldValues> = {
+export type FormTypeProps = {
 	petData: PetsArray,
 	isSubmitting: boolean
-	register: UseFormRegister<TFieldValues>
-	handleSubmit: UseFormHandleSubmit<TFieldValues>
+	register: any
+	handleSubmit: UseFormHandleSubmit<FormSchemaType>
 	onSubmit: SubmitHandler<FormSchemaType>
 	handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 	setToken: (token: string) => void
 	setValue: UseFormSetValue<FormSchemaType>
 }
 
-export type EditBookingFormTypeProps<TFieldValues extends FieldValues> = {
+export type EditBookingFormTypeProps = {
 	isSubmitting: boolean
-	register: UseFormRegister<TFieldValues>
-	handleSubmit: UseFormHandleSubmit<TFieldValues>
+	register: any
+	handleSubmit: UseFormHandleSubmit<FormSchemaType>
 	onSubmit: SubmitHandler<FormSchemaType>
 	setShowForm: (showForm: boolean) => void
 }
 
-export type ContactFormTypeProps<TFieldValues extends FieldValues> = {
-	isSubmitting: boolean
-	register: UseFormRegister<TFieldValues>
-	handleSubmit: UseFormHandleSubmit<TFieldValues>,
+export type ContactFormTypeProps = {
+	isSubmitting: boolean,
+	register: any,
+	handleSubmit: UseFormHandleSubmit<ContactFormType>,
 	onSubmit: SubmitHandler<ContactFormType>
 	setToken: (token: string) => void
 }
