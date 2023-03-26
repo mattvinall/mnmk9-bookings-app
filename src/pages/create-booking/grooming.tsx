@@ -111,16 +111,14 @@ const Grooming: NextPage = () => {
 
 	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
 		try {
-			if (token && secret) {
-				console.log("secret before fetch", secret)
-				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
-					method: "POST",
-					headers: { "Content-Type": "application/x-www-form-urlencoded" },
-					body: `secret=${secret}&response=${token}`,
-				});
+			const url = process.env.NEXT_PUBLIC_RECAPTCHA_VERIFY_URL as string;
+			const response = await fetch(url, {
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: `secret=${secret}&response=${token}`,
+			});
 
-				console.log("response from fetch", response);
-			}
+			console.log("response from fetch", response);
 		} catch (err) {
 			console.log("error", err)
 		}
