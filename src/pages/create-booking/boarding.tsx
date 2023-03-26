@@ -111,7 +111,7 @@ const Boarding: NextPage = () => {
 	}
 
 	const verifyRecaptcha = async (token: string, secret: string) => {
-		const url = 'https://www.google.com/recaptcha/api/siteverify';
+		const url = process.env.NEXT_PUBLIC_RECAPTCHA_VERIFY_URL as string;
 		try {
 			const response = await fetch(url, {
 				method: "POST",
