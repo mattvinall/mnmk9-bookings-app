@@ -31,3 +31,11 @@ export type UserFormSchema = {
 	postalCode: string,
 	phoneNumber: string,
 }
+
+export type EditBookingFormSchema = {
+	checkInDate: string
+	checkOutDate: string
+	startTime: string
+	endTime: string
+	notes: string
+}
