@@ -1,10 +1,13 @@
 "use client";
+
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+
 type Props = {
 	checkInBookings: any
 	checkInBookingsList: any
 }
 
-const CheckInTable = ({ checkInBookings, checkInBookingsList }: Props) => {
+const CheckInTable = ({ checkInBookings, checkInBookingsList }: Props): ReactJSXElement => {
 	return (
 		<>
 			<h3 className="text-white font-bold text-[2rem] mb-8">Checking In:</h3>

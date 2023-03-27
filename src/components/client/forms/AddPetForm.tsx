@@ -5,12 +5,13 @@ import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { AddPetFormSchema } from "../../../types/form-shema";
 import { addPetFormSchema } from "../../../utils/schema";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 type Props = {
 	setShowPetForm: (bool: boolean) => void;
 }
 
-const AddPetForm = ({ setShowPetForm }: Props) => {
+const AddPetForm = ({ setShowPetForm }: Props): ReactJSXElement => {
 	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
 		resolver: zodResolver(addPetFormSchema)
 	});

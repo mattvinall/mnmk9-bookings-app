@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+
 type Props = {
 	name: string,
 	address: string,
@@ -9,7 +11,7 @@ type Props = {
 	postalCode: string,
 }
 
-const UserInfoCard: React.FC<Props> = ({ name, address, city, phoneNumber, postalCode, image }: Props) => {
+const UserInfoCard: React.FC<Props> = ({ name, address, city, phoneNumber, postalCode, image }: Props): ReactJSXElement => {
 	return (
 		<div key={name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 			<div className="flex justify-center">

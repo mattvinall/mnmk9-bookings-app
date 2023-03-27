@@ -2,9 +2,10 @@
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import { EditBookingFormTypeProps } from "../../../types/form-types";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 
-const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm }: EditBookingFormTypeProps) => {
+const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm }: EditBookingFormTypeProps): ReactJSXElement => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 	const { data: bookingDetail } = trpc.bookings.byId.useQuery({ id: bookingId });

@@ -4,8 +4,9 @@ import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { BookingsArray, Booking } from "../../../types/router";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
-const AdminBookings = () => {
+const AdminBookings: React.FC = (): ReactJSXElement => {
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
 		onSuccess: () => {

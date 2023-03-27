@@ -6,9 +6,10 @@ import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 
-const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps) => {
+const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 

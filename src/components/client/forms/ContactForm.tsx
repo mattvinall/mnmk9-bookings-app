@@ -1,5 +1,6 @@
 "use client";
 
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { useEffect, useCallback } from "react";
 import {
 	useGoogleReCaptcha,
@@ -7,7 +8,7 @@ import {
 } from 'react-google-recaptcha-v3';
 import { ContactFormTypeProps } from "../../../types/form-types";
 
-const ContactForm = ({ handleSubmit, setToken, register, onSubmit, isSubmitting }: ContactFormTypeProps) => {
+const ContactForm = ({ handleSubmit, setToken, register, onSubmit, isSubmitting }: ContactFormTypeProps): ReactJSXElement => {
 	const rows = 6;
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
