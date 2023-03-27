@@ -3,6 +3,20 @@ import { UseFormSetValue } from "react-hook-form/dist/types";
 import { FormSchemaType } from "./form-shema";
 import { SubmitHandler, UseFormHandleSubmit } from "react-hook-form/dist/types/form";
 
+export type ContactFormType = {
+	name: string,
+	email: string,
+	message: string
+}
+
+export type EditBookingFormType = {
+	checkInDate?: string,
+	checkOutDate: string,
+	startTime?: string,
+	endTime?: string
+	notes?: string,
+}
+
 export type FormTypeProps = {
 	petData: PetsArray,
 	isSubmitting: boolean
@@ -17,7 +31,7 @@ export type FormTypeProps = {
 export type EditBookingFormTypeProps = {
 	isSubmitting: boolean
 	register: any
-	handleSubmit: UseFormHandleSubmit<FormSchemaType>
+	handleSubmit: UseFormHandleSubmit<EditBookingFormType>
 	onSubmit: SubmitHandler<FormSchemaType>
 	setShowForm: (showForm: boolean) => void
 }
@@ -28,10 +42,4 @@ export type ContactFormTypeProps = {
 	handleSubmit: UseFormHandleSubmit<ContactFormType>,
 	onSubmit: SubmitHandler<ContactFormType>
 	setToken: (token: string) => void
-}
-
-export type ContactFormType = {
-	name: string,
-	email: string,
-	message: string
 }
