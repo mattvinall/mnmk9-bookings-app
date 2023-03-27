@@ -8,38 +8,24 @@ import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from "sweetalert2";
 import EditBookingForm from "../../components/client/forms/EditBookingForm";
+import { editBookingsFormSchema } from "../../utils/schema";
+import { EditBookingFormType } from "../../types/form-types";
 
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
-	type FormSchemaType = {
-		checkInDate?: string,
-		checkOutDate?: string,
-		startTime?: string,
-		endTime?: string
-		notes?: string,
-	}
 
-	// define schema for the form 
-	const schema = z.object({
-		checkInDate: z.string().optional(),
-		checkOutDate: z.string().optional(),
-		startTime: z.string().optional(),
-		endTime: z.string().optional(),
-		notes: z.string().optional(),
-	});
-
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(schema)
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
+		resolver: zodResolver(editBookingsFormSchema)
 	});
 
 	const editBooking = trpc.bookings.editBooking.useMutation();
 
 	const cancelBooking = trpc.bookings.cancelBooking.useMutation()
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
 
 		try {
 			Swal.fire({
