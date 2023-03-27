@@ -32,7 +32,7 @@ export type EditBookingFormTypeProps = {
 	isSubmitting: boolean
 	register: any
 	handleSubmit: UseFormHandleSubmit<EditBookingFormType>
-	onSubmit: SubmitHandler<FormSchemaType>
+	onSubmit: SubmitHandler<EditBookingFormType>
 	setShowForm: (showForm: boolean) => void
 }
 
