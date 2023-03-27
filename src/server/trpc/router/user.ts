@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
@@ -45,6 +46,10 @@ export const userRouter = router({
 		.query(async ({ ctx, input }) => {
 			try {
 				const { id } = input;
+				if (!id) {
+					throw new TRPCError({code: "BAD_REQUEST"});	
+				}
+				
 				return await ctx.prisma.user.findUnique({ where: { id }, include: { pets: true, bookings: true}})
 			} catch (err) {
 				console.log(`User cannot be fetched by ID: ${err}`)

@@ -22,6 +22,8 @@
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
+    "@upstash/ratelimit": "^0.4.1",
+    "@upstash/redis": "^1.20.1",
     "aws-sdk": "^2.1290.0",
     "ioredis": "^5.3.1",
     "next": "13.0.2",

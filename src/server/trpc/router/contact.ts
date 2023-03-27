@@ -1,5 +1,7 @@
 
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { rateLimit } from "../../../lib/rateLimit";
 
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
@@ -25,7 +27,13 @@ export const contactRouter = router({
 	)
 	.mutation(async ({ ctx, input }) => {
 		try {
-			const { name, email, message } = input
+			const { name, email, message } = input;
+			const { success } = await rateLimit.limit(email)
+
+			if (!success) {
+				throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+			}
+			
 			return await ctx.prisma.contact.create({
 				data: {
 					name,

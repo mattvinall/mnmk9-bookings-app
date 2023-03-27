@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { rateLimit } from "../../../lib/rateLimit";
 
 import { router, protectedProcedure } from "../trpc";
 
@@ -20,6 +22,12 @@ export const documentRouter = router({
 		.mutation(async ({ ctx, input }) => {
 			const { petId, fileName } = input;
 			try {
+				const { success } = await rateLimit.limit(petId)
+
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+				
 				return await ctx.prisma.documents.create({
 					data: { petId, fileName }
 				})
