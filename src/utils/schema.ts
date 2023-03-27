@@ -99,3 +99,11 @@ export const contactFormSchema = z.object({
 	email: z.string(),
 	message: z.string(),
 });
+
+export const editBookingsFormSchema = z.object({
+		checkInDate: z.string().optional(),
+		checkOutDate: z.string().optional(),
+		startTime: z.string().optional(),
+		endTime: z.string().optional(),
+		notes: z.string().optional(),
+});
