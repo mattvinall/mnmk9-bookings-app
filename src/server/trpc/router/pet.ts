@@ -1,6 +1,7 @@
-import { z } from "zod";
-
 import { router, protectedProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { rateLimit } from "../../../lib/rateLimit";
 
 export const petRouter = router({
 	getAllPets: protectedProcedure.query(({ ctx }) => {
@@ -39,6 +40,12 @@ export const petRouter = router({
 		.mutation(async ({ ctx, input }) => {
 			const { ownerId, name, breed, notes, vaccinated } = input;
 			try {
+				const { success } = await rateLimit.limit(ownerId)
+
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+
 				return await ctx.prisma.pet.create({
 					data: {
 						ownerId,

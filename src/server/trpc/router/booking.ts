@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
+import { TRPCError } from '@trpc/server';
+import { rateLimit } from './../../../lib/rateLimit';
 
 export const bookingRouter = router({
 	getAllBookings: protectedProcedure.query(async ({ ctx }) => {
@@ -37,7 +39,13 @@ export const bookingRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
+			
 				const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes, startTime, endTime, serviceName, petId, serviceId, userId } = input
+				const { success } = await rateLimit.limit(userId)
+
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
 				return await ctx.prisma.bookings.create({
 					data: {
 						firstName,
@@ -75,6 +83,12 @@ export const bookingRouter = router({
 			const { id, checkInDate, checkOutDate, startTime, endTime, notes } = input;
 
 			try {
+				const { success } = await rateLimit.limit(id)
+
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+				
 				return await ctx.prisma.bookings.update({
 					where: {
 						id,
