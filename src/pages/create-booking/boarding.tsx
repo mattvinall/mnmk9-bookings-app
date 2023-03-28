@@ -24,32 +24,29 @@ const Boarding: NextPage = () => {
 	const [petId, setPetID] = useState<string>("");
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("")
-	const [secret, setSecret] = useState<string>("")
+	const [secret, setSecret] = useState<string>("");
+	const [score, setScore] = useState<number | null>(null)
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
 		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
 
-		if (key && key !== undefined) {
-			setKey(key);
-		}
+		if (!key) return;
+		if (!secret) return;
 
-		if (secret || secret !== undefined) {
-			setSecret(secret);
-		}
+		setKey(key);
+		setSecret(secret);
 	}, []);
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
 		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
 
-		if (key && key !== undefined) {
-			setKey(key);
-		}
+		if (!key) return;
+		if (!secret) return;
 
-		if (secret || secret !== undefined) {
-			setSecret(secret);
-		}
+		setKey(key);
+		setSecret(secret);
 	}, [key, secret]);
 
 	// query user table by email to get user data
@@ -76,6 +73,17 @@ const Boarding: NextPage = () => {
 				});
 			}
 		},
+	});
+
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
+		}
 	});
 
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
@@ -110,36 +118,7 @@ const Boarding: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const verifyRecaptcha = async (token: string, secret: string) => {
-		const url = process.env.NEXT_PUBLIC_RECAPTCHA_VERIFY_URL as string;
-		try {
-			const response = await fetch(url, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded",
-					"Access-Control-Allow-Origin": "*"
-				},
-				body: `secret=${secret}&response=${token}`,
-			});
-
-			const json = await response.json();
-			console.log("json", json)
-
-			// setToken("")
-
-		} catch (err) {
-			console.log("error", err)
-			// setToken("")
-		}
-	}
-
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
-		if (!token || token === "") return;
-		const result = await verifyRecaptcha(token, secret);
-		console.log("result from calling verify recaptcha", result)
-
-		// TODO: logic to handle response and evaluate score
-
 		try {
 			// check if boardingId is truthy and then set the id of the service
 			if (boardingId) {
@@ -158,6 +137,12 @@ const Boarding: NextPage = () => {
 			// set the service name to Boarding
 			formData.serviceName = "Boarding";
 
+			verifyRecaptcha.mutate({ token, secret });
+
+			if (score && score < 0.5) {
+				console.log("score is less than 0.5");
+				return;
+			};
 			// mutate / POST request to bookings api endpoint and submit the form data
 			addNewBooking.mutate(formData);
 
@@ -166,8 +151,10 @@ const Boarding: NextPage = () => {
 
 			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailBoarding(
-				[formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
-				`${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+				[formData?.email],
+				"matt.vinall7@gmail.com",
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
@@ -219,7 +206,7 @@ const Boarding: NextPage = () => {
 				<p className="text-white text-center w-[80%] font-bold sm:text-[2.5rem]">
 					Fill out the form below and someone from the MNMK-9 team will confirm your booking.
 				</p>
-				{key && key !== undefined ? (
+				{key && key !== undefined && key !== "" ? (
 					<GoogleReCaptchaProvider reCaptchaKey={key}>
 						<BoardingForm petData={petData ?? []} setValue={setValue} setToken={setToken} isSubmitting={isSubmitting} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} handleChange={handleChange} />
 					</GoogleReCaptchaProvider>
