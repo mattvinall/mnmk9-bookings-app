@@ -7,6 +7,7 @@ import { bookingRouter } from "./booking";
 import { documentRouter } from "./document";
 import { contactRouter } from "./contact";
 import { todoRouter } from "./todo";
+import { recaptchaRouter } from "./recaptcha";
 
 export const appRouter = router({
   auth: authRouter,
@@ -16,7 +17,8 @@ export const appRouter = router({
   bookings: bookingRouter,
   documents: documentRouter,
   contact: contactRouter,
-  todo: todoRouter
+  todo: todoRouter,
+  recaptcha: recaptchaRouter
 });
 
 // export type definition of API
