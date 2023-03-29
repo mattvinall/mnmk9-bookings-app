@@ -6,7 +6,6 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useCallback, useEffect } from "react";
 
-
 const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm, setToken }: EditBookingFormTypeProps): ReactJSXElement => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
