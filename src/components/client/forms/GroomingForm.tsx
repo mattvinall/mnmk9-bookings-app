@@ -2,9 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
-import {
-	FormTypeProps
-} from "../../../types/form-types";
+import { FormTypeProps } from "../../../types/form-types";
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
