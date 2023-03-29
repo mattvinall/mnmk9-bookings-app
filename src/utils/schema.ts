@@ -107,6 +107,8 @@ export const editBookingsFormSchema = z.object({
 	startTime: z.string().optional(),
 	endTime: z.string().optional(),
 	notes: z.string().optional(),
+	petId: z.string().optional(),
+	petName: z.string().optional(),
 });
 
 export const userDetailFormSchema = z.object({
