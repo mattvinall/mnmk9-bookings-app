@@ -22,6 +22,8 @@ const Daycare: NextPage = () => {
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
+	const [score, setScore] = useState<number | null>(null);
+	const [petId, setPetID] = useState<string>("");
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -80,13 +82,22 @@ const Daycare: NextPage = () => {
 		},
 	});
 
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
+		}
+	});
+
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
 		resolver: zodResolver(daycareSchema)
 	});
 
 	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation();
-
-	const [petId, setPetID] = useState<string>("");
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
@@ -109,29 +120,7 @@ const Daycare: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
-		try {
-			const url = process.env.NEXT_PUBLIC_RECAPTCHA_VERIFY_URL as string;
-			const response = await fetch(url, {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: `secret=${secret}&response=${token}`,
-			});
-
-			console.log("response from fetch", response);
-		} catch (err) {
-			console.log("error", err)
-		}
-	}, [token])
-
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
-		if (!token || token === "") return;
-
-		const result = await verifyRecaptcha(token, secret);
-		console.log("result from calling verify recaptcha", result)
-
-		// TODO: logic to handle response and evaluate score
-
 		try {
 			if (trainingId) {
 				formData.serviceId = trainingId;
@@ -147,6 +136,13 @@ const Daycare: NextPage = () => {
 			formData.petId = petId ? petId : id;
 
 			formData.serviceName = "Daycare";
+
+			verifyRecaptcha.mutate({ token, secret });
+
+			if (score && score < 0.5) {
+				console.log("score is less than 0.5");
+				return;
+			};
 
 			addNewDaycareBooking.mutate(formData);
 
