@@ -22,32 +22,8 @@ const Training: NextPage = () => {
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
-
-	useEffect(() => {
-		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-		if (key && key !== undefined) {
-			setKey(key);
-		}
-
-		if (secret || secret !== undefined) {
-			setSecret(secret);
-		}
-	}, []);
-
-	useEffect(() => {
-		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-		if (key && key !== undefined) {
-			setKey(key);
-		}
-
-		if (secret || secret !== undefined) {
-			setSecret(secret);
-		}
-	}, [key, secret]);
+	const [petId, setPetID] = useState<string>("");
+	const [score, setScore] = useState<number | null>(null);
 
 	const { data: sessionData } = useSession();
 	// get id from session data
@@ -80,22 +56,43 @@ const Training: NextPage = () => {
 		},
 	});
 
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(trainingSchema)
-	});
-
 	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation();
 
-	const [petId, setPetID] = useState<string>("");
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
+		}
+	});
 
 	useEffect(() => {
-		if (petData && petData?.length > 1) {
-			// store the pet ID of the first pet in the petData array as default
-			const initialPetId = petData && petData[0]?.id;
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
 
-			initialPetId && setPetID(initialPetId);
+		if (key && key !== undefined) {
+			setKey(key);
 		}
-	}, [])
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, []);
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (key && key !== undefined) {
+			setKey(key);
+		}
+
+		if (secret || secret !== undefined) {
+			setSecret(secret);
+		}
+	}, [key, secret]);
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
@@ -106,6 +103,9 @@ const Training: NextPage = () => {
 		}
 	}, [petData])
 
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+		resolver: zodResolver(trainingSchema)
+	});
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
@@ -119,31 +119,8 @@ const Training: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
-		try {
-			const url = process.env.NEXT_PUBLIC_RECAPTCHA_VERIFY_URL as string;
-			const response = await fetch(url, {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: `secret=${secret}&response=${token}`,
-			});
-
-			console.log("response from fetch", response);
-		} catch (err) {
-			console.log("error", err)
-		}
-	}, [token])
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
-		if (!token || token === "") return;
-
-		console.log("token in on submit", token)
-
-		const result = await verifyRecaptcha(token, secret);
-		console.log("result from calling verify recaptcha", result)
-
-		// TODO: logic to handle response and evaluate score
-
 		try {
 			if (trainingId) {
 				formData.serviceId = trainingId;
@@ -159,6 +136,13 @@ const Training: NextPage = () => {
 			formData.petId = petId ? petId : id;
 
 			formData.serviceName = "Training";
+
+			verifyRecaptcha.mutate({ token, secret });
+
+			if (score && score < 0.5) {
+				console.log("score is less than 0.5");
+				return;
+			};
 
 			addNewTrainingBooking.mutate(formData);
 
