@@ -80,19 +80,6 @@ const Grooming: NextPage = () => {
 		if (secret || secret !== undefined) {
 			setSecret(secret);
 		}
-	}, []);
-
-	useEffect(() => {
-		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-		if (key && key !== undefined) {
-			setKey(key);
-		}
-
-		if (secret || secret !== undefined) {
-			setSecret(secret);
-		}
 	}, [key, secret]);
 
 	useEffect(() => {
