@@ -3,15 +3,37 @@ import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import { EditBookingFormTypeProps } from "../../../types/form-types";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useCallback, useEffect } from "react";
 
 
-const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm }: EditBookingFormTypeProps): ReactJSXElement => {
+const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm, setToken }: EditBookingFormTypeProps): ReactJSXElement => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 	const { data: bookingDetail } = trpc.bookings.byId.useQuery({ id: bookingId });
 
+	const { executeRecaptcha } = useGoogleReCaptcha()
+	// Create an event handler so you can call the verification on button click event or form submit
+	const handleReCaptchaVerify = useCallback(async () => {
+		if (!executeRecaptcha) {
+			console.log('Execute recaptcha not yet available');
+			return;
+		}
+
+		const token = await executeRecaptcha('editBookingForm');
+		setToken(token)
+		console.log("token", token);
+		// Do whatever you want with the token
+	}, [executeRecaptcha]);
+
+	// You can use useEffect to trigger the verification as soon as the component being loaded
+	useEffect(() => {
+		handleReCaptchaVerify();
+	}, [handleReCaptchaVerify]);
+
 	return (
 		<form className="w-[80%] md:w-[90%]" style={{ position: "relative" }} onSubmit={handleSubmit(onSubmit)}>
+			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="editBookingForm" />
 			<svg onClick={() => setShowForm(false)} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer", position: "absolute", right: "0px", top: "0%", color: "white" }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
 			<h2 className="text-[2rem] text-white font-bold">Booking Details</h2>
 			<ul className="my-8 lg:my-8">
