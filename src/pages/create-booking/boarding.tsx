@@ -25,29 +25,8 @@ const Boarding: NextPage = () => {
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("")
 	const [secret, setSecret] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null)
+	const [score, setScore] = useState<number | null>(null);
 
-	useEffect(() => {
-		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-		if (!key) return;
-		if (!secret) return;
-
-		setKey(key);
-		setSecret(secret);
-	}, []);
-
-	useEffect(() => {
-		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-		if (!key) return;
-		if (!secret) return;
-
-		setKey(key);
-		setSecret(secret);
-	}, [key, secret]);
 
 	// query user table by email to get user data
 	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
@@ -75,10 +54,11 @@ const Boarding: NextPage = () => {
 		},
 	});
 
+	const addNewBooking = trpc.bookings.newBooking.useMutation();
+
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
 		onSuccess(data) {
 			if (!data) return;
-
 			setScore(data.score);
 		},
 		onError(error) {
@@ -86,11 +66,27 @@ const Boarding: NextPage = () => {
 		}
 	});
 
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(boardingSchema)
-	});
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
 
-	const addNewBooking = trpc.bookings.newBooking.useMutation();
+		if (!key) return;
+		if (!secret) return;
+
+		setKey(key);
+		setSecret(secret);
+	}, []);
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (!key) return;
+		if (!secret) return;
+
+		setKey(key);
+		setSecret(secret);
+	}, [key, secret]);
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
@@ -101,6 +97,10 @@ const Boarding: NextPage = () => {
 			initialPetId && setPetID(initialPetId);
 		}
 	}, [petData])
+
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+		resolver: zodResolver(boardingSchema)
+	});
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
 	// set the ID of the pet selected to state
@@ -143,6 +143,7 @@ const Boarding: NextPage = () => {
 				console.log("score is less than 0.5");
 				return;
 			};
+
 			// mutate / POST request to bookings api endpoint and submit the form data
 			addNewBooking.mutate(formData);
 
