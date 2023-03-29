@@ -33,7 +33,7 @@ const ContactUs = () => {
 		if (secret || secret !== undefined) {
 			setSecret(secret);
 		}
-	}, []);
+	}, [key, secret]);
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<ContactFormType>({
 		resolver: zodResolver(contactFormSchema)
