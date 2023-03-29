@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from "../../../utils/trpc";
@@ -6,28 +8,71 @@ import Swal from "sweetalert2";
 import { AddPetFormSchema } from "../../../types/form-shema";
 import { addPetFormSchema } from "../../../utils/schema";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { useCallback, useEffect, useState } from "react";
+import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 type Props = {
 	setShowPetForm: (bool: boolean) => void;
+	secret: string;
 }
 
-const AddPetForm = ({ setShowPetForm }: Props): ReactJSXElement => {
-	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
-		resolver: zodResolver(addPetFormSchema)
-	});
+const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
+	const [token, setToken] = useState<string>("");
+	const [score, setScore] = useState<number | null>(null);
 
-	const { data: sessionData } = useSession()
+	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
 	const { data: userData, refetch } = trpc.user.byId.useQuery({ id });
+
+	const { executeRecaptcha } = useGoogleReCaptcha()
+	// Create an event handler so you can call the verification on button click event or form submit
+	const handleReCaptchaVerify = useCallback(async () => {
+		if (!executeRecaptcha) {
+			console.log('Execute recaptcha not yet available');
+			return;
+		}
+
+		const token = await executeRecaptcha('addPetForm');
+		setToken(token)
+		console.log("token", token);
+		// Do whatever you want with the token
+	}, [executeRecaptcha]);
+
+	// You can use useEffect to trigger the verification as soon as the component being loaded
+	useEffect(() => {
+		handleReCaptchaVerify();
+	}, [handleReCaptchaVerify]);
 
 	const addPet = trpc.pet.addPet.useMutation({
 		onSuccess: () => refetch()
 	});
 
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
+		}
+	});
+
+	const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
+		resolver: zodResolver(addPetFormSchema)
+	});
+
 	const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
 		try {
 			formData.ownerId = userData?.id;
-			formData.vaccinated === "yes" ? formData.vaccinated = true : formData.vaccinated = false
+			formData.vaccinated === "yes" ? formData.vaccinated = true : formData.vaccinated = false;
+
+			verifyRecaptcha.mutate({ token, secret });
+
+			if (score && score < 0.5) {
+				console.log("score is less than 0.5");
+				return;
+			};
+
 			addPet.mutate(formData);
 			reset();
 
@@ -56,6 +101,7 @@ const AddPetForm = ({ setShowPetForm }: Props): ReactJSXElement => {
 	const rows = 2
 	return (
 		<form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit)}>
+			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
 			<svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-20%", color: "white" }} className="w-6 h-6 mt-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
 			<div className="grid md:grid-cols-1 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
