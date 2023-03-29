@@ -200,4 +200,4 @@ const PetDetail = () => {
 	)
 }
 
-export default PetDetail
+export default PetDetail;
