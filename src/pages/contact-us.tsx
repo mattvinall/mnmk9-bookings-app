@@ -20,6 +20,7 @@ const ContactUs = () => {
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
+	const [score, setScore] = useState<number | null>(null);
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -40,33 +41,26 @@ const ContactUs = () => {
 
 	const addNewContactFormEntry = trpc.contact.newContactEmail.useMutation();
 
-	const verifyRecaptcha = useCallback(async (token: string, secret: string) => {
-
-		try {
-			if (token && secret) {
-				console.log("secret before fetch", secret)
-				const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`, {
-					method: "POST",
-					headers: { "Content-Type": "application/x-www-form-urlencoded" },
-					body: `secret=${secret}&response=${token}`,
-				});
-
-				console.log("response from fetch", response);
-			}
-		} catch (err) {
-			console.log("error", err)
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
 		}
-	}, [token])
+	});
+
 
 	const onSubmit: SubmitHandler<ContactFormType> = async (formData: any) => {
-		if (!token || token === "") return;
-
-		const result = await verifyRecaptcha(token, secret);
-		console.log("result from calling verify recaptcha", result)
-
-		// TODO: logic to handle response and evaluate score
-
 		try {
+			verifyRecaptcha.mutate({ token, secret });
+
+			if (score && score < 0.5) {
+				console.log("score is less than 0.5");
+				return;
+			};
+
 			addNewContactFormEntry.mutate(formData);
 
 			reset();
