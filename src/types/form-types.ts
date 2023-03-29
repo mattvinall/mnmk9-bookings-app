@@ -34,6 +34,7 @@ export type EditBookingFormTypeProps = {
 	handleSubmit: UseFormHandleSubmit<EditBookingFormType>
 	onSubmit: SubmitHandler<EditBookingFormType>
 	setShowForm: (showForm: boolean) => void
+	setToken: (token: string) => void
 }
 
 export type ContactFormTypeProps = {
