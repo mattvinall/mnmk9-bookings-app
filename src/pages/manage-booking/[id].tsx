@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -10,12 +10,18 @@ import Swal from "sweetalert2";
 import EditBookingForm from "../../components/client/forms/EditBookingForm";
 import { editBookingsFormSchema } from "../../utils/schema";
 import { EditBookingFormType } from "../../types/form-types";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
-	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
+	const [score, setScore] = useState<number | null>(null);
+	const [token, setToken] = useState<string>("");
+	const [key, setKey] = useState<string>("")
+	const [secret, setSecret] = useState<string>("");
+
+	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
 		resolver: zodResolver(editBookingsFormSchema)
@@ -23,7 +29,39 @@ const BookingDetail: NextPage = () => {
 
 	const editBooking = trpc.bookings.editBooking.useMutation();
 
-	const cancelBooking = trpc.bookings.cancelBooking.useMutation()
+	const cancelBooking = trpc.bookings.cancelBooking.useMutation();
+
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
+		}
+	});
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (!key) return;
+		if (!secret) return;
+
+		setKey(key);
+		setSecret(secret);
+	}, []);
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (!key) return;
+		if (!secret) return;
+
+		setKey(key);
+		setSecret(secret);
+	}, [key, secret]);
 
 	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
 
@@ -36,6 +74,13 @@ const BookingDetail: NextPage = () => {
 				if (result.isConfirmed) {
 					// mutate / POST request to bookings api endpoint and submit the form data
 					formData.id = bookingDetail?.id;
+
+					verifyRecaptcha.mutate({ token, secret });
+
+					if (score && score < 0.5) {
+						console.log("score is less than 0.5");
+						return;
+					};
 
 					editBooking.mutate(formData);
 
@@ -119,14 +164,17 @@ const BookingDetail: NextPage = () => {
 					</li>
 				</ul>
 			</nav>
-			{showForm ? (
-				<EditBookingForm
-					register={register}
-					isSubmitting={isSubmitting}
-					onSubmit={onSubmit}
-					handleSubmit={handleSubmit}
-					setShowForm={setShowForm}
-				/>
+			{key && key !== undefined && key !== "" && showForm ? (
+				<GoogleReCaptchaProvider reCaptchaKey={key}>
+					<EditBookingForm
+						register={register}
+						isSubmitting={isSubmitting}
+						onSubmit={onSubmit}
+						handleSubmit={handleSubmit}
+						setShowForm={setShowForm}
+						setToken={setToken}
+					/>
+				</GoogleReCaptchaProvider>
 			) : null}
 		</div>
 	)
