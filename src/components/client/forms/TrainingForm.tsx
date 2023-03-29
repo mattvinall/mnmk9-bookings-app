@@ -14,10 +14,6 @@ const TrainingForm = ({ register, setToken, setValue, handleSubmit, onSubmit, ha
 	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
-	if (userData) {
-
-	}
-
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
 	const handleReCaptchaVerify = useCallback(async () => {
