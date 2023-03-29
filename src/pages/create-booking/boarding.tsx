@@ -75,17 +75,6 @@ const Boarding: NextPage = () => {
 
 		setKey(key);
 		setSecret(secret);
-	}, []);
-
-	useEffect(() => {
-		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-		if (!key) return;
-		if (!secret) return;
-
-		setKey(key);
-		setSecret(secret);
 	}, [key, secret]);
 
 	useEffect(() => {
