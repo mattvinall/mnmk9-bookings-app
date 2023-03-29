@@ -37,5 +37,7 @@ export type EditBookingFormSchema = {
 	checkOutDate: string
 	startTime: string
 	endTime: string
+	petName: string,
+	petId: string
 	notes: string
 }
