@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -9,15 +9,20 @@ import UserDetailForm from "../../components/client/forms/UserDetailForm";
 import AddPetForm from "../../components/client/forms/AddPetForm";
 import UserInfoTable from "../../components/client/UserInfoCard";
 import Swal from "sweetalert2";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
-const UserDetail: () => void = () => {
+const UserDetail = () => {
 	const router = useRouter();
 	const userId = router.query.id as string;
-	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
+
 	const [showUserForm, setShowUserForm] = useState<boolean>(false);
 	const [showPetForm, setShowPetForm] = useState<boolean>(false);
 	const [showPets, setShowPets] = useState<boolean>(false);
 	const [showProfileTable, setShowProfileTable] = useState<boolean>(false);
+	const [key, setKey] = useState<string>("")
+	const [secret, setSecret] = useState<string>("");
+
+	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
 
 	const handleShowUserForm = () => {
 		setShowUserForm(true);
@@ -51,6 +56,28 @@ const UserDetail: () => void = () => {
 		setShowPets(true);
 	}, [])
 
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (!key) return;
+		if (!secret) return;
+
+		setKey(key);
+		setSecret(secret);
+	}, []);
+
+	useEffect(() => {
+		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+		const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+		if (!key) return;
+		if (!secret) return;
+
+		setKey(key);
+		setSecret(secret);
+	}, [key, secret]);
+
 	const deletePet = trpc.pet.deletePet.useMutation();
 
 	const handleDeletePet = async (id: string, name: string) => {
@@ -71,7 +98,6 @@ const UserDetail: () => void = () => {
 					});
 				}
 			});
-
 		} catch (error) {
 			// error message
 			Swal.fire({
@@ -121,8 +147,10 @@ const UserDetail: () => void = () => {
 			</div>
 
 			{/* Content */}
-			<>{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} />)}</>
-			<>{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} />)}</>
+			<GoogleReCaptchaProvider reCaptchaKey={key}>
+				{showUserForm && (<UserDetailForm setShowUserForm={setShowUserForm} secret={secret} />)}
+				{showPetForm && (<AddPetForm setShowPetForm={setShowPetForm} secret={secret} />)}
+			</GoogleReCaptchaProvider>
 			<>
 				{userDetail && showProfileTable && (
 					<UserInfoTable
