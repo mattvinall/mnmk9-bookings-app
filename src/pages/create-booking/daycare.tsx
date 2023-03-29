@@ -142,7 +142,7 @@ const Daycare: NextPage = () => {
 			if (score && score < 0.5) {
 				console.log("score is less than 0.5");
 				return;
-			};
+			}
 
 			addNewDaycareBooking.mutate(formData);
 

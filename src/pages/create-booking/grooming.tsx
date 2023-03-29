@@ -144,7 +144,7 @@ const Grooming: NextPage = () => {
 			if (score && score < 0.5) {
 				console.log("score is less than 0.5");
 				return;
-			};
+			}
 
 			addNewGroomingBooking.mutate(formData);
 

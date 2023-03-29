@@ -142,7 +142,7 @@ const Boarding: NextPage = () => {
 			if (score && score < 0.5) {
 				console.log("score is less than 0.5");
 				return;
-			};
+			}
 
 			// mutate / POST request to bookings api endpoint and submit the form data
 			addNewBooking.mutate(formData);

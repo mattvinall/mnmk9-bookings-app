@@ -59,7 +59,7 @@ const ContactUs = () => {
 			if (score && score < 0.5) {
 				console.log("score is less than 0.5");
 				return;
-			};
+			}
 
 			addNewContactFormEntry.mutate(formData);
 
