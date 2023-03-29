@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { UserFormSchema } from '../../../types/form-shema';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { userDetailFormSchema } from '../../../utils/schema';
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 type Props = {
 	setShowUserForm: (bool: boolean) => void;
@@ -35,7 +35,7 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 			return;
 		}
 
-		const token = await executeRecaptcha('boardingForm');
+		const token = await executeRecaptcha('userDetailForm');
 		setToken(token)
 		console.log("token", token);
 		// Do whatever you want with the token
@@ -103,6 +103,7 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 
 	return (
 		<form style={{ position: "relative" }} className="w-[95%] md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
+			<GoogleReCaptcha onVerify={handleReCaptchaVerify} action="userDetailForm" />
 			<svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-10%", color: "white" }} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
 			<div className="grid md:grid-cols-2 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
