@@ -1,39 +1,76 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { trpc } from "../../../utils/trpc";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
 import { UserFormSchema } from '../../../types/form-shema';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
+import { userDetailFormSchema } from '../../../utils/schema';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 type Props = {
 	setShowUserForm: (bool: boolean) => void;
+	secret: string
 }
-const UserDetailForm = ({ setShowUserForm }: Props): ReactJSXElement => {
-	const schema = z.object({
-		address: z.string().min(6).max(65),
-		city: z.string().min(1),
-		postalCode: z.string().min(6).max(7),
-		phoneNumber: z.string().max(12)
-	});
+
+const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => {
 
 	const router = useRouter();
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
-		resolver: zodResolver(schema)
-	});
+	const [token, setToken] = useState<string>("");
+	const [score, setScore] = useState<number | null>(null);
 
 	const { data: sessionData } = useSession()
 	const id = sessionData?.user?.id as string;
+
 	const { data: userData } = trpc.user.byId.useQuery({ id });
+
+	const { executeRecaptcha } = useGoogleReCaptcha()
+	// Create an event handler so you can call the verification on button click event or form submit
+	const handleReCaptchaVerify = useCallback(async () => {
+		if (!executeRecaptcha) {
+			console.log('Execute recaptcha not yet available');
+			return;
+		}
+
+		const token = await executeRecaptcha('boardingForm');
+		setToken(token)
+		console.log("token", token);
+		// Do whatever you want with the token
+	}, [executeRecaptcha]);
+
+	// You can use useEffect to trigger the verification as soon as the component being loaded
+	useEffect(() => {
+		handleReCaptchaVerify();
+	}, [handleReCaptchaVerify]);
 
 	const editProfile = trpc.user.editProfile.useMutation();
 
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
+		onSuccess(data) {
+			if (!data) return;
+			setScore(data.score);
+		},
+		onError(error) {
+			console.log("error verify recaptcha mutation", error);
+		}
+	});
+
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
+		resolver: zodResolver(userDetailFormSchema)
+	});
+
 	const onSubmit: SubmitHandler<UserFormSchema> = async (formData: any) => {
 		formData.id = userData?.id;
+
+		verifyRecaptcha.mutate({ token, secret });
+
+		if (score && score < 0.5) {
+			console.log("score is less than 0.5");
+			return;
+		};
 
 		editProfile.mutate(formData);
 
