@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 // define schema for the form 
 export const boardingSchema = z.object({
 	firstName: z.string().min(1, { message: "First name is required" }),
@@ -101,9 +102,16 @@ export const contactFormSchema = z.object({
 });
 
 export const editBookingsFormSchema = z.object({
-		checkInDate: z.string().optional(),
-		checkOutDate: z.string().optional(),
-		startTime: z.string().optional(),
-		endTime: z.string().optional(),
-		notes: z.string().optional(),
+	checkInDate: z.string().optional(),
+	checkOutDate: z.string().optional(),
+	startTime: z.string().optional(),
+	endTime: z.string().optional(),
+	notes: z.string().optional(),
+});
+
+export const userDetailFormSchema = z.object({
+	address: z.string().min(6).max(65),
+	city: z.string().min(1),
+	postalCode: z.string().min(6).max(7),
+	phoneNumber: z.string().max(12)
 });
