@@ -1,4 +1,4 @@
-"use client";
+"use-client";
 
 import { useState, useEffect } from "react";
 import { trpc } from "../../../utils/trpc";
@@ -122,9 +122,9 @@ const BookingsCalendar = () => {
 					<Calendar className="!lg:w-full" value={date} onChange={handleDateChange} />
 					<div className="mt-5 relative">
 						{/* Check In Table */}
-						{checkInBookings && checkInBookings?.length > 0 ? <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} /> : <p className="text-[1.3rem] text-gray-100 text-left">Nobody checking in today</p>}
+						{checkInBookings.length > 0 ? <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} /> : <p className="text-[1.2rem] text-gray-100 text-left">Please click on a date to see your bookings</p>}
 						{/* Check Out Table */}
-						{checkInBookings && checkOutBookings?.length > 0 ? <CheckOutTable checkOutBookings={checkOutBookings} checkOutBookingsList={checkOutBookingsList} /> : <p className="text-[1.3rem] text-gray-100 text-left">Nobody checking out today</p>}
+						{checkOutBookings.length > 0 && <CheckOutTable checkOutBookings={checkOutBookings} checkOutBookingsList={checkOutBookingsList} />}
 					</div>
 
 				</div>
