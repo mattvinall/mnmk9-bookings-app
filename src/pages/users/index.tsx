@@ -78,7 +78,7 @@ const Users = () => {
 			{userData?.role === "admin" && sessionData ? (
 				<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-						MNMK-9  <span className="text-[hsl(280,100%,70%)]">Users</span>
+						MNMK-9  <span className="text-[rgb(103,163,161)]">Users</span>
 					</h1>
 					<label htmlFor="simple-search" className="sr-only">Search</label>
 					<div className="relative w-[35%]">
