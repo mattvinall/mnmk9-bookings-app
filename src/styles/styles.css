@@ -129,3 +129,7 @@
   color: #fff !important;
   padding: 0 10px !important;
 }
+
+.css-1jhmdt8-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  background-color: rgba(103,163,161, 0.8) !important;
+}
