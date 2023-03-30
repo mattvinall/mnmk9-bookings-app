@@ -11,7 +11,7 @@ const Dashboard = () => {
 	// get user session
 	const { data: sessionData } = useSession();
 	// get the id from the user session
-	const id = sessionData?.user?.id as string;
+	const id = sessionData?.user?.id as string | "";
 	// fetch user by id 
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
@@ -20,7 +20,7 @@ const Dashboard = () => {
 			{userData?.role === "admin" && sessionData ? (
 				<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 					<h1 className="text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-						MNMK-9  <span className="text-[hsl(280,100%,70%)]">Dashboard</span>
+						MNMK-9  <span className="text-[rgb(103,163,161)]">Dashboard</span>
 					</h1>
 					<DashboardOverview />
 					<BookingsCalendar />
