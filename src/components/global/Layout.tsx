@@ -15,7 +15,7 @@ const MainLayout = ({ children }: ILayoutProps) => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<Navbar />
-			<main className="min-h-[85vh] flex justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+			<main className="min-h-[85vh] flex justify-center bg-gradient-to-b from-[#112C4F] to-[#15162c]">
 				{children}
 			</main>
 			<Footer />
