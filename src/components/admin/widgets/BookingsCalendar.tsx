@@ -122,7 +122,8 @@ const BookingsCalendar = () => {
 					<Calendar className="!lg:w-full" value={date} onChange={handleDateChange} />
 					<div className="mt-5 relative">
 						{/* Check In Table */}
-						{checkInBookings && checkInBookings?.length > 0 ? <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} /> : <p className="text-[1.2rem] text-gray-100 text-left">Please click on a date to see your bookings</p>}
+						{(!checkInBookings || checkInBookings?.length === 0) && (!checkOutBookings || checkOutBookings.length === 0) ? <p className="text-[1.2rem] text-gray-100 text-left">Please click on a date to see your bookings</p> : null}
+						{checkInBookings && checkInBookings?.length > 0 && <CheckInTable checkInBookings={checkInBookings} checkInBookingsList={checkInBookingsList} />}
 						{/* Check Out Table */}
 						{checkOutBookings && checkOutBookings?.length > 0 && <CheckOutTable checkOutBookings={checkOutBookings} checkOutBookingsList={checkOutBookingsList} />}
 					</div>

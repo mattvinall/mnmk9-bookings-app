@@ -104,7 +104,7 @@
   background: #ffffa9;
 }
 .react-calendar__tile--hasActive {
-  background: #2e026d !important;
+  background: #112B4D !important;
 	color: #fff !important;
 }
 .react-calendar__tile--hasActive:enabled:hover,
@@ -112,12 +112,13 @@
   background: #a9d4ff;
 }
 .react-calendar__tile--active {
-  background: #2e026d !important;
+  background: #112B4D !important;
   color: white !important;
+  font-weight: 600 !important;
 }
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
-  background: #2e026d !important;
+  background: #112B4D !important;
 }
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
@@ -127,4 +128,8 @@
   border: 1px solid #fff !important;
   color: #fff !important;
   padding: 0 10px !important;
+}
+
+.css-1jhmdt8-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  background-color: rgba(103,163,161, 0.8) !important;
 }

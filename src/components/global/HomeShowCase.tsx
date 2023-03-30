@@ -79,7 +79,7 @@ const HomeShowCase = () => {
 	return (
 		<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
 			<h1 className="text-5xl text-center font-extrabold tracking-tight text-white sm:text-[5rem]">
-				MNMK-9 <span className="text-[hsl(280,100%,70%)]">Bookings</span>
+				MNMK-9 <span className="text-[rgb(103,163,161)]">Bookings</span>
 			</h1>
 			<h2 className="text-12xl font-bold tracking-tight text-white text-center text-[2rem] sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
 			{sessionData ? (

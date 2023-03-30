@@ -51,13 +51,13 @@ const ConfirmBookings = () => {
 										<div className="flex flex-col flex-wrap justify-between md:justify-start lg:justify-between">
 											{!booking.confirmedBooking && (
 												<button
-													className="text-center bg-purple-900 w-[175px] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+													className="text-center bg-blue-700 w-[175px] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
 													onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: booking.confirmedBooking })}
 												>
 													Confirm Booking
 												</button>
 											)}
-											<Link className="block w-[175px] text-center bg-purple-900 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
+											<Link className="block w-[175px] text-center bg-teal-500 hover:bg-teal-400 text-black font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 												Booking Details
 											</Link>
 										</div>

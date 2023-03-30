@@ -119,7 +119,7 @@ const PetDetail = () => {
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 max-w-8xl">
 			<a className="flex justify-start text-left text-white font-bold text-2xl" href={`/profile/${ownerId}`}>Go Back</a>
-			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[hsl(280,100%,70%)]">Details</span></h1>
+			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[rgb(103,163,161)]">Details</span></h1>
 			<div className="m-auto">
 				{petDetail?.map((pet, idx) => {
 					const defaultImage = `https://mdbootstrap.com/img/new/standard/nature/19${idx + 1}.jpg`
@@ -141,7 +141,7 @@ const PetDetail = () => {
 											defaultValue={pet?.notes ?? ""}
 										/>
 										<button
-											className="mt-[25px] rounded-full bg-gradient-to-l from-[#667eea] to-[#764ba2] hover:bg-gradient-to-r from-[#764ba2] to-[#667eea] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+											className="mt-[25px] rounded-full bg-gradient-to-l from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-r from-[#112B4E] to-[#67A3A1] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 											Update
 										</button>
 										<p className="block font-medium py-6 text-md">Upload:</p>
@@ -158,12 +158,12 @@ const PetDetail = () => {
 										</label>
 										{imageFileNamePreview ? (<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={handleUploadProfileImage}>Upload Selected Profile Image</button>) : null}
 										<label style={{ cursor: "pointer" }} htmlFor="vaccination-documents" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-											Upload Vaccination Document
+											Upload Proof of Vaccinations
 											<input
 												style={{ cursor: "pointer" }}
 												type="file"
 												multiple
-												accept=".pdf"
+												accept=".pdf, image/*, .png, .jpg, .jpeg"
 												id="vaccination-documents"
 												className="hidden"
 												onChange={handleVaccinationDocumentFileChange}

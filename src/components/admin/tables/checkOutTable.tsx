@@ -12,7 +12,7 @@ const CheckOutTable = ({ checkOutBookings, checkOutBookingsList }: Props): React
 		<>
 			<h3 className="text-white font-bold text-[2rem] my-8">Checking Out:</h3>
 			<table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-				<thead className={`text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400`}>
+				<thead className={`text-md text-gray-700 uppercase bg-white dark:bg-white dark:text-navy-800`}>
 					<tr>
 						<th scope="col" className="px-6 py-3">
 							Name
