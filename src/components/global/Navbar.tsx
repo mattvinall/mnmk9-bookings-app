@@ -21,7 +21,7 @@ const AuthShowcase: React.FC = () => {
 	return (
 		<div className="flex items-center justify-center">
 			<button
-				className="rounded-full bg-gradient-to-b from-[#2e026d] to-[#15162c] px-10 py-3 font-semibold text-white no-underline transition hover:bg-gradient-to-b from-[#15162c] to-[#2e026d]"
+				className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] px-10 py-3 font-semibold text-white hover:underline transition hover:bg-gradient-to-b from-[#67A3A1] to-[#112B4E]"
 				onClick={sessionData ? () => signOut() : () => signIn()}
 			>
 				{sessionData ? "Sign out" : "Sign in"}
@@ -54,24 +54,24 @@ const Navbar: React.FC = () => {
 							<div className="hidden md:flex items-center">
 								<Link
 									href="/"
-									className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 									Home
 								</Link>
 								{sessionData ? (
 									<>
 										<Link
 											href={`/profile/${sessionData?.user?.id}`}
-											className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
+											className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 											Profile
 										</Link>
 										<Link
 											href="/create-booking"
-											className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+											className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 											Book Service
 										</Link>
 										<Link
 											href="/manage-booking"
-											className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+											className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold transition duration-300">
 											Manage Booking
 										</Link>
 									</>
@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
 								) : null}
 								<Link
 									href="/contact-us"
-									className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold transition duration-300">
 									Contact Us
 								</Link>
 							</div>
@@ -120,31 +120,31 @@ const Navbar: React.FC = () => {
 					<ul className={`md:hidden flex-wrap ${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center items-center text-white bg-[#060606]`}>
 						<Link
 							href="/"
-							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 							Home
 						</Link>
 						{sessionData ? (
 							<>
 								<Link
 									href={`/profile/${sessionData?.user?.id}`}
-									className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold">
+									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 									Profile
 								</Link>
 								<Link
 									href="/create-booking"
-									className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 									Book Service
 								</Link>
 								<Link
 									href="/manage-booking"
-									className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold transition duration-300">
 									Manage Booking
 								</Link>
 							</>
 						) : null}
 						<Link
 							href="/contact-us"
-							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold transition duration-300">
 							Contact Us
 						</Link>
 					</ul>
@@ -166,22 +166,22 @@ const Navbar: React.FC = () => {
 								<>
 									<Link
 										href="/dashboard"
-										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+										className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 										Dashboard
 									</Link>
 									<Link
 										href="/users"
-										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+										className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 										Users
 									</Link>
 									<Link
 										href="/create-booking"
-										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+										className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 										Book Service
 									</Link>
 									<Link
 										href="/manage-booking"
-										className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+										className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold transition duration-300">
 										Manage Bookings
 									</Link>
 								</>
@@ -222,31 +222,29 @@ const Navbar: React.FC = () => {
 					<ul className={`md:hidden flex-wrap ${!menuToggled ? "hidden" : ""} mobile-menu flex justify-center items-center text-white bg-[#060606]`}>
 						<Link
 							href="/dashboard"
-							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 							Dashboard
 						</Link>
 						<Link
 							href="/users"
-							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 							Users
 						</Link>
 						<Link
 							href="/create-booking"
-							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold ">
+							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 							Book Service
 						</Link>
 						<Link
 							href="/manage-booking"
-							className="py-4 px-5 text-black-700 hover:text-purple-700 font-semibold transition duration-300">
+							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold transition duration-300">
 							Manage Bookings
 						</Link>
-
 					</ul>
 				</div>
 			</nav>
 		)
 	}
-
 
 	return (
 		<>
