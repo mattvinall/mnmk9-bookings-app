@@ -108,7 +108,7 @@ const UserDetail = () => {
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-				Manage  <span className="text-[hsl(280,100%,70%)]">Profile</span>
+				Manage  <span className="text-[rgb(103,163,161)]">Profile</span>
 			</h1>
 			<p className="text-white text-center w-[80%] font-bold text-[2rem] md:text-[2.5rem]">
 				Manage Your Information or Add Pets to your Profile
