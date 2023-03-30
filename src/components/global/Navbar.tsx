@@ -21,7 +21,7 @@ const AuthShowcase: React.FC = () => {
 	return (
 		<div className="flex items-center justify-center">
 			<button
-				className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition hover:bg-gradient-to-b from-[#67A3A1] to-[#112B4E]"
+				className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition"
 				onClick={sessionData ? () => signOut() : () => signIn()}
 			>
 				{sessionData ? "Sign out" : "Sign in"}
