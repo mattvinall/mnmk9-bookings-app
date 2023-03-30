@@ -140,7 +140,7 @@ const BookingDetail: NextPage = () => {
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<Link className="flex justify-start text-left text-white font-bold text-2xl" href="/manage-booking">Go Back</Link>
 			<h1 className="text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-8">
-				Manage Booking: <span className="text-[hsl(280,100%,70%)]">{bookingDetail?.serviceName}</span>
+				Manage Booking: <span className="text-[rgb(103,163,161)]">{bookingDetail?.serviceName}</span>
 			</h1>
 
 			<nav className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
