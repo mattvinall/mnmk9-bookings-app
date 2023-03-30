@@ -158,12 +158,12 @@ const PetDetail = () => {
 										</label>
 										{imageFileNamePreview ? (<button className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" onClick={handleUploadProfileImage}>Upload Selected Profile Image</button>) : null}
 										<label style={{ cursor: "pointer" }} htmlFor="vaccination-documents" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-											Upload Vaccination Document
+											Upload Proof of Vaccinations
 											<input
 												style={{ cursor: "pointer" }}
 												type="file"
 												multiple
-												accept=".pdf"
+												accept=".pdf, image/*, .png, .jpg, .jpeg"
 												id="vaccination-documents"
 												className="hidden"
 												onChange={handleVaccinationDocumentFileChange}
