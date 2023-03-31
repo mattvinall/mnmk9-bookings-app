@@ -130,6 +130,11 @@
   padding: 0 10px !important;
 }
 
-.css-1jhmdt8-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+.css-1jhmdt8-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected,
+.css-zm4fy8.Mui-selected {
   background-color: rgba(103,163,161, 0.8) !important;
+}
+
+.css-zm4fy8.Mui-selected:hover {
+  background-color: rgba(103,163,161, 0.5) !important;
 }
