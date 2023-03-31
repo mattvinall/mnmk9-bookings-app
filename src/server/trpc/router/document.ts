@@ -35,6 +35,30 @@ export const documentRouter = router({
 				console.log(`failed to create new vaccination document: ${error}`)
 			}
 		}),
+	addWaiverDocument: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				fileName: z.string(),
+				url: z.string().url()
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, fileName, url } = input;
+			try {
+				const { success } = await rateLimit.limit(id)
+
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+				
+				return await ctx.prisma.documents.create({
+					data: { petId: id, fileName, url }
+				})
+			} catch (error) {
+				console.log(`failed to create new vaccination document: ${error}`)
+			}
+		}),
 	deleteVaccinationDocument: protectedProcedure
 		.input(
 			z.object({
