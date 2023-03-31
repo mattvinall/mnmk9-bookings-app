@@ -136,6 +136,38 @@ const BoardingForm = ({ petData, setValue, setToken, isSubmitting, register, han
 			</div>
 			<div className="grid md:grid-cols-2 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
+					<input
+						{...register("startTime", { required: true })}
+						type="time"
+						name="startTime"
+						id="startTime"
+						className="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+						required
+					/>
+					<label
+						htmlFor="startTime"
+						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+						Drop Off Time
+					</label>
+				</div>
+				<div className="relative z-0 mb-6 w-full group">
+					<input
+						{...register("endTime", { required: true })}
+						type="time"
+						name="endTime"
+						id="endTime"
+						className="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+						required
+					/>
+					<label
+						htmlFor="endTime"
+						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+						Pick Up Time
+					</label>
+				</div>
+			</div>
+			<div className="grid md:grid-cols-2 md:gap-6">
+				<div className="relative z-0 mb-6 w-full group">
 					<label
 						htmlFor="pet-select"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
