@@ -150,7 +150,7 @@ const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
 					</label>
 				</div>
 
-				<p className="mt-[-5px] text-white font-medium">Is your pet up to date with all of their vaccinations?</p>
+				<p className="mt-[-5px] text-white font-medium">Is your pet up to date with all of their vaccinations? (Rabies, Leptospirosis)</p>
 				<div className="flex items-center mr-4 mb-4">
 					<input
 						{...register("vaccinated")}
