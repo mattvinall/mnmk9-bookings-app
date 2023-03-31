@@ -23,7 +23,7 @@ const PetDetail = () => {
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
 
 	// get values of name, id and vaccinated to use for later
-	const name = petDetail?.map(pet => pet.name as string);
+	const name = petDetail?.map(pet => pet.name as string)[0];
 	const petId = petDetail?.map(pet => pet.id as string)[0];
 	const vaccinated = petDetail?.map(pet => pet.vaccinated)[0];
 	const ownerId = petDetail?.map(pet => pet.ownerId as string)[0];
@@ -174,10 +174,8 @@ const PetDetail = () => {
 									{pet?.documents && pet?.documents.length > 0 && <h2 className="text-gray-900 text-xl font-medium mb-2 mt-6">Documents</h2>}
 									{pet?.documents && pet?.documents.length > 0 && <p className="pb-8 text-sm text-grey-100">*your vaccination document will not upload again if you have the same file name. If you have a revised version, delete the existing one and re-upload the file again.</p>}
 									{pet.documents?.map(doc => {
-										// definte file name based on position in the array of the file name in S3
-										const fileName = doc.fileName.split("/")[5];
-										// split the array by perdiod and return the first item in the array --> ["murphy-vaccination", ".pdf"]
-										const formattedName = fileName && fileName?.split(".")[0]?.replace(/%20/g, " ");
+										console.log("doc file name", doc.fileName);
+										const fileName = doc.fileName.includes("amazonaws.com") ? doc.fileName.split("/")[5] : doc.fileName;
 										return (
 											<div key={doc.id} style={{ position: "relative" }}>
 												<svg onClick={() => deleteVaccinationDocument.mutate({ id: doc.id })} className="w-6 h-6" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer", position: "absolute", right: "0px", top: "35%" }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -185,7 +183,7 @@ const PetDetail = () => {
 													<svg className="w-[80px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 														<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
 													</svg>
-													{formattedName}
+													{fileName}
 												</a>
 											</div>
 										)
