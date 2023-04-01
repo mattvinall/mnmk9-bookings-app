@@ -8,10 +8,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
-import { sendEmailTraining } from "../../lib/email";
+import { sendEmailToAdmin } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
 import { FormSchemaType } from "../../types/form-shema";
-import { trainingSchema } from "../../utils/schema";
+import { bookingFormSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
@@ -91,7 +91,7 @@ const Training: NextPage = () => {
 	}, [petData])
 
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(trainingSchema)
+		resolver: zodResolver(bookingFormSchema)
 	});
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
@@ -136,9 +136,9 @@ const Training: NextPage = () => {
 			// reset form state
 			reset();
 
-			await sendEmailTraining(
-				[formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
-				`${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+			await sendEmailToAdmin(
+				formData?.email,
+				"matt.vinall7@gmail.com",
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
@@ -147,6 +147,7 @@ const Training: NextPage = () => {
 				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
+				"Training",
 				formData?.notes
 			);
 
