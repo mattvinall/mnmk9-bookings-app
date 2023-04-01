@@ -7,14 +7,12 @@ import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
-import Swal from "sweetalert2";
-import { sendEmailDaycare } from "../../lib/email";
 import DaycareForm from "../../components/client/forms/DaycareForm";
 import { FormSchemaType } from "../../types/form-shema";
-import { daycareSchema } from "../../utils/schema";
-import {
-	GoogleReCaptchaProvider,
-} from 'react-google-recaptcha-v3';
+import { bookingFormSchema } from "../../utils/schema";
+import { sendEmailToAdmin } from './../../lib/email';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import Swal from "sweetalert2";
 
 const Daycare: NextPage = () => {
 	const router = useRouter();
@@ -81,7 +79,7 @@ const Daycare: NextPage = () => {
 	});
 
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(daycareSchema)
+		resolver: zodResolver(bookingFormSchema)
 	});
 
 	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation();
@@ -136,9 +134,9 @@ const Daycare: NextPage = () => {
 			// reset form state
 			reset();
 
-			await sendEmailDaycare(
-				[formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
-				`${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+			await sendEmailToAdmin(
+				formData?.email,
+				"matt.vinall7@gmail.com",
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
@@ -147,6 +145,7 @@ const Daycare: NextPage = () => {
 				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
+				"Daycare",
 				formData?.notes
 			);
 
