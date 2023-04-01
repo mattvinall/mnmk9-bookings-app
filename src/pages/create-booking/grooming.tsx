@@ -8,10 +8,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
-import { sendEmailGrooming } from "../../lib/email";
+import { sendEmailToAdmin } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
 import { FormSchemaType } from "../../types/form-shema";
-import { groomingSchema } from "../../utils/schema";
+import { bookingFormSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
@@ -92,7 +92,7 @@ const Grooming: NextPage = () => {
 	}, [petData])
 
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(groomingSchema)
+		resolver: zodResolver(bookingFormSchema)
 	});
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
@@ -138,18 +138,19 @@ const Grooming: NextPage = () => {
 			// reset form
 			reset();
 
-			await sendEmailGrooming(
-				[formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
-				`${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+			await sendEmailToAdmin(
+				formData?.email,
+				"matt.vinall7@gmail.com",
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
 				formData?.phoneNumber,
 				formData?.petName,
 				formData?.checkInDate,
-				formData?.startTime || "",
-				formData?.endTime || "",
-				formData?.notes
+				formData?.startTime as string,
+				formData?.endTime as string,
+				"Daycare",
+				formData?.notes as string
 			);
 
 			// success message 
