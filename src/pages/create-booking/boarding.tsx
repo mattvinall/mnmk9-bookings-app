@@ -7,14 +7,12 @@ import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
-import { sendEmailBoarding } from "../../lib/email";
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
 import { FormSchemaType } from "../../types/form-shema";
-import { boardingSchema } from "../../utils/schema";
-import {
-	GoogleReCaptchaProvider,
-} from 'react-google-recaptcha-v3';
+import { bookingFormSchema } from "../../utils/schema";
+import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 const Boarding: NextPage = () => {
 	const { data: sessionData } = useSession();
@@ -88,7 +86,7 @@ const Boarding: NextPage = () => {
 	}, [petData])
 
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
-		resolver: zodResolver(boardingSchema)
+		resolver: zodResolver(bookingFormSchema)
 	});
 
 	// on change grab the pet name, use the pet name to find the pet in the array and store the ID
@@ -108,6 +106,7 @@ const Boarding: NextPage = () => {
 	}
 
 	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+		console.log("form data", formData);
 		try {
 			// check if boardingId is truthy and then set the id of the service
 			if (boardingId) {
@@ -139,11 +138,13 @@ const Boarding: NextPage = () => {
 			// reset the form state
 			reset();
 
+			if (!formData.petName || formData.petName.length === 0) return;
+
 			// call send email function that leverages AWS SES to send the form data via email
-			await sendEmailBoarding(
+			await sendEmailToAdmin(
 				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
 				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
-				[formData?.email],
+				formData?.email,
 				"matt.vinall7@gmail.com",
 				formData?.firstName,
 				formData?.lastName,
@@ -151,6 +152,23 @@ const Boarding: NextPage = () => {
 				formData?.phoneNumber,
 				formData?.petName,
 				formData?.checkInDate,
+				formData?.checkOutDate,
+				formData.startTime,
+				formData.endTime,
+				"Boarding",
+				formData?.notes
+			);
+
+			await sendEmailToClient(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+				formData?.email,
+				"matt.vinall7@gmail.com",
+				formData?.petName,
+				formData?.checkInDate,
+				formData?.startTime,
+				formData?.endTime,
+				"Boarding",
 				formData?.checkOutDate,
 				formData?.notes
 			);
