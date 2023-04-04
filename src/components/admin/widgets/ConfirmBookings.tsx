@@ -3,6 +3,7 @@ import { trpc } from "../../../utils/trpc";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Link from "next/link";
+import { Booking } from "../../../types/router";
 
 const ConfirmBookings = () => {
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
@@ -12,7 +13,7 @@ const ConfirmBookings = () => {
 		}
 	});
 
-	const filteredBookingsByNotConfirmed = bookingsData?.filter(booking => booking.confirmedBooking === false);
+	const filteredBookingsByNotConfirmed = bookingsData?.filter((booking: Booking) => booking.confirmedBooking === false);
 
 	const [showArrows, setShowArrows] = useState<boolean>(true);
 
@@ -23,13 +24,14 @@ const ConfirmBookings = () => {
 		}
 
 		setShowArrows(false);
-	}, [showArrows, filteredBookingsByNotConfirmed?.length])
+	}, [showArrows, filteredBookingsByNotConfirmed?.length]);
+
 	return (
 		<div className="w-[50%] flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
-				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map(booking => (
-					<SplideSlide key={booking?.id} >
+				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Booking) => (
+					<SplideSlide key={booking?.id}>
 						<li className="flex flex-col gap-4 rounded-xl  p-2 text-white ">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
@@ -67,10 +69,10 @@ const ConfirmBookings = () => {
 						</li>
 					</SplideSlide>
 				)) : (
-					<div className="container text-center lg:text-right mt-16 lg:mt-0">
-						<h3 className="text-1xl font-extrabold tracking-tight text-white sm:text-[1.5rem]">All Bookings Confirmed ✅</h3>
-					</div>
-				)}
+						<div className="container text-center lg:text-right mt-16 lg:mt-0">
+							<h3 className="text-1xl font-extrabold tracking-tight text-white sm:text-[1.5rem]">All Bookings Confirmed ✅</h3>
+						</div>
+					)}
 			</Splide>
 		</div>
 	)
