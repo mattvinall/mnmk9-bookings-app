@@ -5,6 +5,7 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Media from "react-media";
+import { formatTime } from '../../../utils/formatTime';
 
 type Props = {
 	checkInBookings: any
@@ -59,6 +60,18 @@ const CheckInTable = ({ checkInBookings, checkInBookingsList }: Props): ReactJSX
 				) : (
 						<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
 							{checkInBookings && checkInBookings?.map((booking: any) => {
+								const formattedCheckInDate = booking.checkInDate ? new Date(booking.checkInDate).toLocaleDateString("en-US", {
+									weekday: "long",
+									year: "numeric",
+									month: "long",
+									day: "numeric",
+								}) : '';
+								const formattedCheckOutDate = booking.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString("en-US", {
+									weekday: "long",
+									year: "numeric",
+									month: "long",
+									day: "numeric",
+								}) : '';
 								return (
 									<SplideSlide key={booking?.id}>
 										<li className="flex flex-col w-[300px] md:w-[400px] gap-4 rounded-xl p-2 text-white ">
@@ -74,10 +87,14 @@ const CheckInTable = ({ checkInBookings, checkInBookingsList }: Props): ReactJSX
 													<div className="p-6">
 														<span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2">{booking.serviceName} | </span><span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2"> &nbsp;{booking.petName}</span>
 														<p className="text-md text-gray-700 mb-2"><span className="font-bold">Confirmed:</span> {booking.confirmedBooking ? "✅" : "❌"}</p>
-														<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check In:</span> {booking.checkInDate}</p>
-														<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check Out:</span> {booking.checkOutDate ? booking.checkOutDate : "--"}</p>
-														<p className="text-md text-gray-700 mb-2"><span className="font-bold">Start Time:</span> {booking.startTime ? (booking.startTime) : "--"}</p>
-														<p className="text-md text-gray-700 mb-2"><span className="font-bold">End Time:</span> {booking.endTime ? (booking.endTime) : "--"}</p>
+														<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check In Date:</span> {formattedCheckInDate}</p>
+														{booking.serviceName === "Boarding" ? <p className="text-md text-gray-700 mb-2"><span className="font-bold">Check Out Date:</span> {booking.checkOutDate ? formattedCheckOutDate : "--"}</p> : null}
+														<p className="text-md text-gray-700 mb-2"><span className="font-bold">
+															{booking.serviceName === "Training" ? "Start Time:" : "Drop Off Time"}</span> {booking.startTime ? formatTime(booking.startTime) : "--"}
+														</p>
+														<p className="text-md text-gray-700 mb-2"><span className="font-bold">
+															{booking.serviceName === "Training" ? "End Time:" : "Pick Up Time"}</span> {booking.endTime ? formatTime(booking.endTime) : "--"}
+														</p>
 														<p className="text-md text-gray-700 mb-2"><span className="font-bold">Notes:</span> {booking?.notes ? booking.notes : "--"}</p>
 													</div>
 												</div>
