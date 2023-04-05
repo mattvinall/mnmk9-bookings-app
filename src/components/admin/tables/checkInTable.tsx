@@ -74,7 +74,7 @@ const CheckInTable = ({ checkInBookings, checkInBookingsList }: Props): ReactJSX
 								}) : '';
 								return (
 									<SplideSlide key={booking?.id}>
-										<li className="flex flex-col w-[300px] md:w-[400px] gap-4 rounded-xl p-2 text-white ">
+										<li className="flex flex-col w-[300px] sm:w-[400px] gap-4 rounded-xl p-2 text-white ">
 											<div className="flex justify-center">
 												<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[320px]">
 													<div className="bg-gray shadow-lg  overflow-hidden w-full max-w-md">
