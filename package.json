@@ -34,6 +34,7 @@
     "react-dom": "18.2.0",
     "react-google-recaptcha-v3": "^1.10.1",
     "react-hook-form": "^7.41.0",
+    "react-media": "^1.10.0",
     "superjson": "1.9.1",
     "zod": "^3.20.2"
   },
