@@ -15,7 +15,9 @@ const Logo = () => {
 	)
 }
 
-const AuthShowcase: React.FC = () => {
+// test comment
+
+function AuthShowcase() {
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
 	return (
@@ -29,7 +31,7 @@ const AuthShowcase: React.FC = () => {
 			<Link href={`/profile/${id}`}><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></Link>
 		</div>
 	);
-};
+}
 
 
 const Navbar: React.FC = () => {
