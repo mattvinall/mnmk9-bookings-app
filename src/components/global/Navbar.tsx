@@ -15,8 +15,6 @@ const Logo = () => {
 	)
 }
 
-// test comment
-
 function AuthShowcase() {
 	const { data: sessionData } = useSession();
 	const id = sessionData?.user?.id as string;
