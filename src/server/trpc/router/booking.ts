@@ -13,7 +13,7 @@ export const bookingRouter = router({
 			if (cache) {
 				return cache;
 			} else {
-				const allBookings = await ctx.prisma.documents.findMany();
+				const allBookings = await ctx.prisma.bookings.findMany();
 		
 				await setCache("allBookings", allBookings);
 				return allBookings;
