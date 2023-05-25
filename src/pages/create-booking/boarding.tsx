@@ -13,6 +13,7 @@ import { FormSchemaType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { Pet } from "../../types/router";
 
 const Boarding: NextPage = () => {
 	const { data: sessionData } = useSession();
@@ -96,7 +97,7 @@ const Boarding: NextPage = () => {
 		const petName = e.target.value;
 
 		// find the pet in the petData array based on the name to set the selected pet
-		const petSelected = petData?.find(pet => pet.name === petName);
+		const petSelected = petData?.find((pet: Pet) => pet.name === petName);
 
 		// store the ID of the pet
 		const petSelectedId = petSelected?.id;

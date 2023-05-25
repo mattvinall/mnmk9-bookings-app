@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { trpc } from "../../../utils/trpc";
@@ -8,7 +8,7 @@ import CheckInTable from "../../../components/admin/tables/checkInTable";
 import CheckOutTable from "../../../components/admin/tables/checkOutTable";
 import { useSession } from "next-auth/react";
 import { formatTime } from "../../../utils/formatTime";
-import { Booking } from "../../../types/router";
+import { Bookings } from "@prisma/client";
 
 const BookingsCalendar = () => {
 	// get user session
@@ -21,7 +21,7 @@ const BookingsCalendar = () => {
 	// fetch bookings if user role is admin
 	const { data: bookingsData, isLoading, error } = trpc.bookings.getAllBookings.useQuery();
 
-	const filteredBookingsByConfirmedStatus = bookingsData?.filter(booking => booking.confirmedBooking === true);
+	const filteredBookingsByConfirmedStatus = bookingsData?.filter((booking: Bookings) => booking.confirmedBooking === true);
 	console.log("filtered bookings by confirmed status", filteredBookingsByConfirmedStatus);
 
 	const [date, setDate] = useState(new Date());
@@ -33,7 +33,7 @@ const BookingsCalendar = () => {
 		setDate(date);
 	};
 
-	const checkInBookingsList = checkInBookings?.map((booking: Booking, idx: number) => {
+	const checkInBookingsList = checkInBookings?.map((booking: Bookings, idx: number) => {
 		return (
 			<tr
 				key={booking?.id}
@@ -48,7 +48,7 @@ const BookingsCalendar = () => {
 		);
 	});
 
-	const checkOutBookingsList = checkOutBookings?.map((booking: Booking, idx: number) => {
+	const checkOutBookingsList = checkOutBookings?.map((booking: Bookings, idx: number) => {
 		return (
 			<tr
 				key={booking?.id}
@@ -64,7 +64,7 @@ const BookingsCalendar = () => {
 	});
 
 	useEffect(() => {
-		const filteredCheckInBookings = filteredBookingsByConfirmedStatus?.filter((booking: Booking) => {
+		const filteredCheckInBookings = filteredBookingsByConfirmedStatus?.filter((booking: Bookings) => {
 			const checkInDate = new Date(booking?.checkInDate as string).toISOString();
 
 			const checkInBookings = new Date(checkInDate)
@@ -74,7 +74,7 @@ const BookingsCalendar = () => {
 			return checkInBookings;
 		});
 
-		const filteredCheckOutBookings = filteredBookingsByConfirmedStatus?.filter((booking: Booking) => {
+		const filteredCheckOutBookings = filteredBookingsByConfirmedStatus?.filter((booking: Bookings) => {
 			const checkOutDate = new Date(booking?.checkOutDate as string).toISOString();
 			const checkOutBookings = new Date(checkOutDate)
 				.toISOString()

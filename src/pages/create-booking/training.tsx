@@ -15,6 +15,7 @@ import { bookingFormSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
+import { Pet } from "../../types/router";
 
 const Training: NextPage = () => {
 	const router = useRouter();
@@ -99,7 +100,7 @@ const Training: NextPage = () => {
 	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const petName = e.target.value;
 
-		const petSelected = petData?.find(pet => pet.name === petName);
+		const petSelected = petData?.find((pet: Pet) => pet.name === petName);
 
 		const petSelectedId = petSelected?.id;
 

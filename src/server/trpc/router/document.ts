@@ -1,13 +1,22 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { rateLimit } from "../../../lib/rateLimit";
-
 import { router, protectedProcedure } from "../trpc";
+import { getCache, setCache } from "../../../lib/cache";
 
 export const documentRouter = router({
 	getAllVaccinationDocuments: protectedProcedure.query(async ({ ctx }) => {
 		try {
-			return await ctx.prisma.bookings.findMany();
+			const cache = await getCache("allVaccinationDocuments");
+
+			if (cache) {
+				return cache;
+			} else {
+				const allVaccinationDocuments = await ctx.prisma.documents.findMany();
+		
+				await setCache("allVaccinationDocuments", allVaccinationDocuments);
+				return allVaccinationDocuments;
+			}
 		} catch (error) {
 			console.log(`failed to fetch all documents: ${error}`)
 		}

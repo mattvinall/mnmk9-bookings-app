@@ -1,10 +1,11 @@
 import { trpc } from "../../../utils/trpc";
+import { Bookings } from "@prisma/client";
 
 const DashboardOverview = () => {
 	// fetch bookings if user role is admin
 	const { data: bookingsData, isLoading, error } = trpc.bookings.getAllBookings.useQuery();
 
-	const filteredCheckInBookings = bookingsData?.filter(booking => {
+	const filteredCheckInBookings = bookingsData?.filter((booking: Bookings) => {
 		const checkInDate = new Date(booking?.checkInDate as string).toISOString();
 		const today = new Date().toISOString().split("T")[0];
 		const checkInBookings = new Date(checkInDate)
@@ -16,7 +17,7 @@ const DashboardOverview = () => {
 
 	console.log("check in bookings", filteredCheckInBookings);
 
-	const filteredCheckOutBookings = bookingsData?.filter(booking => {
+	const filteredCheckOutBookings = bookingsData?.filter((booking: Bookings) => {
 		const checkOutDate = new Date(booking?.checkOutDate as string).toISOString();
 		const today = new Date().toISOString().split("T")[0];
 		const checkOutBookings = new Date(checkOutDate)
@@ -27,11 +28,11 @@ const DashboardOverview = () => {
 	});
 
 	const totalServicesToday = filteredCheckInBookings?.length;
-	const totalCheckInBoarding = filteredCheckInBookings?.filter(booking => booking.serviceName === "Boarding").length;
-	const totalCheckOutBoarding = filteredCheckOutBookings?.filter(booking => booking.serviceName === "Boading").length;
-	const totalTraining = filteredCheckInBookings?.filter(booking => booking.serviceName === "Training").length;
-	const totalGrooming = filteredCheckInBookings?.filter(booking => booking.serviceName === "Grooming").length;
-	const totalDaycare = filteredCheckInBookings?.filter(booking => booking.serviceName === "Daycare").length;
+	const totalCheckInBoarding = filteredCheckInBookings?.filter((booking: Bookings) => booking.serviceName === "Boarding").length;
+	const totalCheckOutBoarding = filteredCheckOutBookings?.filter((booking: Bookings) => booking.serviceName === "Boading").length;
+	const totalTraining = filteredCheckInBookings?.filter((booking: Bookings) => booking.serviceName === "Training").length;
+	const totalGrooming = filteredCheckInBookings?.filter((booking: Bookings) => booking.serviceName === "Grooming").length;
+	const totalDaycare = filteredCheckInBookings?.filter((booking: Bookings) => booking.serviceName === "Daycare").length;
 
 	if (isLoading) return (
 		<div className="container text-center">

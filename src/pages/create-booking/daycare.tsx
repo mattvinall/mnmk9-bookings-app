@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
+import { Pet } from '@prisma/client';
 import DaycareForm from "../../components/client/forms/DaycareForm";
 import { FormSchemaType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
@@ -99,7 +100,7 @@ const Daycare: NextPage = () => {
 	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const petName = e.target.value;
 
-		const petSelected = petData?.find(pet => pet.name === petName);
+		const petSelected = petData?.find((pet: Pet) => pet.name === petName);
 		const petSelectedId = petSelected?.id;
 
 		petSelectedId && setPetID(petSelectedId);
