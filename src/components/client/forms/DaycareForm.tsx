@@ -7,10 +7,11 @@ import {
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { Pet } from "../../../types/router";
 
 
 const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
-	const id = petData && petData?.map(pet => pet.ownerId)[0] as string;
+	const id = petData && petData?.map((pet: Pet) => pet.ownerId)[0] as string;
 	const { data: userData } = trpc.user.byId.useQuery({ id });
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
@@ -133,7 +134,7 @@ const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, han
 						id="pet-select"
 						onChange={handleChange}
 					>
-						{petData?.map((pet) => {
+						{petData?.map((pet: Pet) => {
 							const { name } = pet;
 							return (
 								<option key={name} className="text-gray-900 w-[10%]" defaultValue={name}>{name}</option>
