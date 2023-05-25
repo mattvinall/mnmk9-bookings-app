@@ -2,10 +2,24 @@ import { router, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { rateLimit } from "../../../lib/rateLimit";
+import { getCache, setCache } from "../../../lib/cache";
 
 export const petRouter = router({
-	getAllPets: protectedProcedure.query(({ ctx }) => {
-		return ctx.prisma.pet.findMany();
+	getAllPets: protectedProcedure.query(async ({ ctx }) => {
+		try {
+			const cache = await getCache("allPets");
+
+			if (cache) {
+				return cache;
+			} else {
+				const allPets = await ctx.prisma.pet.findMany();
+		
+				await setCache("allPets", allPets);
+				return allPets;
+			}
+		} catch (error) {
+			console.log(`failed to fetch all Pets: ${error}`)
+		}
 	}),
 	byId: protectedProcedure
 		.input(z.object({ id: z.string() }))
@@ -21,8 +35,17 @@ export const petRouter = router({
 	.input(z.object({ id: z.string() }))
 		.query(async ({ ctx, input }) => {
 			try {
-				const { id } = input;
-				return await ctx.prisma.pet.findMany({ where: { ownerId: id } })
+				const cache = await getCache("petsByOwnerId");
+
+				if (cache) {
+					return cache;
+				} else {
+					const { id } = input;
+					const petsByOwnerId = await ctx.prisma.pet.findMany({ where: { ownerId: id } });
+			
+					await setCache("petsByOwnerId", petsByOwnerId);
+					return petsByOwnerId;
+				}
 		} catch (err) {
 			console.log(`Pet cannot be fetched by Owner ID: ${err}`)
 		}
