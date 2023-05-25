@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
+import { User } from "@prisma/client";
 
 const Users = () => {
 	// get user session
@@ -39,8 +40,8 @@ const Users = () => {
 		const query = event.target.value;
 		setSearchTerm(query);
 
-		const filteredUsers = allUserData?.filter((user) => {
-			const userPets = user.pets.map((pet) => pet.name.toLowerCase());
+		const filteredUsers = allUserData?.filter((user: any) => {
+			const userPets = user.pets.map((pet: Pet) => pet.name.toLowerCase());
 			return (
 				user.name.toLowerCase().includes(query.toLowerCase()) ||
 				userPets.includes(query.toLowerCase())
