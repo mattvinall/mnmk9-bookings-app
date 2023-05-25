@@ -3,10 +3,24 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { TRPCError } from '@trpc/server';
 import { rateLimit } from './../../../lib/rateLimit';
+import { getCache, setCache } from "../../../lib/cache";
 
 export const bookingRouter = router({
 	getAllBookings: protectedProcedure.query(async ({ ctx }) => {
-		return await ctx.prisma.bookings.findMany();
+		try {
+			const cache = await getCache("allBookings");
+
+			if (cache) {
+				return cache;
+			} else {
+				const allBookings = await ctx.prisma.documents.findMany();
+		
+				await setCache("allBookings", allBookings);
+				return allBookings;
+			}
+		} catch (error) {
+			console.log(`failed to fetch all bookings: ${error}`)
+		}
 	}),
 	byId: protectedProcedure
 		.input(z.object({ id: z.string() }))
