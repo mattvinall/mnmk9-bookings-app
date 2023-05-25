@@ -156,7 +156,7 @@ const UserDetail = () => {
 		const petName = e.target.value;
 
 		// find the pet in the petData array based on the name to set the selected pet
-		const petSelected = userDetail?.pets?.find(pet => pet.name === petName);
+		const petSelected = userDetail?.pets?.find((pet: Pet) => pet.name === petName);
 
 		// store the ID of the pet
 		const petSelectedId = petSelected?.id;
@@ -323,12 +323,12 @@ const UserDetail = () => {
 			)}
 
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-				{showPets && userDetail?.pets?.map((pet, i) => {
+				{showPets && userDetail?.pets?.map((pet: Pet, index: number) => {
 					return (
 						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
-									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-[300px] object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${i}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
+									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-[300px] object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
