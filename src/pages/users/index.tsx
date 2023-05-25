@@ -12,13 +12,13 @@ const Users = () => {
 	// get user session
 	const { data: sessionData } = useSession();
 	// get the id from the user session
-	const id = sessionData?.user?.id as string;
-
-	// fetch user by id 
-	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id });
-
+	const id = sessionData?.user?.id as string | "";
 	// fetch all users
 	const { data: allUserData, refetch } = trpc.user.getAllUsers.useQuery();
+
+	// fetch user by id 
+	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id })
+
 
 	const handleMakeUserAdmin = trpc.user.makeUserAdmin.useMutation({
 		onSuccess: () => refetch()
@@ -49,7 +49,7 @@ const Users = () => {
 		setSearchResults(filteredUsers as []);
 	};
 
-	const onPageChange = (event: any, value: any) => {
+	const onPageChange = (event: any, value: number) => {
 		changePage(value);
 
 		setSearchResults([]);
