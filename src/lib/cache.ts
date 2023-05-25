@@ -8,7 +8,7 @@ export const getCache = async (key: string) => {
   return cache ? JSON.parse(cache) : null;
 };
 
-export const setCache = async (key: string, data: [] | {} | null) => {
+export const setCache = async (key: string, data: [] | null) => {
   await client.set(key, JSON.stringify(data));
   await client.expire(key, 1000);
 };
