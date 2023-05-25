@@ -2,23 +2,12 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import Redis from "ioredis";
 import { env } from "../../../env/server.mjs";
-
-const client = new Redis(env.REDIS_DB_URL);
-
-const getUserCache = async (key: string) => {
-  const cache = await client.get(key);
-  return cache ? JSON.parse(cache) : null;
-};
-
-const setUserCache = async (key: string, data: [] | {} | null) => {
-  await client.set(key, JSON.stringify(data));
-  await client.expire(key, 1000);
-};
+import { client, getCache, setCache } from "../../../lib/cache";
 
 export const userRouter = router({
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const cache = await getUserCache("allUsers");
+      const cache = await getCache("allUsers");
       if (cache) {
         return cache;
       } else {
@@ -28,7 +17,7 @@ export const userRouter = router({
             bookings: true
           }
         });
-        await setUserCache("allUsers", allUsers);
+        await setCache("allUsers", allUsers);
         return allUsers;
       }
     } catch (err) {
@@ -44,7 +33,7 @@ export const userRouter = router({
     )
     .query(async ({ ctx, input }) => {
       try {
-        const cache = await getUserCache("userByRole");
+        const cache = await getCache("userByRole");
         if (cache) {
           console.log("Cache successfully retrieved: ", cache);
           return cache;
@@ -56,7 +45,7 @@ export const userRouter = router({
               role: true
             }
           });
-          await setUserCache("userByRole", userByRole);
+          await setCache("userByRole", userByRole);
           return userByRole;
         }
       } catch (err) {
@@ -82,7 +71,7 @@ export const userRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
-        const cache = await getUserCache("user");
+        const cache = await getCache("user");
         if (cache) {
           console.log("Cache successfully retrieved: ", cache);
           return cache;
@@ -91,7 +80,7 @@ export const userRouter = router({
             where: { id: input?.id },
             include: { pets: true, bookings: true }
           });
-          await setUserCache("user", user);
+          await setCache("user", user);
           return user;
         }
       } catch (err) {
