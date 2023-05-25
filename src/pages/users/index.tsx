@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
-import { User } from "@prisma/client";
+import { Pet } from "../../types/router";
 
 const Users = () => {
 	// get user session
@@ -90,7 +90,7 @@ const Users = () => {
 					</div>
 					{/* display results */}
 					<ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-						{searchTerm && searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, idx: number) => (
+						{searchTerm && searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, index: number) => (
 							<li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 								<div className="flex justify-center">
 									<div className="rounded-lg shadow-lg bg-white max-w-md w-[350px] h-full min-h-[375px]">
@@ -101,7 +101,7 @@ const Users = () => {
 											{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
 											<h3 className="text-gray-900 font-bold">Pets:</h3>
 											<ul className="flex flex-wrap pl-[0px]">
-												{user && user?.pets?.length > 0 ? user?.pets?.map((pet: any, index: number) => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+												{user && user?.pets?.length > 0 ? user?.pets?.map((pet: Pet, index: number) => <li key={pet.id}><a href={`/pet/${pet.id}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
 											</ul>
 											{user?.role === "user" ? (
 												<button
@@ -136,7 +136,7 @@ const Users = () => {
 												{user?.address && user?.city && user?.postalCode ? <p className="text-gray-700 text-base mb-4">{user?.address}, {user?.city}. {user?.postalCode}</p> : <div><p className="text-gray-900">No Address Added...</p><br /></div>}
 												<h3 className="text-gray-900 font-bold">Pets:</h3>
 												<ul className="flex flex-wrap pl-[0px]">
-													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map((pet: any, index: number) => <li key={pet.id as string}><a href={`/pet/${pet.id as string}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
+													{user?.pets && user?.pets?.length > 0 ? user?.pets?.map((pet: Pet, index: number) => <li key={pet.id as string}><a href={`/pet/${pet.id as string}`}><Image width={75} height={75} className="w-[75px] h-[75px] rounded-full scale-50" src={pet.profileImage as string || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`profile image of pet ${pet.name}`} /><p className="text-gray-900 font-medium text-center">{pet.name}</p></a></li>) : <p className="text-gray-900 font-medium">No pets added to profile...</p>}
 												</ul>
 												{user?.role === "user" ? (
 													<button
