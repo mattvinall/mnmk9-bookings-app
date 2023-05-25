@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import Redis from "ioredis";
-import { env } from "../../../env/server.mjs";
-import { client, getCache, setCache } from "../../../lib/cache";
+import { getCache, setCache } from "../../../lib/cache";
 
 export const userRouter = router({
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
