@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 import { env } from "../env/server.mjs";
 
-export const client = new Redis(env.REDIS_DB_URL);
+const client = new Redis(env.REDIS_DB_URL);
 
 export const getCache = async (key: string) => {
   const cache = await client.get(key);
