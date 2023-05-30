@@ -82,7 +82,11 @@ const PrivacyPolicy = () => {
 					</li>
 				</ul>
 				{/* Rest of the content */}
-				<ul>
+				<h2 className="text-3xl font-bold my-3">Collecting and Using Your Personal Data</h2>
+				<h3 className="text-2xl font-bold my-3">Types of Data Collected</h3>
+				<h3 className="font-bold my-3">Personal Data</h3>
+				<p className="my-3">While using Our Service, We may ask you to provide us with certain personally identifiable information that can be used to contact or identifty you. Personally identifiable information may include, but is not limited to:</p>
+				<ul className="list-disc ml-8 space-y-4 mt-4">
 					<li>
 						<p className="my-3">Email address</p>
 					</li>
@@ -106,7 +110,7 @@ const PrivacyPolicy = () => {
 				<p className="my-3">We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or through a mobile device.</p>
 				<h2 className="text-2xl my-5 font-bold">Use of Your Personal Data</h2>
 				<p className="my-3">The Company may use Personal Data for the following purposes:</p>
-				<ul>
+				<ul className="list-disc ml-8 space-y-4 mt-4">
 					<li>
 						<p className="my-3"><strong>To provide and maintain our Service</strong>, including to monitor the usage of our Service.</p>
 					</li>
@@ -133,7 +137,7 @@ const PrivacyPolicy = () => {
 					</li>
 				</ul>
 				<p className="my-3">We may share Your personal information in the following situations:</p>
-				<ul>
+				<ul className="list-disc ml-8 space-y-4 mt-4">
 					<li><strong>With Service Providers:</strong> We may share Your personal information with Service Providers to monitor and analyze the use of our Service,  to contact You.</li>
 					<li><strong>For business transfers:</strong> We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.</li>
 					<li><strong>With Affiliates:</strong> We may share Your information with Our affiliates, in which case we will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.</li>
@@ -160,7 +164,7 @@ const PrivacyPolicy = () => {
 				<p className="my-3">Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency).</p>
 				<h3 className="font-bold my-5">Other legal requirements</h3>
 				<p className="my-3">The Company may disclose Your Personal Data in the good faith belief that such action is necessary to:</p>
-				<ul>
+				<ul className="list-disc ml-8 space-y-4 mt-4">
 					<li>Comply with a legal obligation</li>
 					<li>Protect and defend the rights or property of the Company</li>
 					<li>Prevent or investigate possible wrongdoing in connection with the Service</li>
