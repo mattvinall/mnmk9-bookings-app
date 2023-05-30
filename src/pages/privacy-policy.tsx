@@ -48,7 +48,7 @@ const PrivacyPolicy = () => {
 						<p className="my-3">
 							<strong>Affiliate</strong> means an entity that controls, is
 							controlled by or is under common control with a party, where
-							"control" means ownership of 50% or more of the shares, equity
+							&quot;control&quot; means ownership of 50% or more of the shares, equity
 							interest or other securities entitled to vote for election of
 							directors or other managing authority.
 						</p>
@@ -57,7 +57,7 @@ const PrivacyPolicy = () => {
 						<p className="my-3"><strong>Application</strong> refers to MNMK-9 Bookings, the software program provided by the Company.</p>
 					</li>
 					<li>
-						<p className="my-3"><strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to MNMK-9 Bookings.</p>
+						<p className="my-3"><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to MNMK-9 Bookings.</p>
 					</li>
 					<li>
 						<p className="my-3"><strong>Country</strong> refers to: Ontario,  Canada</p>
@@ -105,7 +105,7 @@ const PrivacyPolicy = () => {
 				</ul>
 				<h3 className="font-bold my-5">Usage Data</h3>
 				<p className="my-3">Usage Data is collected automatically when using the Service.</p>
-				<p className="my-3">Usage Data may include information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.</p>
+				<p className="my-3">Usage Data may include information such as Your Device&apos;s Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.</p>
 				<p className="my-3">When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data.</p>
 				<p className="my-3">We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or through a mobile device.</p>
 				<h2 className="text-2xl my-5 font-bold">Use of Your Personal Data</h2>
@@ -121,7 +121,7 @@ const PrivacyPolicy = () => {
 						<p className="my-3"><strong>For the performance of a contract:</strong> the development, compliance and undertaking of the purchase contract for the products, items or services You have purchased or of any other contract with Us through the Service.</p>
 					</li>
 					<li>
-						<p className="my-3"><strong>To contact You:</strong> To contact You by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.</p>
+						<p className="my-3"><strong>To contact You:</strong> To contact You by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application&apos;s push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.</p>
 					</li>
 					<li>
 						<p className="my-3"><strong>To provide You</strong> with news, special offers and general information about other goods, services and events which we offer that are similar to those that you have already purchased or enquired about unless You have opted not to receive such information.</p>
@@ -149,7 +149,7 @@ const PrivacyPolicy = () => {
 				<p className="my-3">The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.</p>
 				<p className="my-3">The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods.</p>
 				<h2 className="text-2xl my-5 font-bold">Transfer of Your Personal Data</h2>
-				<p className="my-3">Your information, including Personal Data, is processed at the Company's operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
+				<p className="my-3">Your information, including Personal Data, is processed at the Company&apos;s operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
 				<p className="my-3">Your consent to this Privacy Policy followed by Your submission of such information represents Your agreement to that transfer.</p>
 				<p className="my-3">The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of Your data and other personal information.</p>
 				<h2 className="text-2xl my-5 font-bold">Delete Your Personal Data</h2>
@@ -173,18 +173,18 @@ const PrivacyPolicy = () => {
 				</ul>
 				<h2 className="text-2xl my-5 font-bold">Security of Your Personal Data</h2>
 				<p className="my-3">The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.</p>
-				<h2 className="text-2xl my-5 font-bold">Children's Privacy</h2>
+				<h2 className="text-2xl my-5 font-bold">Children&apos;s Privacy</h2>
 				<p className="my-3">Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If You are a parent or guardian and You are aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We have collected Personal Data from anyone under the age of 13 without verification of parental consent, We take steps to remove that information from Our servers.</p>
 				<p className="my-3">If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent's consent before We collect and use that information.</p>
 				<h2 className="text-2xl my-5 font-bold">Links to Other Websites</h2>
-				<p className="my-3">Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
+				<p className="my-3">Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party&apos;s site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
 				<p className="my-3">We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.</p>
 				<h2 className="text-2xl my-5 font-bold">Changes to this Privacy Policy</h2>
 				<p className="my-3">We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.</p>
-				<p className="my-3">We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the "Last updated" date at the top of this Privacy Policy.</p>
+				<p className="my-3">We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the &quot;Last updated&quot; date at the top of this Privacy Policy.</p>
 				<p className="my-3">You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
 				<h2 className="text-2xl my-5 font-bold">Contact Us</h2>
-				<p className="my-3">If you have any questions about this Privacy Policy, You can contact us by visiting this page on our website: <a className="underline" href="https://mnmk9-bookings.vercel.app/contact-us" rel="external nofollow noopener" target="_blank">https://mnmk9-bookings.vercel.app/contact-us</a></p>
+				<p className="my-3">If you have any questions about this Privacy Policy, You can contact us by visiting this page on our website: <a className="underline" href="https://mnmk9-bookings.vercel.app/contact-us" rel="external noreferrer nofollow noopener" target="_blank">https://mnmk9-bookings.vercel.app/contact-us</a></p>
 			</section>
 		</div>
 	)
