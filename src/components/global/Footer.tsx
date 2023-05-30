@@ -7,7 +7,7 @@ const Footer = () => {
 			</span>
 			<ul className="flex flex-wrap items-center justify-center md:justify-start text-sm text-gray-100 dark:text-gray-100 sm:mt-3">
 				<li>
-					<Link href="/about" className="mr-4 hover:underline md:mr-6 ">About</Link>
+					<Link href="/privacy-policy" className="mr-4 hover:underline md:mr-6 ">Privacy Policy</Link>
 				</li>
 				<li>
 					<Link href="https://www.mnmk9.ca" target="_blank" rel="noreferrer" className="mr-4 hover:underline md:mr-6">MNMK-9 Website</Link>
