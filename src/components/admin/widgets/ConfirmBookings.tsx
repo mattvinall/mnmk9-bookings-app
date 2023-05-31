@@ -28,7 +28,7 @@ const ConfirmBookings = () => {
 	}, [showArrows, filteredBookingsByNotConfirmed?.length]);
 
 	return (
-		<div className="w-[50%] flex flex-col pl-0 lg:pl-24">
+		<div className="w-full md:w-[50%] flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Booking) => {
@@ -79,7 +79,7 @@ const ConfirmBookings = () => {
 												)}
 												<Link className="block w-[175px] text-center bg-teal-500 hover:bg-teal-400 text-black font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 													Booking Details
-											</Link>
+												</Link>
 											</div>
 										</div>
 									</div>
@@ -88,10 +88,10 @@ const ConfirmBookings = () => {
 						</SplideSlide>
 					)
 				}) : (
-						<div className="container text-center lg:text-right mt-16 lg:mt-0">
-							<h3 className="text-1xl font-extrabold tracking-tight text-white sm:text-[1.5rem]">All Bookings Confirmed ✅</h3>
-						</div>
-					)}
+					<div className="container text-center lg:text-right mt-16 lg:mt-0">
+						<h3 className="text-1xl font-extrabold tracking-tight text-white sm:text-[1.5rem]">All Bookings Confirmed ✅</h3>
+					</div>
+				)}
 			</Splide>
 		</div>
 	)
