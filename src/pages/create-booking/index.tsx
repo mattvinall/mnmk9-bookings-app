@@ -49,12 +49,12 @@ const CreateBooking: NextPage = () => {
               Book a  <span className="text-[rgb(103,163,161)]">Service</span>
             </h1>
             <h2 className="text-3xl font-bold text-white text-center">Select a Service that you want to book</h2>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 md:gap-8 my-20">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
               {
                 cards && cards.map(card => {
                   return (
                     <Link
-                      className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+                      className="flex max-w-sm flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
                       href={card.href}
                       key={card.service}
                     >
