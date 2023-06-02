@@ -36,41 +36,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const eventType = evt.type as EventType;
-  if (
-    eventType === "user.created" ||
-    eventType === "user.updated"
-  ) {
-    console.log("event data", evt.data );
-    const { id, image_url, first_name, last_name, email_addresses } = evt.data;
-    const email = email_addresses?.length > 0 && email_addresses[0].email_address || null;
-    console.log("TEST EMAIL Webhook", email)
-    const user = await prisma.user.upsert({
-      where: { id: id as string },
-      create: {
+  const { id, image_url, first_name, last_name, email_addresses } = evt.data;
+  const email = email_addresses?.length > 0 && email_addresses?.map((email: any) => email.email_address)[0];
+  
+  if (eventType === "user.created") {
+    await prisma.user.create({
+      data: {
         id: id as string,
         image: image_url as string,
         name: `${first_name} ${last_name}`,
-        email: "matt.vinall7@gmail.com",
-      },
-      update: {
-        id: id as string,
-        image: image_url as string,
-        name: `${first_name} ${last_name}`,
-        email: "matt.vinall7@gmail.com",
+        email: email as string,
       }
     });
-
-    console.log("user upserted into user talbe", user);
-    return user;
   }
+  
+  if (eventType === "user.updated") {
+    await prisma.user.update({
+      where: {
+        id: id as string,
+      },
+      data: {
+        image: image_url as string,
+        name: `${first_name} ${last_name}`,
+        email: email as string,
+      }
+    });
+  } 
 
   res.status(200).json({ message: "Webhook processed successfully" });
 }
 
-type EventType = "user.created" | "user.updated" | "user.deleted";
+type EventType = "user.created" | "user.updated";
 
 type Event = {
   data: any;
   object: "event";
   type: EventType;
-};
+} | WebhookEvent;
