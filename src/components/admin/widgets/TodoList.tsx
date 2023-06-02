@@ -1,9 +1,9 @@
+import { useAuth } from "@clerk/nextjs";
 import { trpc } from "../../../utils/trpc";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 
 const TodoList = () => {
-	const { data: sessionData } = useSession()
+	const { userId } = useAuth();
 	const { data: todos, isLoading, error, refetch } = trpc.todo.getAll.useQuery()
 
 	const [inputValue, setInputValue] = useState("");
@@ -23,7 +23,7 @@ const TodoList = () => {
 	const handleAddTodo = () => {
 		if (inputValue.trim() !== "") {
 			const newTodo = {
-				authorId: sessionData?.user?.id as string,
+				authorId: userId as string,
 				title: inputValue,
 			};
 			addTodo.mutate(newTodo);
@@ -42,6 +42,18 @@ const TodoList = () => {
 	const handleUpdateCompletedStatus = (id: string, completed: boolean) => {
 		changeCompleteStatus.mutate({ id, completed })
 	}
+
+	if (isLoading) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+		</div>
+	);
+
+	if (error) return (
+		<div className="container text-center">
+			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
+		</div>
+	);
 
 	return (
 		<div className="w-full lg:w-[50%]">
