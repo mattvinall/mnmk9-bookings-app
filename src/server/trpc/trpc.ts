@@ -1,39 +1,31 @@
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-
-import { type Context } from "./context";
+import { initTRPC, TRPCError } from '@trpc/server'
+import superjson from 'superjson'
+import { type Context } from './context'
+import { prisma } from './../db/client';
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape }) {
-    return shape;
-  },
-});
+    return shape
+  }
+})
 
-export const router = t.router;
-
-/**
- * Unprotected procedure
- **/
-export const publicProcedure = t.procedure;
-
-/**
- * Reusable middleware to ensure
- * users are logged in
- */
-const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+// check if the user is signed in, otherwise throw a UNAUTHORIZED CODE
+const isAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.auth.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      auth: ctx.auth,
+      prisma
     },
-  });
-});
+  })
+})
 
-/**
- * Protected procedure
- **/
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const router = t.router
+
+export const publicProcedure = t.procedure
+
+// export this procedure to be used anywhere in your application
+export const protectedProcedure = t.procedure.use(isAuthed)
