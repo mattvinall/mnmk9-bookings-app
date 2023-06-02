@@ -1,6 +1,5 @@
 import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { ClerkProvider } from '@clerk/nextjs'
 import MainLayout from "../components/global/Layout"
 import '../styles/styles.css';
 
@@ -8,16 +7,16 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp: AppType = ({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: { ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
+    <ClerkProvider>
       <MainLayout>
         <Component {...pageProps} />
       </MainLayout>
-    </SessionProvider>
+    </ClerkProvider>
   );
 };
 
