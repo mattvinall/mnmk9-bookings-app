@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.19.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@hookform/resolvers": "^2.9.10",
@@ -36,6 +37,7 @@
     "react-hook-form": "^7.41.0",
     "react-media": "^1.10.0",
     "superjson": "1.9.1",
+    "svix": "^1.4.12",
     "zod": "^3.20.2"
   },
   "devDependencies": {
