@@ -1,20 +1,19 @@
 import React from 'react'
 import Link from "next/link";
-import { useSession } from 'next-auth/react';
 import { trpc } from "../../utils/trpc";
+import { useAuth } from '@clerk/nextjs';
 
 const HomeShowCase = () => {
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+	const { userId, sessionId } = useAuth();
 
-	const { data: userData } = trpc.user.byId.useQuery({ id });
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const ClientShowCase = () => {
 		return (
 			<>
 				<Link
 					className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-					href={`/profile/${id}`}
+					href={`/profile/${userData?.id as string}`}
 				>
 					<h3 className="text-2xl font-bold">Manage Profile →</h3>
 					<p className="text-lg text">
@@ -82,7 +81,7 @@ const HomeShowCase = () => {
 				MNMK-9 <span className="text-[rgb(103,163,161)]">Bookings</span>
 			</h1>
 			<h2 className="text-12xl font-bold tracking-tight text-white text-center text-[2rem] sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
-			{sessionData ? (
+			{sessionId ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-8">
 					{userData?.role === "user" ? (
 						<ClientShowCase />
