@@ -34,7 +34,7 @@ function AuthShowcase() {
 					<SignInButton />
 				</div>
 			)}
-			<Link href={`/profile/${userId}`}><img className="rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
+			<Link href={`/profile/${userId}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
 		</div>
 	);
 }
