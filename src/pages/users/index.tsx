@@ -8,18 +8,17 @@ import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const Users = () => {
-	// get user session
-	const { data: sessionData } = useSession();
-	// get the id from the user session
-	const id = sessionData?.user?.id as string | "";
+	const { isSignedIn } = useUser();
+	const { userId, sessionId } = useAuth();
+
 	// fetch all users
 	const { data: allUserData, refetch } = trpc.user.getAllUsers.useQuery();
 
 	// fetch user by id 
-	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id })
-
+	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
 
 	const handleMakeUserAdmin = trpc.user.makeUserAdmin.useMutation({
 		onSuccess: () => refetch()
@@ -57,7 +56,7 @@ const Users = () => {
 		setSearchTerm("");
 	}
 
-	if (!sessionData) return (
+	if (!isSignedIn) return (
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
 		</div>
@@ -76,7 +75,7 @@ const Users = () => {
 	);
 	return (
 		<>
-			{userData?.role === "admin" && sessionData ? (
+			{userData?.role === "admin" && sessionId ? (
 				<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 						MNMK-9  <span className="text-[rgb(103,163,161)]">Users</span>
