@@ -3,13 +3,13 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from "../../../utils/trpc";
-import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { AddPetFormSchema } from "../../../types/form-shema";
 import { addPetFormSchema } from "../../../utils/schema";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { useCallback, useEffect, useState } from "react";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useAuth } from "@clerk/nextjs";
 
 type Props = {
 	setShowPetForm: (bool: boolean) => void;
@@ -20,9 +20,9 @@ const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
 	const [token, setToken] = useState<string>("");
 	const [score, setScore] = useState<number | null>(null);
 
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
-	const { data: userData, refetch } = trpc.user.byId.useQuery({ id });
+	const { userId } = useAuth();
+
+	const { data: userData, refetch } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
