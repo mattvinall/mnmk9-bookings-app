@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from "../../../utils/trpc";
-import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
 import { UserFormSchema } from '../../../types/form-shema';
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { userDetailFormSchema } from '../../../utils/schema';
 import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useAuth } from '@clerk/nextjs';
 
 type Props = {
 	setShowUserForm: (bool: boolean) => void;
@@ -22,10 +22,9 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 	const [token, setToken] = useState<string>("");
 	const [score, setScore] = useState<number | null>(null);
 
-	const { data: sessionData } = useSession()
-	const id = sessionData?.user?.id as string;
+	const { userId } = useAuth();
 
-	const { data: userData } = trpc.user.byId.useQuery({ id });
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
