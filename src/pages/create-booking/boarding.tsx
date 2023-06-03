@@ -14,10 +14,11 @@ import { bookingFormSchema } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Pet } from "../../types/router";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const Boarding: NextPage = () => {
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
 	const router = useRouter();
 
 	const [petId, setPetID] = useState<string>("");
@@ -28,7 +29,7 @@ const Boarding: NextPage = () => {
 
 
 	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
+	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string });
 
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
@@ -37,7 +38,7 @@ const Boarding: NextPage = () => {
 	const boardingId = boarding?.id as string;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id }, {
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -46,7 +47,7 @@ const Boarding: NextPage = () => {
 					text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
 				}).then(response => {
 					if (response.isConfirmed) {
-						router.push(`/profile/${id}`);
+						router.push(`/profile/${userId}`);
 					}
 				});
 			}
@@ -207,7 +208,7 @@ const Boarding: NextPage = () => {
 	);
 
 	return (
-		sessionData ? (
+		isSignedIn ? (
 			<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
 					Book <span className="text-[rgb(103,163,161)]">Boarding</span>
