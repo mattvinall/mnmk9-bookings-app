@@ -1,6 +1,5 @@
 import { useState } from "react";
-// import { signIn, signOut, useSession } from "next-auth/react";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, useAuth, useUser } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from "../../../public/mnmk9-logo.jpg";
@@ -17,14 +16,12 @@ const Logo = () => {
 }
 
 function AuthShowcase() {
-	// const { data: sessionData } = useSession();
-	const user = useUser();
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
 
-	console.log("user", user)
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
-	const { isSignedIn } = user;
-
-	console.log("user id clerk", user);
+	console.log("user data", userData);
 
 	return (
 		<div className="flex items-center justify-center">
@@ -37,18 +34,16 @@ function AuthShowcase() {
 					<SignInButton />
 				</div>
 			)}
-			{/* <Link href={`/profile/${userId}`}><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></Link> */}
+			<Link href={`/profile/${userId}`}><img className="rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
 		</div>
 	);
 }
 
 
 const Navbar: React.FC = () => {
-	// const { data: sessionData } = useSession();
-	// const id = sessionData?.user?.id as string;
-	const user = useUser();
-	const { isSignedIn } = user;
-	const { data: userData } = trpc.user.byId.useQuery({ id: "cldutzesm0000ut4wfn5zo4dy" });
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
