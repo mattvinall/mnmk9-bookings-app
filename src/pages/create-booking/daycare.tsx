@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import { useSession } from 'next-auth/react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
@@ -14,6 +13,7 @@ import { bookingFormSchema } from "../../utils/schema";
 import { sendEmailToAdmin } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import Swal from "sweetalert2";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const Daycare: NextPage = () => {
 	const router = useRouter();
@@ -37,12 +37,11 @@ const Daycare: NextPage = () => {
 		}
 	}, [key, secret]);
 
-	// get email from session data
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
 
 	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
+	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
 
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
@@ -52,7 +51,7 @@ const Daycare: NextPage = () => {
 	const trainingId = training?.id;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id }, {
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -61,7 +60,7 @@ const Daycare: NextPage = () => {
 					text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
 				}).then(response => {
 					if (response.isConfirmed) {
-						router.push(`/profile/${id}`);
+						router.push(`/profile/${userId}`);
 					}
 				});
 			}
@@ -184,7 +183,7 @@ const Daycare: NextPage = () => {
 	)
 
 	return (
-		sessionData ? (
+		isSignedIn ? (
 			<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
 					Book <span className="text-[rgb(103,163,161)]">Daycare</span>
