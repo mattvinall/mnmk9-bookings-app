@@ -14,7 +14,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ['localhost', 'img.clerk.com/*', 'lh3.googleusercontent.com', 'mnmk9-bookings.s3.amazonaws.com', 'mnmk9-bookings.s3.ca-central-1.amazonaws.com', 'mdbootstrap.com'],
+    domains: ['localhost', 'img.clerk.com', 'lh3.googleusercontent.com', 'mnmk9-bookings.s3.amazonaws.com', 'mnmk9-bookings.s3.ca-central-1.amazonaws.com', 'mdbootstrap.com'],
   },
 };
 export default config;
