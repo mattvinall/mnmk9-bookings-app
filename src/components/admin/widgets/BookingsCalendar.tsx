@@ -12,8 +12,8 @@ import { useAuth, useUser } from "@clerk/nextjs";
 
 const BookingsCalendar = () => {
 	const { userId } = useAuth();
-	const { isSignedIn } = useUser()
-	console.log("user id using useAuth", userId);
+	const { isSignedIn } = useUser();
+
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	// fetch bookings if user role is admin
