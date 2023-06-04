@@ -1,5 +1,4 @@
 import { router } from "../trpc";
-import { authRouter } from "./auth";
 import { userRouter } from "./user";
 import { serviceRouter } from "./service";
 import { petRouter } from "./pet";
@@ -10,7 +9,6 @@ import { todoRouter } from "./todo";
 import { recaptchaRouter } from "./recaptcha";
 
 export const appRouter = router({
-  auth: authRouter,
   user: userRouter,
   service: serviceRouter,
   pet: petRouter,
