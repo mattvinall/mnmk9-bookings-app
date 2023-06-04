@@ -69,7 +69,7 @@ export const userRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
-        const cache = await getCache("user");
+        const cache = await getCache(`user-${input?.id}}`);
         if (cache) {
           console.log("Cache successfully retrieved: ", cache);
           return cache;
