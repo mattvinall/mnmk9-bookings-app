@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { SignInButton, SignOutButton, useAuth, useUser } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from "../../../public/mnmk9-logo.jpg";
@@ -16,26 +16,34 @@ const Logo = () => {
 }
 
 function AuthShowcase() {
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
+
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
+
+	console.log("user data", userData);
+
 	return (
 		<div className="flex items-center justify-center">
-			<button
-				className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition"
-				onClick={sessionData ? () => signOut() : () => signIn()}
-			>
-				{sessionData ? "Sign out" : "Sign in"}
-			</button>
-			<Link href={`/profile/${id}`}><img className="rounded-full scale-50 float-right" src={sessionData?.user?.image as string} /></Link>
+			{isSignedIn ? (
+				<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
+					<SignOutButton />
+				</div>
+			) : (
+				<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hov:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
+					<SignInButton />
+				</div>
+			)}
+			<Link href={`/profile/${userId}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
 		</div>
 	);
 }
 
 
 const Navbar: React.FC = () => {
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
-	const { data: userData } = trpc.user.byId.useQuery({ id });
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
@@ -57,10 +65,10 @@ const Navbar: React.FC = () => {
 									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 									Home
 								</Link>
-								{sessionData ? (
+								{isSignedIn ? (
 									<>
 										<Link
-											href={`/profile/${sessionData?.user?.id}`}
+											href={`/profile/cldutzesm0000ut4wfn5zo4dy`}
 											className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 											Profile
 										</Link>
@@ -123,10 +131,10 @@ const Navbar: React.FC = () => {
 							className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold ">
 							Home
 						</Link>
-						{sessionData ? (
+						{isSignedIn ? (
 							<>
 								<Link
-									href={`/profile/${sessionData?.user?.id}`}
+									href={`/profile/cldutzesm0000ut4wfn5zo4dy`}
 									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 									Profile
 								</Link>

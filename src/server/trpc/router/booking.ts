@@ -3,7 +3,7 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { TRPCError } from '@trpc/server';
 import { rateLimit } from './../../../lib/rateLimit';
-import { getCache, setCache } from "../../../lib/cache";
+import { getCache, setCache, invalidateCache } from "../../../lib/cache";
 
 export const bookingRouter = router({
 	getAllBookings: protectedProcedure.query(async ({ ctx }) => {
@@ -14,7 +14,7 @@ export const bookingRouter = router({
 				return cache;
 			} else {
 				const allBookings = await ctx.prisma.bookings.findMany();
-		
+
 				await setCache("allBookings", allBookings);
 				return allBookings;
 			}
@@ -53,13 +53,18 @@ export const bookingRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
-			
+
 				const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes, startTime, endTime, serviceName, petId, serviceId, userId } = input
 				const { success } = await rateLimit.limit(userId)
 
 				if (!success) {
 					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 				}
+
+				// invalidate cache
+				await invalidateCache("allBookings");
+				await invalidateCache(`user-${userId}}`);
+
 				return await ctx.prisma.bookings.create({
 					data: {
 						firstName,
@@ -102,16 +107,19 @@ export const bookingRouter = router({
 				if (!success) {
 					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 				}
-				
+
+				// invalidate cache
+				await invalidateCache("allBookings");
+
 				return await ctx.prisma.bookings.update({
 					where: {
 						id,
-					}, 
+					},
 					data: {
 						checkInDate,
 						checkOutDate,
-						startTime, 
-						endTime, 
+						startTime,
+						endTime,
 						notes
 					}
 				})
@@ -129,6 +137,9 @@ export const bookingRouter = router({
 			const { id } = input;
 
 			try {
+				// invalidate cache
+				await invalidateCache("allBookings");
+
 				return await ctx.prisma.bookings.delete({
 					where: {
 						id
@@ -149,6 +160,9 @@ export const bookingRouter = router({
 			const { id, confirmedBooking } = input;
 
 			try {
+				// invalidate cache
+				await invalidateCache("allBookings");
+
 				return await ctx.prisma.bookings.update({
 					where: {
 						id

@@ -6,15 +6,16 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import AdminBookings from '../../components/admin/bookings/AdminBookings';
 import ClientBookings from '../../components/client/bookings/ClientBookings';
+import { useAuth, useUser } from '@clerk/nextjs';
 
 const ManageBooking = () => {
 	const router = useRouter();
-	// get email from session data
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
 
 	// query user table by email to get user data
-	const { data: userData, isLoading, error, refetch } = trpc.user.byId.useQuery({ id })
+	const { data: userData, isLoading, error, refetch } = trpc.user.byId.useQuery({ id: userId as string });
 
 	useEffect(() => {
 		// wait 1 second for page to load and refetch 
@@ -39,7 +40,7 @@ const ManageBooking = () => {
 	return (
 		<section>
 			{
-				sessionData ? (
+				isSignedIn ? (
 					<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 						<h1 className="text-5xl font-extrabold tracking-tight text-center text-white sm:text-[5rem]">
 							Manage a  <span className="text-[rgb(103,163,161)]">Booking</span>

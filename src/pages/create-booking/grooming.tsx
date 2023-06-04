@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { type NextPage } from "next";
-import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +15,7 @@ import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
 import { Pet } from "../../types/router";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const Grooming: NextPage = () => {
 	const router = useRouter();
@@ -26,12 +26,11 @@ const Grooming: NextPage = () => {
 	const [petId, setPetID] = useState<string>("");
 	const [score, setScore] = useState<number | null>(null);
 
-	// get email from session data
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
 
-	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id })
+	// query user table by id to get user data
+	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
 
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
@@ -41,7 +40,7 @@ const Grooming: NextPage = () => {
 	const trainingId = training?.id;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id }, {
+	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -50,7 +49,7 @@ const Grooming: NextPage = () => {
 					text: 'Looks like you have not added a pet to your profile. You will now be routed to your profile page. Go to the tab "Add Pet" before trying to book a service!',
 				}).then(response => {
 					if (response.isConfirmed) {
-						router.push(`/profile/${id}`);
+						router.push(`/profile/${userId}`);
 					}
 				});
 			}
@@ -189,7 +188,7 @@ const Grooming: NextPage = () => {
 	)
 
 	return (
-		sessionData ? (
+		isSignedIn ? (
 			<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 				<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
 					Book <span className="text-[rgb(103,163,161)]">Grooming</span>

@@ -13,7 +13,7 @@ export const petRouter = router({
 				return cache;
 			} else {
 				const allPets = await ctx.prisma.pet.findMany();
-		
+
 				await setCache("allPets", allPets);
 				return allPets;
 			}
@@ -23,33 +23,33 @@ export const petRouter = router({
 	}),
 	byId: protectedProcedure
 		.input(z.object({ id: z.string() }))
-			.query(async ({ ctx, input }) => {
-				try {
-					const { id } = input;
-					return await ctx.prisma.pet.findMany({ where: { id }, include: { documents: true } })
+		.query(async ({ ctx, input }) => {
+			try {
+				const { id } = input;
+				return await ctx.prisma.pet.findMany({ where: { id }, include: { documents: true } })
 			} catch (err) {
 				console.log(`Pet cannot be fetched by ID: ${err}`)
 			}
-	}),
+		}),
 	byOwnerId: protectedProcedure
-	.input(z.object({ id: z.string() }))
+		.input(z.object({ id: z.string() }))
 		.query(async ({ ctx, input }) => {
+			const { id } = input;
 			try {
-				const cache = await getCache("petsByOwnerId");
+				const cache = await getCache(`pet-owner-${id}`);
 
 				if (cache) {
 					return cache;
 				} else {
-					const { id } = input;
 					const petsByOwnerId = await ctx.prisma.pet.findMany({ where: { ownerId: id } });
-			
+
 					await setCache("petsByOwnerId", petsByOwnerId);
 					return petsByOwnerId;
 				}
-		} catch (err) {
-			console.log(`Pet cannot be fetched by Owner ID: ${err}`)
-		}
-	}),
+			} catch (err) {
+				console.log(`Pet cannot be fetched by Owner ID: ${err}`)
+			}
+		}),
 	addPet: protectedProcedure
 		.input(
 			z.object({
@@ -72,7 +72,7 @@ export const petRouter = router({
 				return await ctx.prisma.pet.create({
 					data: {
 						ownerId,
-						name, 
+						name,
 						breed,
 						notes,
 						vaccinated
@@ -107,12 +107,12 @@ export const petRouter = router({
 		.input(
 			z.object({
 				id: z.string(),
-				notes: z.string().min(1).max(250)	
+				notes: z.string().min(1).max(250)
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
 			const { id, notes } = input;
-			
+
 			try {
 				return await ctx.prisma.pet.update({
 					where: { id },

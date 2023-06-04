@@ -6,17 +6,15 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CheckInTable from "../../../components/admin/tables/checkInTable";
 import CheckOutTable from "../../../components/admin/tables/checkOutTable";
-import { useSession } from "next-auth/react";
 import { formatTime } from "../../../utils/formatTime";
 import { Bookings } from "@prisma/client";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const BookingsCalendar = () => {
-	// get user session
-	const { data: sessionData } = useSession();
-	// get the id from the user session
-	const id = sessionData?.user?.id as string;
-	// fetch user by id 
-	const { data: userData } = trpc.user.byId.useQuery({ id });
+	const { userId } = useAuth();
+	const { isSignedIn } = useUser();
+
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	// fetch bookings if user role is admin
 	const { data: bookingsData, isLoading, error } = trpc.bookings.getAllBookings.useQuery();
@@ -97,7 +95,7 @@ const BookingsCalendar = () => {
 
 	}, [date]);
 
-	if (!sessionData) return (
+	if (!isSignedIn) return (
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
 		</div>
@@ -117,7 +115,7 @@ const BookingsCalendar = () => {
 
 	return (
 		<>
-			{userData?.role === "admin" && sessionData ? (
+			{userData?.role === "admin" && isSignedIn ? (
 				<div className="container flex flex-col items-center lg:flex-row lg:items-center justify-between gap-12 px-4 py-16">
 					<Calendar className="!lg:w-full" value={date} onChange={handleDateChange} />
 					<div className="mt-5 relative">

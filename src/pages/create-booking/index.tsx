@@ -6,6 +6,7 @@ import training from "../../../public/training.png"
 import boarding from "../../../public/boarding.jpg";
 import grooming from "../../../public/grooming.jpg";
 import daycare from "../../../public/daycare.webp";
+import { useUser } from "@clerk/nextjs";
 
 const cards = [
   {
@@ -39,11 +40,11 @@ const cards = [
 ]
 
 const CreateBooking: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { isSignedIn } = useUser();
   return (
     <>
       {
-        sessionData ? (
+        isSignedIn ? (
           <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
               Book a  <span className="text-[rgb(103,163,161)]">Service</span>
