@@ -1,19 +1,18 @@
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { trpc } from "../../../utils/trpc";
 import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { BookingsArray, Booking } from "../../../types/router";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const ClientBookings: React.FC = (): ReactJSXElement => {
 
-	const { data: sessionData } = useSession();
-	const id = sessionData?.user?.id as string;
+	const { userId } = useAuth();
 
 	// query user table by email to get user data
-	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id });
+	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string });
 
 	// Pagination Logic
 	const ITEMS_PER_PAGE = 3;
