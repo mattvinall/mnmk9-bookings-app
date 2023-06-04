@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "../../utils/trpc";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
