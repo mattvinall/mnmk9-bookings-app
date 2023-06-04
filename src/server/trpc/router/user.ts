@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { getCache, setCache } from "../../../lib/cache";
+import { getCache, setCache, invalidateCache } from "../../../lib/cache";
 
 export const userRouter = router({
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
@@ -78,7 +78,7 @@ export const userRouter = router({
             where: { id: input?.id },
             include: { pets: true, bookings: true }
           });
-          await setCache("user", user);
+          await setCache(`user-${user?.name}`, user);
           return user;
         }
       } catch (err) {
@@ -98,6 +98,11 @@ export const userRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, address, city, postalCode, phoneNumber } = input;
+
+      // invalidate cache before making update to DB
+      await invalidateCache(`user-${id}`);
+      await invalidateCache("allUsers");
+
       return await ctx.prisma.user.update({
         where: {
           id
@@ -120,6 +125,10 @@ export const userRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
       try {
+        // invalidate cache before making update to DB
+        await invalidateCache(`user-${id}`);
+        await invalidateCache("allUsers");
+
         return await ctx.prisma.user.update({
           where: { id },
           data: {
@@ -140,6 +149,10 @@ export const userRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
       try {
+        // invalidate cache before making update to DB
+        await invalidateCache(`user-${id}`);
+        await invalidateCache("allUsers");
+
         return await ctx.prisma.user.update({
           where: { id },
           data: {
