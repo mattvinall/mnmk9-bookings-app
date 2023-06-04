@@ -68,6 +68,7 @@ export const userRouter = router({
   byId: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      console.log("input: ", input.id);
       try {
         const cache = await getCache(`user-${input?.id}}`);
         if (cache) {
@@ -78,7 +79,7 @@ export const userRouter = router({
             where: { id: input?.id },
             include: { pets: true, bookings: true }
           });
-          await setCache(`user-${user?.name}`, user);
+          await setCache(`user-${input?.id}`, user);
           return user;
         }
       } catch (err) {
