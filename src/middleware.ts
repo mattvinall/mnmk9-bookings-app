@@ -20,7 +20,7 @@ export default withClerkMiddleware((request: NextRequest) => {
 
   if (!userId) {
     // redirect the users to /pages/sign-in/[[...index]].ts
-    
+
     const signInUrl = new URL('/sign-in', request.url)
     signInUrl.searchParams.set('redirect_url', request.url)
     return NextResponse.redirect(signInUrl)
@@ -28,4 +28,4 @@ export default withClerkMiddleware((request: NextRequest) => {
   return NextResponse.next()
 })
 
-export const config = { matcher:  '/((?!_next/image|_next/static|favicon.ico).*)'};
+// export const config = { matcher:  '/((?!_next/image|_next/static|favicon.ico).*)'};
