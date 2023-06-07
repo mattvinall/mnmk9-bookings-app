@@ -39,7 +39,7 @@ Client can:
 - update their profile information (address, vet information, etc)
 - upload profile images for their pets
 - upload vaccination documents for their pets
-- download waiver document 
+- download and upload waiver document
 
 Admin can:
 - do anything a client can do listed above
