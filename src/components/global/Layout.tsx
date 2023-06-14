@@ -16,11 +16,15 @@ const MainLayout = ({ children }: ILayoutProps) => {
                 <link rel="icon" href="/favicon.ico" />
                 {/* <script src="https://clerk.mnmk9-bookings.app/npm/@clerk/clerk-js@4/dist/clerk.browser.js"></script> */}
             </Head>
-            <Navbar />
-            <main className="min-h-[85vh] flex justify-center bg-gradient-to-b from-[#112C4F] to-[#15162c]">
-                {children}
-            </main>
-            <Footer />
+            <body>
+                <header>
+                    <Navbar />
+                </header>
+                <main className="min-h-[85vh] flex justify-center bg-gradient-to-b from-[#112C4F] to-[#15162c]">
+                    {children}
+                </main>
+                <Footer />
+            </body>
         </html>
     )
 }
