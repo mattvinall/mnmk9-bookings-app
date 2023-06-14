@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Set the paths that don't require the user to be signed in
-const publicPaths = ['/contact-us']
+const publicPaths = ['/', '/sign-in', '/sign-up']
 
 const isPublic = (path: string) => {
   return publicPaths.find(x =>
@@ -28,4 +28,4 @@ export default withClerkMiddleware((request: NextRequest) => {
   return NextResponse.next()
 })
 
-export const config = { matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"], };
+export const config = { matcher: ['/', "/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"], };
