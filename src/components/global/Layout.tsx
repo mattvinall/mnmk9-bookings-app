@@ -9,7 +9,7 @@ interface ILayoutProps {
 
 const MainLayout = ({ children }: ILayoutProps) => {
     return (
-        <>
+        <html>
             <Head>
                 <title>MNMK-9 Bookings App</title>
                 <meta name="description" content="MNMK-9 Booking App" />
@@ -21,7 +21,7 @@ const MainLayout = ({ children }: ILayoutProps) => {
                 {children}
             </main>
             <Footer />
-        </>
+        </html>
     )
 }
 
