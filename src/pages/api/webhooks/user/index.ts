@@ -31,6 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     evt = wh.verify(JSON.stringify(payload), heads as IncomingHttpHeaders & WebhookRequiredHeaders) as Event;
+    console.log("event webhook", evt);
   } catch (err) {
     console.error((err as Error).message);
     res.status(400).json({});
@@ -38,10 +39,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const eventType = evt.type as EventType;
+  console.log("event type", eventType);
   const { id, image_url, first_name, last_name, email_addresses } = evt.data;
   const email = email_addresses?.length > 0 && email_addresses?.map((email: any) => email.email_address)[0];
+  console.log("email", email);
 
   if (eventType === "user.created") {
+    console.log("user created log")
     await prisma.user.create({
       data: {
         id: id as string,
@@ -66,6 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   res.status(200).json({ message: "Webhook processed successfully" });
+  console.log("webhook processed successfully");
 }
 
 type EventType = "user.created" | "user.updated";
