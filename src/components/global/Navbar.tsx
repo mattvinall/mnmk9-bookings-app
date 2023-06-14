@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { SignInButton, SignOutButton, useAuth, useUser } from "@clerk/nextjs";
 import Image from 'next/image';
