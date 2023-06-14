@@ -8,7 +8,7 @@ import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 
-const publicPages = ["/sign-in/[[...index]]", "/sign-up/[[...index]]"];
+const publicPages = ["/", "/sign-in/[[...index]]", "/sign-up/[[...index]]", "contact-us"];
 
 const SignedOutRedirect = () => {
   const router = useRouter();
