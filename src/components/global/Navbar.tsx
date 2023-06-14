@@ -42,7 +42,9 @@ const AuthShowcase = ({ userId, isSignedIn }: Props) => {
 
 
 const Navbar: React.FC = () => {
-	const { userId, isSignedIn } = useAuth();
+	// const { userId, isSignedIn } = useAuth();
+	const userId = "user_2RB3HVuUUvCoqw6DTT4jD46jkhZ";
+	const isSignedIn = true;
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 	console.log("user data in navbar component", userData);
 	const [menuToggled, setMenuToggled] = useState(false);
@@ -68,7 +70,7 @@ const Navbar: React.FC = () => {
 								{isSignedIn ? (
 									<>
 										<Link
-											href={`/profile/cldutzesm0000ut4wfn5zo4dy`}
+											href={`/profile/${userId}`}
 											className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 											Profile
 										</Link>
@@ -134,7 +136,7 @@ const Navbar: React.FC = () => {
 						{isSignedIn ? (
 							<>
 								<Link
-									href={`/profile/cldutzesm0000ut4wfn5zo4dy`}
+									href={`/profile/${userId}`}
 									className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 									Profile
 								</Link>
