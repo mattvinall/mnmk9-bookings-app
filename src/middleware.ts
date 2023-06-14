@@ -29,5 +29,5 @@ export default withClerkMiddleware((request: NextRequest) => {
 })
 
 export const config = {
-  matcher: ["/((?!_next/image|_next/static|favicon.ico).*)", "/((?!.*\\..*|_next).*)"]
+  matcher: ["/((?!_next/image|_next/static|favicon.ico).*)", "/((?!.*\\..*|_next).*)", "/(api|trpc)(.*)"]
 };
