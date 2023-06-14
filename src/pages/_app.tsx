@@ -37,7 +37,7 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }: AppProps) =>
             </MainLayout>
           </SignedIn>
           <SignedOut>
-            <RedirectToSignIn />
+            <RedirectToSignIn redirectUrl="/" afterSignInUrl={window.location.href} afterSignUpUrl={window.location.href} />
           </SignedOut>
         </>
       )}
