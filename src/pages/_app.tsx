@@ -14,7 +14,7 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 
-const publicPages: Array<string> = ["/", "/contact-us", "/sign-in", "/sign-up"];
+const publicPages: Array<string> = [];
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
   // Get the pathname
@@ -24,7 +24,7 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }: AppProps) =>
   const isPublicPage = publicPages.includes(pathname);
 
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string}>
       {isPublicPage ? (
         <MainLayout>
           <Component {...pageProps} />
