@@ -15,16 +15,11 @@ const Logo = () => {
 	)
 }
 
-const { isSignedIn } = useUser();
-const { userId } = useAuth();
 
-function AuthShowcase() {
-	// const { isSignedIn } = useUser();
-	// const { userId } = useAuth();
+function AuthShowcase(userId: string, isSignedIn: boolean) {
 
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
-	console.log("user data", userData);
 
 	return (
 		<div className="flex items-center justify-center">
@@ -44,8 +39,8 @@ function AuthShowcase() {
 
 
 const Navbar: React.FC = () => {
-	// const { isSignedIn } = useUser();
-	// const { userId } = useAuth();
+	const { isSignedIn } = useUser();
+	const { userId } = useAuth();
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const [menuToggled, setMenuToggled] = useState(false);
@@ -94,7 +89,7 @@ const Navbar: React.FC = () => {
 									Contact Us
 								</Link>
 							</div>
-							<AuthShowcase />
+							<AuthShowcase isSignedIn={isSignedIn} userId={userId} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
