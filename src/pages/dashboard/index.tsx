@@ -8,11 +8,11 @@ import ConfirmBookings from "../../components/admin/widgets/ConfirmBookings";
 import { useAuth } from "@clerk/nextjs";
 
 const Dashboard = () => {
-	const { userId, sessionId } = useAuth();
+	const { userId, isSignedIn } = useAuth();
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 	return (
 		<>
-			{userData?.role === "admin" && sessionId ? (
+			{userData?.role === "admin" && isSignedIn ? (
 				<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 					<h1 className="text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 						MNMK-9  <span className="text-[rgb(103,163,161)]">Dashboard</span>

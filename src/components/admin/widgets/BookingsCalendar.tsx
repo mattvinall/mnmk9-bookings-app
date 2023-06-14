@@ -8,11 +8,10 @@ import CheckInTable from "../../../components/admin/tables/checkInTable";
 import CheckOutTable from "../../../components/admin/tables/checkOutTable";
 import { formatTime } from "../../../utils/formatTime";
 import { Bookings } from "@prisma/client";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
 const BookingsCalendar = () => {
-	const { userId } = useAuth();
-	const { isSignedIn } = useUser();
+	const { userId, isSignedIn } = useAuth();
 
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 

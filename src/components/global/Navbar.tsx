@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SignInButton, SignOutButton, useAuth, useUser } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from "../../../public/mnmk9-logo.jpg";
@@ -22,10 +22,8 @@ type Props = {
 	isSignedIn: boolean
 }
 const AuthShowcase = ({ userId, isSignedIn }: Props) => {
-
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
-
-
+	console.log("user data in auth showcase", userData);
 	return (
 		<div className="flex items-center justify-center">
 			{isSignedIn ? (
@@ -44,10 +42,9 @@ const AuthShowcase = ({ userId, isSignedIn }: Props) => {
 
 
 const Navbar: React.FC = () => {
-	const { isSignedIn } = useUser();
-	const { userId } = useAuth();
+	const { userId, isSignedIn } = useAuth();
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
-
+	console.log("user data in navbar component", userData);
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
 		setMenuToggled((prevState) => !prevState);
