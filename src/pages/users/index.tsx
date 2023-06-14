@@ -12,6 +12,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 const Users = () => {
 	const { isSignedIn } = useUser();
 	const { userId, sessionId } = useAuth();
+	console.log("user id", userId);
 
 	// fetch all users
 	const { data: allUserData, refetch } = trpc.user.getAllUsers.useQuery();
