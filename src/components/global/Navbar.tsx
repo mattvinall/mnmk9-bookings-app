@@ -15,9 +15,12 @@ const Logo = () => {
 	)
 }
 
+const { isSignedIn } = useUser();
+const { userId } = useAuth();
+
 function AuthShowcase() {
-	const { isSignedIn } = useUser();
-	const { userId } = useAuth();
+	// const { isSignedIn } = useUser();
+	// const { userId } = useAuth();
 
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
@@ -41,8 +44,8 @@ function AuthShowcase() {
 
 
 const Navbar: React.FC = () => {
-	const { isSignedIn } = useUser();
-	const { userId } = useAuth();
+	// const { isSignedIn } = useUser();
+	// const { userId } = useAuth();
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const [menuToggled, setMenuToggled] = useState(false);
