@@ -18,11 +18,11 @@ const Logo = () => {
 }
 
 type Props = {
-	userId: string,
+	userData: any,
 	isSignedIn: boolean
 }
-const AuthShowcase = ({ userId, isSignedIn }: Props) => {
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
+const AuthShowcase = ({ userData, isSignedIn }: Props) => {
+	// const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 	console.log("user data in auth showcase", userData);
 	return (
 		<div className="flex items-center justify-center">
@@ -35,7 +35,7 @@ const AuthShowcase = ({ userId, isSignedIn }: Props) => {
 					<SignInButton />
 				</div>
 			)}
-			<Link href={`/profile/${userId}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
+			<Link href={`/profile/${userData?.id}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
 		</div>
 	);
 }
@@ -43,7 +43,7 @@ const AuthShowcase = ({ userId, isSignedIn }: Props) => {
 
 const Navbar: React.FC = () => {
 	const { userId, isSignedIn } = useAuth();
-	console.log("user id in navbar", userId);
+	// console.log("user id in navbar", userId);
 	console.log("is signed in navbar", isSignedIn)
 
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
 								{isSignedIn ? (
 									<>
 										<Link
-											href={`/profile/${userId}`}
+											href={`/profile/${userData?.id}`}
 											className="py-4 px-5 text-black-700 hover:text-teal-600 font-semibold">
 											Profile
 										</Link>
@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
 									Contact Us
 								</Link>
 							</div>
-							<AuthShowcase userId={userId as string} isSignedIn={isSignedIn as boolean} />
+							<AuthShowcase userData={userData} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
@@ -197,7 +197,7 @@ const Navbar: React.FC = () => {
 									</Link>
 								</>
 							</div>
-							<AuthShowcase userId={userId as string} isSignedIn={isSignedIn as boolean} />
+							<AuthShowcase userData={userData} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
@@ -259,7 +259,7 @@ const Navbar: React.FC = () => {
 
 	return (
 		<>
-			{userData?.role === "user" ? (
+			{isSignedIn && userData && userData?.role === "user" ? (
 				<ClientViewNavigation />
 			) : <AdminViewNavigation />}
 		</>
