@@ -19,11 +19,12 @@ export default withClerkMiddleware((request: NextRequest) => {
   console.log("get auth request", getAuth(request));
 
     if (!userId) {
-      return NextResponse.redirect("/sign-in");
+      // return NextResponse.redirect("/sign-in");
+
     // redirect the users to /pages/sign-in/[[...index]].ts
-    // const signInUrl = new URL("/sign-in", request.url);
-    // signInUrl.searchParams.set("redirect_url", request.url);
-    // return NextResponse.redirect(signInUrl);
+    const signInUrl = new URL("/sign-in", request.url);
+    signInUrl.searchParams.set("redirect_url", request.url);
+    return NextResponse.redirect(signInUrl);
   }
   return NextResponse.next();
 });
