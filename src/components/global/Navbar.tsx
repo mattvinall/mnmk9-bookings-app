@@ -42,9 +42,13 @@ const AuthShowcase = ({ userId, isSignedIn }: Props) => {
 
 
 const Navbar: React.FC = () => {
-	// const { userId, isSignedIn } = useAuth();
-	const userId = "user_2RB3HVuUUvCoqw6DTT4jD46jkhZ";
-	const isSignedIn = true;
+	const { userId, isSignedIn } = useAuth();
+	console.log("user id in navbar", userId);
+	console.log("is signed in navbar", isSignedIn)
+	if (!userId) {
+		console.log("no user id in navbar", userId);
+		return null;
+	}
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 	console.log("user data in navbar component", userData);
 	const [menuToggled, setMenuToggled] = useState(false);
