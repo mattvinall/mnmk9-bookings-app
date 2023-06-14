@@ -15,8 +15,11 @@ const Logo = () => {
 	)
 }
 
-
-function AuthShowcase(userId: string, isSignedIn: boolean) {
+type Props = {
+	userId: string,
+	isSignedIn: boolean
+}
+const AuthShowcase = ({ userId, isSignedIn }: Props) => {
 
 	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
@@ -89,7 +92,7 @@ const Navbar: React.FC = () => {
 									Contact Us
 								</Link>
 							</div>
-							<AuthShowcase isSignedIn={isSignedIn} userId={userId} />
+							<AuthShowcase userId={userId as string} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
@@ -192,7 +195,7 @@ const Navbar: React.FC = () => {
 									</Link>
 								</>
 							</div>
-							<AuthShowcase />
+							<AuthShowcase userId={userId as string} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
