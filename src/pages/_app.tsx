@@ -14,7 +14,7 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 
-const publicPages: Array<string> = ["/", "/contact-us"];
+const publicPages: Array<string> = ["/", "/contact-us", "/sign-in", "/sign-up"];
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
   // Get the pathname
