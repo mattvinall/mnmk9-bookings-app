@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
     console.log(`User ${id} was ${eventType}`);
     res.status(201).json({ message: "user was created successfully" });
   } else if (eventType === "user.updated") {
-       const { id, image_url, first_name, last_name, email_addresses } = evt.data;
+    const { id, image_url, first_name, last_name, email_addresses } = evt.data;
     const email = email_addresses?.length > 0 && email_addresses?.map((email: any) => email.email_address)[0];
     await prisma.user.update({
       where: {
