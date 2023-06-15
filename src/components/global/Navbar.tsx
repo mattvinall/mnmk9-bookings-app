@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,23 +20,17 @@ const Logo = () => {
 
 type Props = {
 	userData: any,
-	refetch: () => void,
 	isSignedIn: boolean
 }
 
 
-const AuthShowcase = ({ userData, refetch, isSignedIn }: Props) => {
-	useEffect(() => {
-		refetch();
-	}, []);
-
+const AuthShowcase = ({ userData, isSignedIn }: Props) => {
+	const router = useRouter();
 	useEffect(() => {
 		if (isSignedIn && userData?.length > 0) {
-			console.log("user data in auth showcase", userData);
-			console.log("refetching data to re-render component")
-			refetch();
+			router.reload();
 		}
-	}, [isSignedIn])
+	}, [isSignedIn, userData])
 
 	return (
 		<div className="flex items-center justify-center">
@@ -59,11 +54,10 @@ const AuthShowcase = ({ userData, refetch, isSignedIn }: Props) => {
 
 const Navbar: React.FC = () => {
 	const { userId, isSignedIn } = useAuth();
-	// console.log("user id in navbar", userId);
-	console.log("is signed in navbar", isSignedIn)
 
-	const { data: userData, refetch } = trpc.user.byId.useQuery({ id: userId as string });
+	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 	console.log("user data in navbar component", userData);
+
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
 		setMenuToggled((prevState) => !prevState);
@@ -110,7 +104,7 @@ const Navbar: React.FC = () => {
 									Contact Us
 								</Link>
 							</div>
-							<AuthShowcase userData={userData} refetch={refetch} isSignedIn={isSignedIn as boolean} />
+							<AuthShowcase userData={userData} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
@@ -213,7 +207,7 @@ const Navbar: React.FC = () => {
 									</Link>
 								</>
 							</div>
-							<AuthShowcase userData={userData} refetch={refetch} isSignedIn={isSignedIn as boolean} />
+							<AuthShowcase userData={userData} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
