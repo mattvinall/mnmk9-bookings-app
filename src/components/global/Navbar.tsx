@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,21 +21,30 @@ type Props = {
 	userData: any,
 	isSignedIn: boolean
 }
+
+
 const AuthShowcase = ({ userData, isSignedIn }: Props) => {
-	// const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
-	console.log("user data in auth showcase", userData);
+	useEffect(() => {
+		if (isSignedIn) {
+			console.log("user data in auth showcase", userData);
+		}
+	}, [isSignedIn])
+
 	return (
 		<div className="flex items-center justify-center">
 			{isSignedIn ? (
-				<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
-					<SignOutButton />
-				</div>
+				<>
+					<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
+						<SignOutButton />
+					</div>
+					<Link href={`/profile/${userData?.id}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
+				</>
 			) : (
 				<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hov:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
 					<SignInButton />
 				</div>
 			)}
-			<Link href={`/profile/${userData?.id}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} /></Link>
+
 		</div>
 	);
 }
