@@ -27,33 +27,40 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
     return;
   }
 
-  
-  const { id } = evt.data
-
   const eventType = evt.type as EventType;
   console.log("event type", eventType);
-  if (eventType === "user.created" || eventType === "user.updated") {
-    const { image_url, first_name, last_name, email_addresses } = evt.data;
-    const email = email_addresses?.length > 0 && email_addresses?.map((email: any) => email.email_address)[0];
+  
+  const { id, image_url, first_name, last_name, email_addresses } = evt.data;
+  const email = email_addresses?.length > 0 && email_addresses?.map((email: any) => email.email_address)[0];
+  
+  if (eventType === "user.created") {
     console.log("email", email);
-    await prisma.user.upsert({
-      where: { id },
-      update: {
-        name: `${first_name} ${last_name}`,
-        email
-      },
-      create: {
+    await prisma.user.create({
+      data: {
         id: id as string,
         image: image_url as string,
         name: `${first_name} ${last_name}`,
         email: email as string,
       }
     });
+    console.log(`User ${id} was ${eventType}`);
+    res.status(200).json({ message: "user was created successfully" });
+  } else if (eventType === "user.updated") {
+    await prisma.user.update({
+      where: {
+        id: id as string,
+      },
+      data: {
+        image: image_url as string,
+        name: `${first_name} ${last_name}`,
+        email: email as string,
+      }
+    });
+    console.log(`User ${id} was ${eventType}`);
+    res.status(200).json({ message: "user was updated successfully" });
+  } else { 
+    console.log("event type not created or updated", eventType);
   }
-
-  console.log(`User ${id} was ${eventType}`);
-  res.status(200).json({ message: "Webhook processed successfully" });
-  
 }
 
 type NextApiRequestWithSvixRequiredHeaders = NextApiRequest & {
