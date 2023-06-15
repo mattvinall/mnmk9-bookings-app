@@ -65,16 +65,8 @@
 //   }
 // }
 
-// type NextApiRequestWithSvixRequiredHeaders = NextApiRequest & {
-//   headers: IncomingHttpHeaders & WebhookRequiredHeaders;
-// };
-// type EventType = "user.created" | "user.updated" | "*";
 
-// type Event = {
-//   data: any;
-//   object: "event";
-//   type: EventType;
-// } | WebhookEvent;
+
 
 
 
@@ -89,28 +81,30 @@ const prisma = new PrismaClient();
 // webhook secret
 const webhookSecret = process.env.WEBHOOK_SECRET as string || "";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequestWithSvixRequiredHeaders, res: NextApiResponse) {
   if (req.method !== "POST") {
     res.status(405).end("Method Not Allowed");
     return;
   }
 
-  const payload = req.body
+  const payload = JSON.stringify(req.body);
   console.log("payload", payload);
 
-  const headersList = req.headers;
-  const heads = {
-    "svix-id": headersList["svix-id"],
-    "svix-timestamp": headersList["svix-timestamp"],
-    "svix-signature": headersList["svix-signature"],
-  };
+  const headers = req.headers;
+
+  // const headersList = req.headers;
+  // const heads = {
+  //   "svix-id": headersList["svix-id"],
+  //   "svix-timestamp": headersList["svix-timestamp"],
+  //   "svix-signature": headersList["svix-signature"],
+  // };
 
   const wh = new Webhook(webhookSecret);
 
   let evt: Event | null = null;
 
   try {
-    evt = wh.verify(JSON.stringify(payload), heads as IncomingHttpHeaders & WebhookRequiredHeaders) as Event;
+    evt = wh.verify(payload,headers) as Event; 
   } catch (err) {
     console.error((err as Error).message);
     res.status(400).json({});
@@ -151,6 +145,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   
   res.status(200).json({ message: "Webhook processed successfully" });
 }
+
+type NextApiRequestWithSvixRequiredHeaders = NextApiRequest & {
+  headers: IncomingHttpHeaders & WebhookRequiredHeaders;
+};
 
 type EventType = "user.created" | "user.updated" | "user.deleted";
 
