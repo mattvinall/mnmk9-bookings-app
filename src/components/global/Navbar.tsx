@@ -19,14 +19,21 @@ const Logo = () => {
 
 type Props = {
 	userData: any,
+	refetch: () => void,
 	isSignedIn: boolean
 }
 
 
-const AuthShowcase = ({ userData, isSignedIn }: Props) => {
+const AuthShowcase = ({ userData, refetch, isSignedIn }: Props) => {
 	useEffect(() => {
-		if (isSignedIn) {
+		refetch();
+	}, []);
+
+	useEffect(() => {
+		if (isSignedIn && userData?.length > 0) {
 			console.log("user data in auth showcase", userData);
+			console.log("refetching data to re-render component")
+			refetch();
 		}
 	}, [isSignedIn])
 
@@ -55,7 +62,7 @@ const Navbar: React.FC = () => {
 	// console.log("user id in navbar", userId);
 	console.log("is signed in navbar", isSignedIn)
 
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
+	const { data: userData, refetch } = trpc.user.byId.useQuery({ id: userId as string });
 	console.log("user data in navbar component", userData);
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
@@ -103,7 +110,7 @@ const Navbar: React.FC = () => {
 									Contact Us
 								</Link>
 							</div>
-							<AuthShowcase userData={userData} isSignedIn={isSignedIn as boolean} />
+							<AuthShowcase userData={userData} refetch={refetch} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
@@ -206,7 +213,7 @@ const Navbar: React.FC = () => {
 									</Link>
 								</>
 							</div>
-							<AuthShowcase userData={userData} isSignedIn={isSignedIn as boolean} />
+							<AuthShowcase userData={userData} refetch={refetch} isSignedIn={isSignedIn as boolean} />
 							<div className="md:hidden flex items-center">
 								<button className="ml-6 outline-none mobile-menu-button" onClick={handleClick}>
 									{!menuToggled ? (
