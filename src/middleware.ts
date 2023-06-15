@@ -2,7 +2,7 @@ import { getAuth, withClerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api/trpc/user*"];
+const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api/trpc/user*", "/api/webhooks/user*"];
 
 const isPublic = (path: string) => {
   return publicPaths.find((x) =>
@@ -16,7 +16,8 @@ export default withClerkMiddleware((request: NextRequest) => {
   }
   // if the user is not signed in redirect them to the sign in page.
   const { userId } = getAuth(request);
-  console.log("get auth request", getAuth(request));
+  console.log("user id in middleware", userId)
+  console.log("get auth request middleware", getAuth(request));
 
     if (!userId) {
       // return NextResponse.redirect("/sign-in");
