@@ -145,10 +145,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
+   if (eventType === "user.deleted") {
+      await prisma.user.delete({ where: { id: id as string } });
+    }
+  
   res.status(200).json({ message: "Webhook processed successfully" });
 }
 
-type EventType = "user.created" | "user.updated";
+type EventType = "user.created" | "user.updated" | "user.deleted";
 
 type Event = {
   data: any;
