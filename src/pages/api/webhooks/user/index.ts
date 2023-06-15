@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
 type NextApiRequestWithSvixRequiredHeaders = NextApiRequest & {
   headers: IncomingHttpHeaders & WebhookRequiredHeaders;
 };
-type EventType = "user.created" | "user.updated";
+type EventType = "user.created" | "user.updated" | "*";
 
 type Event = {
   data: any;
