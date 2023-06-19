@@ -37,11 +37,6 @@ enum Temperament {
   AGGRESSIVE
 }
 
-enum Role {
-  ADMIN
-  USER
-}
-
 model Vaccination {
   id            String   @id @default(cuid())
   name          String
@@ -64,27 +59,29 @@ model Pet {
   id                 String           @id @default(cuid())
   name               String
   ownerId            String
-  breed              String
-  sex                Sex
-  age                Int
-  weight             Int
+  breed              String?
+  sex                Sex?
+  age                Int?
+  weight             Int?
   profileImage       String?
-  ovariohysterectomy Boolean
-  temperament        Temperament
+  notes              String?
+  ovariohysterectomy Boolean?
+  temperament        Temperament?
+  registrationNumber String?
   microchipNumber    String?
   medicalNotes       String?
   feedingNotes       String?
   petOwner           User             @relation(fields: [ownerId], references: [id])
   vaccinations       Vaccination[]
   Bookings           Bookings[]
-  VetInformation     Vet[]
+  VetInformation     VetInformation[]
   profileImages      Image[]
   IncidentReport     IncidentReport[]
 
   @@index([ownerId])
 }
 
-model Vet {
+model VetInformation {
   id        String   @id @default(cuid())
   name      String
   address   String?
@@ -99,14 +96,12 @@ model Vet {
 }
 
 model IncidentReport {
-  id                  String   @id @default(cuid())
-  Pet                 Pet      @relation(fields: [petId], references: [id])
-  petId               String
-  petName             String
-  incidentDate        DateTime
-  incidentCount       Int      @default(0)
-  incidentDescription String
-  createdAt           DateTime @default(now())
+  id            String   @id @default(cuid())
+  Pet           Pet?     @relation(fields: [petId], references: [id])
+  petId         String?
+  incidentCount Int      @default(0)
+  notes         String?
+  createdAt     DateTime @default(now())
 
   @@index([petId])
 }
