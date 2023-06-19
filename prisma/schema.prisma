@@ -64,24 +64,22 @@ model Pet {
   age                Int?
   weight             Int?
   profileImage       String?
-  notes              String?
   ovariohysterectomy Boolean?
   temperament        Temperament?
-  registrationNumber String?
   microchipNumber    String?
   medicalNotes       String?
   feedingNotes       String?
   petOwner           User             @relation(fields: [ownerId], references: [id])
   vaccinations       Vaccination[]
   Bookings           Bookings[]
-  VetInformation     VetInformation[]
+  VetInformation     VetDetail[]
   profileImages      Image[]
   IncidentReport     IncidentReport[]
 
   @@index([ownerId])
 }
 
-model VetInformation {
+model VetDetail {
   id        String   @id @default(cuid())
   name      String
   address   String?
