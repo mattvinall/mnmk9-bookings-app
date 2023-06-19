@@ -26,27 +26,82 @@ model Contact {
   createdAt DateTime @default(now())
 }
 
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum Temperament {
+  PASSIVE
+  NEUTRAL
+  AGGRESSIVE
+}
+
+model Vaccination {
+  id            String   @id @default(cuid())
+  name          String
+  validTo       DateTime
+  fileName      String
+  uplaodedS3Url String
+  Pet           Pet      @relation(fields: [petId], references: [id])
+  petId         String
+}
+
+model Image {
+  id            String @id @default(cuid())
+  fileName      String
+  uplaodedS3Url String
+  Pet           Pet    @relation(fields: [petId], references: [id])
+  petId         String
+}
+
 model Pet {
-  id           String      @id @default(cuid())
-  name         String
-  ownerId      String
-  breed        String?
-  vaccinated   Boolean?    @default(false)
-  profileImage String?
-  notes        String?
-  petOwner     User        @relation(fields: [ownerId], references: [id])
-  documents    Documents[]
-  Bookings     Bookings[]
+  id                 String           @id @default(cuid())
+  name               String
+  ownerId            String
+  breed              String?
+  sex                Sex?
+  age                Int?
+  weight             Int?
+  profileImage       String?
+  notes              String?
+  ovariohysterectomy Boolean?
+  temperament        Temperament?
+  registrationNumber String?
+  microchipNumber    String?
+  medicalNotes       String?
+  feedingNotes       String?
+  petOwner           User             @relation(fields: [ownerId], references: [id])
+  vaccinations       Vaccination[]
+  Bookings           Bookings[]
+  VetInformation     VetInformation[]
+  profileImages      Image[]
+  IncidentReport     IncidentReport[]
 
   @@index([ownerId])
 }
 
-model Documents {
-  id       String  @id @default(cuid())
-  fileName String
-  petId    String?
-  url      String?
-  Pet      Pet?    @relation(fields: [petId], references: [id], onDelete: Cascade)
+model VetInformation {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  city      String?
+  phone     String?
+  email     String?
+  Pet       Pet?     @relation(fields: [petId], references: [id])
+  petId     String?
+  createdAt DateTime @default(now())
+
+  @@index([petId])
+}
+
+model IncidentReport {
+  id            String   @id @default(cuid())
+  Pet           Pet?     @relation(fields: [petId], references: [id])
+  petId         String?
+  incidentCount Int      @default(0)
+  notes         String?
+  createdAt     DateTime @default(now())
 
   @@index([petId])
 }
