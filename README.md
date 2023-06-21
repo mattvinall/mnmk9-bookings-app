@@ -2,8 +2,9 @@
 Full Stack Application using T3 stack 
 
 ## Technology and Libraries Used
-- NEXT JS
-- Next Auth
+- NEXT.js
+- Clerk for Authentication and User Management
+- Webhooks based on user.created/user.updated/user.deleted events from clerk to modify user table 
 - Tailwind
 - Typescript
 - Prisma
@@ -13,9 +14,9 @@ Full Stack Application using T3 stack
 - Zod
 - React Hook Form
 - Sweet Alerts
-- Vercel for deployment
 - React Calendar 
-- Splide for Carousel components 
+- Splide for Carousel components
+- Vercel for deployment
 
 ## Features
 - Customer/Client and Admin View using role based authorization
@@ -50,3 +51,20 @@ Admin can:
 - view the list of users; can search by name or by pet
 - from the list of users, can promote a user to admin
 - from the list of users, can click user details and will route you to their profile page
+
+
+Coming Soon:
+- more data fields when adding or editing your pet's profile
+  - age
+  - weight
+  - temperament
+  - microchip #
+  - ovariohysterectomy (spayed/neutered)
+  - vaccination uploads (name of vaccine, when its valid until)
+  - feeding instructions
+  - medical instructions
+ - vetrinary details (address, city, phone numner, email)
+ - incident reporting
+ - Waitlist feature (admin)
+ - More robust booking experience (multi-step form)
+ - Email Confirmation sent to admin when a customer cancels an appointment
