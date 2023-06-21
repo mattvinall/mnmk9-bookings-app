@@ -52,8 +52,7 @@ Admin can:
 - from the list of users, can promote a user to admin
 - from the list of users, can click user details and will route you to their profile page
 
-
-Coming Soon:
+## Coming Soon:
 - more data fields when adding or editing your pet's profile
   - age
   - weight
