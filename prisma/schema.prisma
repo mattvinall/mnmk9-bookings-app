@@ -37,6 +37,11 @@ enum Temperament {
   AGGRESSIVE
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model Vaccination {
   id            String   @id @default(cuid())
   name          String
@@ -59,13 +64,13 @@ model Pet {
   id                 String           @id @default(cuid())
   name               String
   ownerId            String
-  breed              String?
-  sex                Sex?
-  age                Int?
-  weight             Int?
+  breed              String
+  sex                Sex
+  age                Int
+  weight             Int
   profileImage       String?
-  ovariohysterectomy Boolean?
-  temperament        Temperament?
+  ovariohysterectomy Boolean
+  temperament        Temperament
   microchipNumber    String?
   medicalNotes       String?
   feedingNotes       String?
