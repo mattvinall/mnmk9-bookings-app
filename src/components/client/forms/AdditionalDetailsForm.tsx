@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, Dispatch, SetStateAction } from 'react';
+<<<<<<< HEAD
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
@@ -23,6 +24,24 @@ const AdditionalDetailsForm = ({ userDetail, setShowAdditionalDetailsForm, secre
     const [token, setToken] = useState<string>("");
     const [score, setScore] = useState<number | null>(null);
     const [isUpdatingVetInfo, setIsUpdatingVetInfo] = useState(true);
+=======
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { trpc } from "../../../utils/trpc";
+import Swal from "sweetalert2";
+import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
+
+type Props = {
+    setShowAdditionalDetailsForm: Dispatch<SetStateAction<boolean>>
+    secret: string;
+}
+
+const AdditionalDetailsForm = ({ setShowAdditionalDetailsForm, secret }: Props) => {
+    const [token, setToken] = useState<string>("");
+    const [score, setScore] = useState<number | null>(null);
+>>>>>>> 90b4fe3 (base setup for additional details form - add vet info, vaccination records, etc)
 
     const { userId } = useAuth();
 
@@ -46,6 +65,7 @@ const AdditionalDetailsForm = ({ userDetail, setShowAdditionalDetailsForm, secre
     }, [handleReCaptchaVerify]);
 
     const router = useRouter();
+<<<<<<< HEAD
 
     const handleToggle = () => {
         setIsUpdatingVetInfo(!isUpdatingVetInfo);
@@ -143,3 +163,11 @@ const AdditionalDetailsForm = ({ userDetail, setShowAdditionalDetailsForm, secre
 }
 
 export default AdditionalDetailsForm;
+=======
+    return (
+        <></>
+    )
+}
+
+export default AdditionalDetailsForm
+>>>>>>> 90b4fe3 (base setup for additional details form - add vet info, vaccination records, etc)
