@@ -21,10 +21,14 @@ export const appRouter = router({
   todo: todoRouter,
   recaptcha: recaptchaRouter,
 <<<<<<< HEAD
+<<<<<<< HEAD
   incidentReport: incidentReportRouter,
 =======
   vet: vetRouter,
 >>>>>>> 80230e7 (added vet router)
+=======
+  incidentReport: incidentReportRouter,
+>>>>>>> e492592 (added incident report router)
 });
 
 // export type definition of API
