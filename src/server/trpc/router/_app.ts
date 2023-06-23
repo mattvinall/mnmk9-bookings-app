@@ -8,17 +8,19 @@ import { contactRouter } from "./contact";
 import { todoRouter } from "./todo";
 import { vetRouter } from "./vet";
 import { recaptchaRouter } from "./recaptcha";
+import { incidentReportRouter } from "./incidentReport";
 
 export const appRouter = router({
   user: userRouter,
   service: serviceRouter,
+  vet: vetRouter,
   pet: petRouter,
   bookings: bookingRouter,
   documents: documentRouter,
   contact: contactRouter,
   todo: todoRouter,
   recaptcha: recaptchaRouter,
-  vet: vetRouter,
+  incidentReport: incidentReportRouter,
 });
 
 // export type definition of API
