@@ -7,7 +7,7 @@ import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
 const Users = () => {
 	const { userId, isSignedIn } = useAuth();
