@@ -7,10 +7,11 @@ import { trpc } from "../../../utils/trpc";
 import Swal from "sweetalert2";
 import { addPetFormSchema, AddPetFormType } from "../../../utils/schema";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { useCallback, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+<<<<<<< HEAD
 import { sexOptions, temperamentOptions, rows } from "../../../constants";
 
 type Props = {
@@ -18,6 +19,15 @@ type Props = {
 }
 
 const AddPetForm = ({ secret }: Props): ReactJSXElement => {
+=======
+
+type Props = {
+  setShowPetForm: Dispatch<SetStateAction<boolean>>
+  secret: string;
+}
+
+const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
+>>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
   const [token, setToken] = useState<string>("");
   const [score, setScore] = useState<number | null>(null);
 
@@ -60,11 +70,19 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
     }
   });
 
+<<<<<<< HEAD
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
     resolver: zodResolver(addPetFormSchema)
   });
 
   const onSubmit: SubmitHandler<AddPetFormType> = async (formData: any) => {
+=======
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
+    resolver: zodResolver(addPetFormSchema)
+  });
+
+  const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
+>>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
     console.log("form data", formData);
 
     try {
@@ -92,6 +110,11 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
         text: `Added a pet to your profile`,
       });
 
+<<<<<<< HEAD
+=======
+      setShowPetForm(false);
+
+>>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
     } catch (error) {
       console.log("error subitting form", error)
       Swal.fire({
@@ -102,9 +125,30 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
     }
   }
 
+<<<<<<< HEAD
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
+=======
+  const handleCloseForm = () => {
+    setShowPetForm(false);
+  };
+
+  const sexOptions = ["MALE", "FEMALE"];
+
+  const temperamentOptions = [
+    "PASSIVE",
+    "NEUTRAL",
+    "AGGRESSIVE",
+  ];
+
+  const rows = 2;
+
+  return (
+    <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
+      <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
+      <svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-20%", color: "white" }} className="w-6 h-6 mt-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+>>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
       <div className="grid md:grid-cols-1 md:gap-6">
         <div className="relative z-0 mb-6 w-full group">
           <input
@@ -146,6 +190,10 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
             {...register("sex")}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
             id="pet-select"
+<<<<<<< HEAD
+=======
+          // onChange={handleChange}
+>>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
           >
             {sexOptions?.map((sex, index) => (
               <option key={index} className="text-gray-900 w-[10%]" value={sex}>{sex.toLowerCase()}</option>
