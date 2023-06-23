@@ -7,11 +7,13 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/client/forms/UserDetailForm";
 import AddPetForm from "../../components/client/forms/AddPetForm";
-import UserInfoTable from "../../components/client/UserInfoCard";
+import AdditionalDetailsForm from "../../components/client/forms/AdditionalDetailsForm";
 import Swal from "sweetalert2";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { Pet } from "../../types/router";
 import useSetWaiverDocument from "../../hooks/useSetWaiverDocument";
+import React from "react";
+import { AddWaiverForm } from "../../components/client/forms/AddWaiverForm";
 
 const UserDetail = () => {
 	const router = useRouter();
@@ -20,12 +22,13 @@ const UserDetail = () => {
 	const [showUserForm, setShowUserForm] = useState<boolean>(false);
 	const [showPetForm, setShowPetForm] = useState<boolean>(false);
 	const [showPets, setShowPets] = useState<boolean>(false);
-	const [showProfileTable, setShowProfileTable] = useState<boolean>(false);
+	const [showAdditionalDetailsForm, setShowAdditionalDetailsForm] = useState<boolean>(false);
 	const [showAddWaiverForm, setshowAddWaiverForm] = useState<boolean>(false)
 	const [key, setKey] = useState<string>("")
 	const [secret, setSecret] = useState<string>("");
 	const [petName, setPetName] = useState<string | null>(null)
 	const [petId, setPetID] = useState<string>("");
+	const [menuShow, setMenuShow] = useState<boolean>(false);
 
 	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
 
@@ -47,7 +50,7 @@ const UserDetail = () => {
 		setShowUserForm(true);
 		setShowPetForm(false);
 		setShowPets(false);
-		setShowProfileTable(false);
+		setShowAdditionalDetailsForm(false);
 		setshowAddWaiverForm(false);
 	}
 
@@ -55,7 +58,7 @@ const UserDetail = () => {
 		setShowPetForm(true);
 		setShowUserForm(false);
 		setShowPets(false);
-		setShowProfileTable(false);
+		setShowAdditionalDetailsForm(false);
 		setshowAddWaiverForm(false);
 	}
 
@@ -63,12 +66,12 @@ const UserDetail = () => {
 		setShowPets(true);
 		setShowPetForm(false);
 		setShowUserForm(false);
-		setShowProfileTable(false);
+		setShowAdditionalDetailsForm(false);
 		setshowAddWaiverForm(false);
 	}
 
-	const handleShowProfileTable = () => {
-		setShowProfileTable(true);
+	const handleShowVetForm = () => {
+		setShowAdditionalDetailsForm(true);
 		setShowPets(false);
 		setShowPetForm(false);
 		setShowUserForm(false);
@@ -77,14 +80,14 @@ const UserDetail = () => {
 
 	const handleShowAddWaiverForm = () => {
 		setshowAddWaiverForm(true);
-		setShowProfileTable(false);
+		setShowAdditionalDetailsForm(false);
 		setShowPets(false);
 		setShowPetForm(false);
 		setShowUserForm(false);
 	}
 
 	useEffect(() => {
-		setShowPets(true);
+		setShowPetForm(true);
 	}, []);
 
 	useEffect(() => {
@@ -124,18 +127,11 @@ const UserDetail = () => {
 
 			setFileName("");
 
-			// verifyRecaptcha.mutate({ token, secret });
-
-			// if (score && score < 0.5) {
-			// 	console.log("score is less than 0.5");
-			// 	return;
-			// }
-
 			// success message 
 			Swal.fire({
 				icon: 'success',
-				title: `🐶`,
-				text: `Successfully added the waiver to your pets' profile`,
+				title: `Success!`,
+				text: `Added the waiver to your pets' profile`,
 			});
 
 			setShowPetForm(false);
@@ -167,70 +163,7 @@ const UserDetail = () => {
 		petName && setPetName(petName);
 	}
 
-
-	const AddWaiverForm = () => {
-		return (
-			<form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit}>
-				<div className="flex flex-col items-center justify-center md:grid-cols-1 md:gap-6">
-					<div className="relative z-0 mb-6 w-[40%] group">
-						<label
-							htmlFor="pet-select"
-							className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Select Pet
-						</label>
-						<select
-							className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-							id="pet-select"
-							onChange={handleChange}
-						>
-							{userDetail?.pets && userDetail?.pets.map((pet: Pet) => {
-								const { name } = pet;
-								return (
-									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
-								)
-							})}
-						</select>
-						<svg
-							style={{ fill: "#fff", position: "absolute", right: "0", bottom: "15px", height: "20px" }}
-							className="ml-2 w-4 h-4"
-							aria-hidden="true"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2" d="M19 9l-7 7-7-7">
-							</path>
-						</svg>
-					</div>
-					<div className="relative z-0 mb-6">
-						<input
-							style={{ cursor: "pointer !important" }}
-							type="file"
-							accept=".pdf, .docx, image/*, .png, .jpg, .jpeg"
-							id="waiver-document"
-							className="hidden"
-							onChange={handleWaiverDocumentFileChange}
-						/>
-						<label
-							htmlFor="waiver-document"
-							className="cursor-pointer inline-block bg-gray-200 rounded-full px-5 py-2 text-sm font-semibold text-gray-700 mr-2 mb-5">
-							Upload Waiver
-						</label>
-						{fileName && <p className="font-medium text-white text-center">Waiver Document Selected: {fileName}. <br />Click Submit to upload.</p>}
-					</div>
-					<button
-						// disabled={}
-						type="submit"
-						className="mt-[25px] rounded-full bg-gradient-to-l from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-r from-[#112B4E] to-[#67A3A1] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-						Submit
-					</button>
-				</div >
-			</form>
-		)
-	}
+	const handleAddButtonClick = () => setMenuShow(!menuShow);
 
 	const handleDeletePet = async (id: string, name: string) => {
 		try {
@@ -280,20 +213,20 @@ const UserDetail = () => {
 			{/* Tabs */}
 			<div className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
 				<ul className="flex flex-wrap">
-					<li>
-						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
+					<li className="mr-2">
+						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""}  inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
 					</li>
 					<li>
-						<button onClick={handleShowProfileTable} className={`${showProfileTable === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Profile</button>
+						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
 					</li>
 					<li className="mr-2">
 						<button onClick={handleShowUserForm} className={`${showUserForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Profile</button>
 					</li>
-					<li className="mr-2">
-						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""}  inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
+					<li>
+						<button onClick={handleShowVetForm} className={`${showAdditionalDetailsForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Additional Information</button>
 					</li>
 					<li className="mr-2">
-						<a href="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/documents/waiver/mnmk9-waiver.docx" className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100" download="MNMK-9 Waiver" >Download Waiver</a>
+						<a href="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/documents/waiver/mnmk9-waiver.docx" className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100" download="MNMK-9 Waiver">Download Waiver</a>
 					</li>
 					<li className="mr-2">
 						<button onClick={handleShowAddWaiverForm} className={`${showAddWaiverForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Upload Waiver</button>
@@ -302,33 +235,35 @@ const UserDetail = () => {
 			</div>
 
 			{/* Content */}
-			{showUserForm && key !== undefined && key && (
+			{showUserForm && key && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
 					<UserDetailForm setShowUserForm={setShowUserForm} secret={secret} />
 				</GoogleReCaptchaProvider>)}
-			{showPetForm && key !== undefined && key && (
+			{showPetForm && key && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
 					<AddPetForm setShowPetForm={setShowPetForm} secret={secret} />
 				</GoogleReCaptchaProvider>)}
-			{showAddWaiverForm && <AddWaiverForm />}
-			{userDetail && showProfileTable && (
-				<UserInfoTable
-					name={userDetail?.name as string}
-					address={userDetail?.address as string}
-					city={userDetail?.city as string}
-					postalCode={userDetail?.postalCode as string}
-					phoneNumber={userDetail?.phoneNumber as string}
-					image={userDetail?.image as string}
-				/>
+			{showAddWaiverForm && userDetail &&
+				<AddWaiverForm
+					userDetail={userDetail || {}}
+					handleChange={handleChange}
+					handleSubmit={handleSubmit}
+					fileName={fileName}
+					handleWaiverDocumentFileChange={handleWaiverDocumentFileChange}
+				/>}
+			{userDetail && showAdditionalDetailsForm && (
+				<GoogleReCaptchaProvider reCaptchaKey={key}>
+					<AdditionalDetailsForm setShowAdditionalDetailsForm={setShowAdditionalDetailsForm} secret={secret} />
+				</GoogleReCaptchaProvider>
 			)}
 
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{showPets && userDetail?.pets?.map((pet: Pet, index: number) => {
 					return (
-						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
+						<div key={pet.name} className="flex max-w-sm md:max-w-md flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
-									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-[300px] object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
+									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-full object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
@@ -342,6 +277,22 @@ const UserDetail = () => {
 													<path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
 												</svg>
 											</button>
+											<button onClick={handleAddButtonClick} className="mt-6 ml-4 flex flex-col items-center justify-center w-12 h-12 mr-2 text-gray-900 transition-colors duration-150 bg-teal-600 rounded-full focus:shadow-outline hover:bg-teal-500" id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover">
+												<svg className="w-5 h-5" fill="#fff" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+													<path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6"></path>
+												</svg>
+											</button>
+											{/* Dropdown Menu */}
+											<div id="dropdownHover" className={`${!menuShow ? `hidden` : "transition-block block z-10 relative top-20 right-12 bg-white divide-y divide-gray-100 rounded-lg shadow w-auto dark:bg-gray-700"}`}>
+												<ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-32" aria-labelledby="dropdownHoverButton">
+													<li>
+														<a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaccinations</a>
+													</li>
+													<li>
+														<a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vet Info</a>
+													</li>
+												</ul>
+											</div>
 										</div>
 									</div>
 								</div>
