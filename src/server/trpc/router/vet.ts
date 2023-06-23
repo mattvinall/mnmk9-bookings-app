@@ -5,11 +5,17 @@ import { rateLimit } from "../../../lib/rateLimit";
 
 export const vetRouter = router({
 <<<<<<< HEAD
+<<<<<<< HEAD
     getAll: protectedProcedure.query(({ ctx }) => {
 		return ctx.prisma.vet.findMany();
 	}),
 =======
 >>>>>>> 4034b31 (vet router setup, added create endpoint to add to DB)
+=======
+    getAll: protectedProcedure.query(({ ctx }) => {
+		return ctx.prisma.vet.findMany();
+	}),
+>>>>>>> d6aafee (added rate limit to create endpoint for the vet router)
     create: protectedProcedure
         .input(z.object({
             petId: z.string(),
@@ -22,6 +28,9 @@ export const vetRouter = router({
         .mutation(async ({ ctx, input }) => { 
             const { petId, name, address, city, email, phone } = input;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d6aafee (added rate limit to create endpoint for the vet router)
 
             const { success } = await rateLimit.limit(petId)
 
@@ -29,6 +38,7 @@ export const vetRouter = router({
                 throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
             }
 
+<<<<<<< HEAD
             try {
                 const addVetDetails = await ctx.prisma.vet.create({
                     data: {
@@ -37,6 +47,11 @@ export const vetRouter = router({
                 const addVetDetails = await ctx.prisma.vet.create({
                     _data: {
 >>>>>>> 4034b31 (vet router setup, added create endpoint to add to DB)
+=======
+            try {
+                const addVetDetails = await ctx.prisma.vet.create({
+                    data: {
+>>>>>>> d6aafee (added rate limit to create endpoint for the vet router)
                         petId,
                         name,
                         address,
@@ -44,6 +59,7 @@ export const vetRouter = router({
                         email,
                         phone
                     },
+<<<<<<< HEAD
 <<<<<<< HEAD
                 })
                 return addVetDetails;
@@ -62,6 +78,13 @@ export const vetRouter = router({
             } catch (err) {
                 console.log(`Vet cannot be created: ${err}`)
 >>>>>>> 4034b31 (vet router setup, added create endpoint to add to DB)
+=======
+                })
+                return addVetDetails;
+            } catch (err) {
+                console.log(`Vet ${name} cannot be created: ${err}`)
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+>>>>>>> d6aafee (added rate limit to create endpoint for the vet router)
             }
         })
 })
