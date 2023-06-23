@@ -17,6 +17,7 @@ export const bookingFormSchema = z.object({
 	notes: z.string().optional(),
 });
 
+<<<<<<< HEAD
 export type BookingFormType = z.infer<typeof bookingFormSchema>;
 
 export const editBookingFormSchema = z.object({
@@ -30,6 +31,10 @@ export const editBookingFormSchema = z.object({
 export type EditBookingFormType = z.infer<typeof editBookingFormSchema>;
 
 export const addPetFormSchema = z.object({
+=======
+export const addPetFormSchema = z.object({
+	// pet details
+>>>>>>> 70ea759 (update to addPetFormSchema and added vetDetailFormSchema)
 	ownerId: z.string().optional(),
 	name: z.string(),
 	breed: z.string(),
@@ -43,17 +48,24 @@ export const addPetFormSchema = z.object({
 	feedingNotes: z.string().optional(),
 });
 
+<<<<<<< HEAD
 export type AddPetFormType = z.infer<typeof addPetFormSchema>;
 
+=======
+>>>>>>> 70ea759 (update to addPetFormSchema and added vetDetailFormSchema)
 export const vetDetailFormSchema = z.object({
 	name: z.string(),
 	address: z.string(),
 	city: z.string(),
 	phoneNumber: z.string(),
 	email: z.string().email(),
+<<<<<<< HEAD
 });
 
 export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;
+=======
+})
+>>>>>>> 70ea759 (update to addPetFormSchema and added vetDetailFormSchema)
 
 export const contactFormSchema = z.object({
 	name: z.string(),
