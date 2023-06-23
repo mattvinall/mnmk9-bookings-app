@@ -7,7 +7,10 @@ import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
 import { useAuth } from "@clerk/nextjs";
+<<<<<<< HEAD
 import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
+=======
+>>>>>>> b0081cd (remove useUser import from clerk)
 
 const Users = () => {
 	// state for search
