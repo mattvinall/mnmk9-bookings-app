@@ -77,14 +77,14 @@ model Pet {
   petOwner           User             @relation(fields: [ownerId], references: [id])
   vaccinations       Vaccination[]
   Bookings           Bookings[]
-  VetInformation     VetDetail[]
+  VetInformation     Vet[]
   profileImages      Image[]
   IncidentReport     IncidentReport[]
 
   @@index([ownerId])
 }
 
-model VetDetail {
+model Vet {
   id        String   @id @default(cuid())
   name      String
   address   String?
@@ -99,12 +99,14 @@ model VetDetail {
 }
 
 model IncidentReport {
-  id            String   @id @default(cuid())
-  Pet           Pet?     @relation(fields: [petId], references: [id])
-  petId         String?
-  incidentCount Int      @default(0)
-  notes         String?
-  createdAt     DateTime @default(now())
+  id                  String   @id @default(cuid())
+  Pet                 Pet      @relation(fields: [petId], references: [id])
+  petId               String
+  petName             String
+  incidentDate        DateTime
+  incidentCount       Int      @default(0)
+  incidentDescription String
+  createdAt           DateTime @default(now())
 
   @@index([petId])
 }
