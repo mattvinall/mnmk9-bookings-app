@@ -4,6 +4,9 @@ import { TRPCError } from "@trpc/server";
 import { rateLimit } from "../../../lib/rateLimit";
 
 export const vetRouter = router({
+    getAll: protectedProcedure.query(({ ctx }) => {
+		return ctx.prisma.vet.findMany();
+	}),
     create: protectedProcedure
         .input(z.object({
             petId: z.string(),
@@ -15,9 +18,16 @@ export const vetRouter = router({
         }))
         .mutation(async ({ ctx, input }) => { 
             const { petId, name, address, city, email, phone } = input;
+
+            const { success } = await rateLimit.limit(petId)
+
+            if (!success) {
+                throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+            }
+
             try {
                 const addVetDetails = await ctx.prisma.vet.create({
-                    _data: {
+                    data: {
                         petId,
                         name,
                         address,
@@ -25,16 +35,11 @@ export const vetRouter = router({
                         email,
                         phone
                     },
-                    get data() {
-                        return this._data;
-                    },
-                    set data(value) {
-                        this._data = value;
-                    },
                 })
                 return addVetDetails;
             } catch (err) {
-                console.log(`Vet cannot be created: ${err}`)
+                console.log(`Vet ${name} cannot be created: ${err}`)
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
             }
         })
 })
