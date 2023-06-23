@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-const usePagination = (data: any, itemsPerPage: number) => {
+const usePagination = (data: [unknown], itemsPerPage: number) => {
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemCount = data?.length;
+	const itemCount: number = data?.length;
 
 	const getCurrentData = () => {
 		const start = (currentPage - 1) * itemsPerPage;
