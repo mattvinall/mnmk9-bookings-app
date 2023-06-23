@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react'
-import Script from "next/script";
 import Head from "next/head";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
