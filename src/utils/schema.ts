@@ -1,3 +1,4 @@
+import { Sex, Temperament } from "@prisma/client";
 import { z } from "zod";
 
 // define schema for the form 
@@ -24,12 +25,28 @@ export const bookingFormSchema = z.object({
 	}).optional()
 });
 
-export const addPetFormSchema	= z.object({
-	name: z.string().min(1),
-	breed: z.string().min(1),
-	notes: z.string().min(1),
-	vaccinated: z.string() || z.boolean()
+export const addPetFormSchema = z.object({
+	// pet details
+	ownerId: z.string().optional(),
+	name: z.string(),
+	breed: z.string(),
+	sex: z.nativeEnum(Sex),
+	age: z.string().optional(),
+	weight: z.string().optional(),
+	ovariohysterectomy: z.string(),
+	temperament: z.nativeEnum(Temperament),
+	microchipNumber: z.string().optional(),
+	medicalNotes: z.string().optional(),
+	feedingNotes: z.string().optional(),
 });
+
+export const vetDetailFormSchema = z.object({
+	name: z.string(),
+	address: z.string(),
+	city: z.string(),
+	phoneNumber: z.string(),
+	email: z.string().email(),
+})
 
 export const contactFormSchema = z.object({
 	name: z.string(),
