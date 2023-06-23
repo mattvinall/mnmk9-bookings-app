@@ -253,10 +253,14 @@ const UserDetail = () => {
 				/>}
 			{userDetail && showAdditionalDetailsForm && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
+<<<<<<< HEAD
 					<AdditionalDetailsForm
 						userDetail={userDetail}
 						setShowAdditionalDetailsForm={setShowAdditionalDetailsForm}
 						secret={secret} />
+=======
+					<AdditionalDetailsForm setShowAdditionalDetailsForm={setShowAdditionalDetailsForm} secret={secret} />
+>>>>>>> b3cdd75 (removed userInfoCard and replacing it with Additional Details form so user can add vet info, vaccine info etc)
 				</GoogleReCaptchaProvider>
 			)}
 
