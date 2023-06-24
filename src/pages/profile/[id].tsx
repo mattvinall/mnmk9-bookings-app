@@ -241,7 +241,7 @@ const UserDetail = () => {
 				</GoogleReCaptchaProvider>)}
 			{showPetForm && key && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
-					<AddPetForm setShowPetForm={setShowPetForm} secret={secret} />
+					<AddPetForm secret={secret} />
 				</GoogleReCaptchaProvider>)}
 			{showAddWaiverForm && userDetail &&
 				<AddWaiverForm
@@ -253,7 +253,10 @@ const UserDetail = () => {
 				/>}
 			{userDetail && showAdditionalDetailsForm && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
-					<AdditionalDetailsForm setShowAdditionalDetailsForm={setShowAdditionalDetailsForm} secret={secret} />
+					<AdditionalDetailsForm
+						userDetail={userDetail}
+						setShowAdditionalDetailsForm={setShowAdditionalDetailsForm}
+						secret={secret} />
 				</GoogleReCaptchaProvider>
 			)}
 
