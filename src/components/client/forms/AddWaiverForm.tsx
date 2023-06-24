@@ -12,9 +12,7 @@ interface AddWaiverFormProps {
     handleWaiverDocumentFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-
-
-export const AddWaiverForm = ({userDetail, handleChange, handleSubmit, fileName, handleWaiverDocumentFileChange } : AddWaiverFormProps) => {
+export const AddWaiverForm = ({ userDetail, handleChange, handleSubmit, fileName, handleWaiverDocumentFileChange }: AddWaiverFormProps) => {
     return (
         <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit}>
             <div className="flex flex-col items-center justify-center md:grid-cols-1 md:gap-6">
