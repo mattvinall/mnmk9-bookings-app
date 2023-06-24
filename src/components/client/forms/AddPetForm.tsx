@@ -7,7 +7,7 @@ import { trpc } from "../../../utils/trpc";
 import Swal from "sweetalert2";
 import { addPetFormSchema, AddPetFormType } from "../../../utils/schema";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
@@ -22,12 +22,15 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
 =======
 
 type Props = {
-  setShowPetForm: Dispatch<SetStateAction<boolean>>
   secret: string;
 }
 
+<<<<<<< HEAD
 const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
 >>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
+=======
+const AddPetForm = ({ secret }: Props): ReactJSXElement => {
+>>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
   const [token, setToken] = useState<string>("");
   const [score, setScore] = useState<number | null>(null);
 
@@ -111,10 +114,13 @@ const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
       });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       setShowPetForm(false);
 
 >>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
+=======
+>>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
     } catch (error) {
       console.log("error subitting form", error)
       Swal.fire({
@@ -126,6 +132,7 @@ const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
@@ -134,6 +141,8 @@ const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
     setShowPetForm(false);
   };
 
+=======
+>>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
   const sexOptions = ["MALE", "FEMALE"];
 
   const temperamentOptions = [
@@ -147,8 +156,11 @@ const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
+<<<<<<< HEAD
       <svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-20%", color: "white" }} className="w-6 h-6 mt-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
 >>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
+=======
+>>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
       <div className="grid md:grid-cols-1 md:gap-6">
         <div className="relative z-0 mb-6 w-full group">
           <input
