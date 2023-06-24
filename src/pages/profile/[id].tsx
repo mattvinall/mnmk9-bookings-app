@@ -254,13 +254,19 @@ const UserDetail = () => {
 			{userDetail && showAdditionalDetailsForm && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ac1f66b (removed setShowPetForm from prop being passed to component)
 					<AdditionalDetailsForm
 						userDetail={userDetail}
 						setShowAdditionalDetailsForm={setShowAdditionalDetailsForm}
 						secret={secret} />
+<<<<<<< HEAD
 =======
 					<AdditionalDetailsForm setShowAdditionalDetailsForm={setShowAdditionalDetailsForm} secret={secret} />
 >>>>>>> b3cdd75 (removed userInfoCard and replacing it with Additional Details form so user can add vet info, vaccine info etc)
+=======
+>>>>>>> ac1f66b (removed setShowPetForm from prop being passed to component)
 				</GoogleReCaptchaProvider>
 			)}
 
