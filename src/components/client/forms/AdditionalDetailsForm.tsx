@@ -8,6 +8,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import type { Pet, User } from '@prisma/client';
+<<<<<<< HEAD
 import VaccineForm from './VaccineForm';
 import VetForm from './VetForm';
 
@@ -40,6 +41,8 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { Pet, User } from '@prisma/client';
+=======
+>>>>>>> 3978c14 (added type keyword)
 import VaccineForm from './VaccineForm';
 import VetForm from './VetForm';
 
