@@ -5,8 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from "../../../utils/trpc";
 import Swal from "sweetalert2";
-import { AddPetFormSchema } from "../../../types/form-shema";
-import { addPetFormSchema } from "../../../utils/schema";
+import { addPetFormSchema, AddPetFormType } from "../../../utils/schema";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { useCallback, useEffect, useState } from "react";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -61,11 +60,11 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
     }
   });
 
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
     resolver: zodResolver(addPetFormSchema)
   });
 
-  const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
+  const onSubmit: SubmitHandler<AddPetFormType> = async (formData: any) => {
     console.log("form data", formData);
 
     try {
