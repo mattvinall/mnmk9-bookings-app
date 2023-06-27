@@ -113,7 +113,11 @@ export const userDetailFormSchema = z.object({
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export type UserDetailFormType = z.infer<typeof userDetailFormSchema>;
 =======
 export type userDetailFormType = z.infer<typeof userDetailFormSchema>;
 >>>>>>> 4630b38 (infer types from schema and export them as types)
+=======
+export type UserDetailFormType = z.infer<typeof userDetailFormSchema>;
+>>>>>>> 6ffd63f (capitalizd UserDetailFormType)
