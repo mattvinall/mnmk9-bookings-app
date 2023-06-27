@@ -5,6 +5,8 @@ import { EditBookingFormTypeProps } from "../../../types/form-types";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useCallback, useEffect } from "react";
+import { formatDate } from "../../../utils/formatDate";
+import { formatTime } from "../../../utils/formatTime";
 
 const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setShowForm, setToken }: EditBookingFormTypeProps): ReactJSXElement => {
 	const router = useRouter();
@@ -42,10 +44,10 @@ const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setSh
 							<div className="p-6">
 								<span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2">{bookingDetail?.serviceName} | </span><span className="inline-block text-xl font-bold uppercase text-gray-900 mb-2"> &nbsp;{bookingDetail?.petName}</span>
 								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Confirmed:</span> {bookingDetail?.confirmedBooking ? "✅" : "❌"}</p>
-								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check In:</span> {bookingDetail?.checkInDate}</p>
-								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check Out:</span> {bookingDetail?.checkOutDate ? bookingDetail?.checkOutDate : "--"}</p>
-								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Start Time:</span> {bookingDetail?.startTime ? (bookingDetail?.startTime) : "--"}</p>
-								<p className="text-md text-gray-700 mb-2"><span className="font-bold">End Time:</span> {bookingDetail?.endTime ? (bookingDetail?.endTime) : "--"}</p>
+								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check In:</span> {formatDate(bookingDetail?.checkInDate as string)}</p>
+								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Check Out:</span> {bookingDetail?.checkOutDate ? formatDate(bookingDetail?.checkOutDate as string) : "--"}</p>
+								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Start Time:</span> {bookingDetail?.startTime ? formatTime(bookingDetail?.startTime as string) : "--"}</p>
+								<p className="text-md text-gray-700 mb-2"><span className="font-bold">End Time:</span> {bookingDetail?.endTime ? formatTime(bookingDetail?.endTime as string) : "--"}</p>
 								<p className="text-md text-gray-700 mb-2"><span className="font-bold">Notes:</span> {bookingDetail?.notes ? bookingDetail?.notes : "--"}</p>
 							</div>
 						</div>
@@ -87,41 +89,38 @@ const EditBookingForm = ({ register, handleSubmit, onSubmit, isSubmitting, setSh
 					</div>
 				) : null}
 			</div>
-			{bookingDetail?.serviceName !== "Boarding" ? (
-				<div className="grid md:grid-cols-2 md:gap-6">
-					<div className="relative z-0 mb-6 w-full group">
-						<input
-							{...register("startTime")}
-							type="time"
-							name="startTime"
-							id="startTime"
-							className="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-							required={bookingDetail?.startTime !== null ? true : false}
-						/>
-						<label
-							htmlFor="startTime"
-							className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Start Time / Drop off Time:
-						</label>
-					</div>
-					<div className="relative z-0 mb-6 w-full group">
-						<input
-							{...register("endTime", { required: true })}
-							type="time"
-							name="endTime"
-							id="endTime"
-							className="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-							required={bookingDetail?.endTime !== null ? true : false}
-						/>
-						<label
-							htmlFor="endTime"
-							className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							End Time / Pick Up Time:
-						</label>
-					</div>
+			<div className="grid md:grid-cols-2 md:gap-6">
+				<div className="relative z-0 mb-6 w-full group">
+					<input
+						{...register("startTime")}
+						type="time"
+						name="startTime"
+						id="startTime"
+						className="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+						required={bookingDetail?.startTime !== null ? true : false}
+					/>
+					<label
+						htmlFor="startTime"
+						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+						{bookingDetail?.serviceName !== "Boarding" && bookingDetail?.serviceName !== "Daycare" ? "Start Time" : "Drop Off Time"}
+					</label>
 				</div>
-			) : null}
-
+				<div className="relative z-0 mb-6 w-full group">
+					<input
+						{...register("endTime", { required: true })}
+						type="time"
+						name="endTime"
+						id="endTime"
+						className="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+						required={bookingDetail?.endTime !== null ? true : false}
+					/>
+					<label
+						htmlFor="endTime"
+						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+						{bookingDetail?.serviceName !== "Boarding" && bookingDetail?.serviceName !== "Daycare" ? "End Time" : "Pick Up Time"}
+					</label>
+				</div>
+			</div>
 			<div className="grid md:grid-cols-1 md:gap-6">
 				<div className="relative z-0 mb-6 w-full group">
 					<textarea
