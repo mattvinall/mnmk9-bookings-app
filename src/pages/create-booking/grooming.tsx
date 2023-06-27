@@ -7,10 +7,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
-import { sendEmailToAdmin } from "../../lib/email";
+import { sendEmailToAdmin, sendEmailToClient } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
-import { BookingFormType } from "../../types/form-shema";
-import { bookingFormSchema } from "../../utils/schema";
+import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
@@ -29,18 +28,15 @@ const Grooming: NextPage = () => {
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
 
-	// query user table by id to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
-
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
-	const training = serviceData?.find(service => service.serviceName === "Grooming");
+	const grooming = serviceData?.find(service => service.serviceName === "Grooming");
 
-	const trainingId = training?.id;
+	const groomingId = grooming?.id;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
+	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -107,23 +103,14 @@ const Grooming: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<BookingFormType> = async (formData) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
 		try {
-			if (trainingId) {
-				formData.serviceId = trainingId;
-			}
-
-			if (data) {
-				formData.userId = data?.id;
-			}
-
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
-			const id = petData && petData[0]?.id as string;
+			const id = petData && petData[0]?.id;
 
-			if (id || petId) {
-				formData.petId = petId ? petId as string : id as string;
-			}
-
+			formData.petId = petId ? petId : id;
+			formData.userId = userId;
+			formData.serviceId = groomingId;
 			formData.serviceName = "Grooming";
 
 			verifyRecaptcha.mutate({ token, secret });
@@ -133,12 +120,16 @@ const Grooming: NextPage = () => {
 				return;
 			}
 
+			// mutate / POST request to bookings api endpoint and submit the form data
 			addNewGroomingBooking.mutate(formData);
 
-			// reset form
+			// reset the form state
 			reset();
 
+			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailToAdmin(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
 				formData?.email,
 				"matt.vinall7@gmail.com",
 				formData?.firstName,
@@ -147,10 +138,25 @@ const Grooming: NextPage = () => {
 				formData?.phoneNumber,
 				formData?.petName,
 				formData?.checkInDate,
-				formData?.startTime as string,
-				formData?.endTime as string,
-				"Daycare",
-				formData?.notes as string
+				formData?.checkOutDate,
+				formData.startTime,
+				formData.endTime,
+				formData?.serviceName,
+				formData?.notes
+			);
+
+			await sendEmailToClient(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+				formData?.email,
+				"matt.vinall7@gmail.com",
+				formData?.petName,
+				formData?.checkInDate,
+				formData?.startTime,
+				formData?.endTime,
+				formData?.serviceName,
+				formData?.checkOutDate,
+				formData?.notes
 			);
 
 			// success message 
