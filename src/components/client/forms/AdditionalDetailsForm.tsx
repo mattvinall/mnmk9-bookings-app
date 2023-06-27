@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, Dispatch, SetStateAction } from 'react';
-import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { Pet, User } from '@prisma/client';
