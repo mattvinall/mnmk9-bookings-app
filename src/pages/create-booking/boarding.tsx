@@ -1,15 +1,14 @@
-// 'use client';
+'use client';
 
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
-import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
-import { FormSchemaType } from "../../types/form-shema";
+import { BookingFormType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
@@ -27,18 +26,15 @@ const Boarding: NextPage = () => {
 	const [secret, setSecret] = useState<string>("");
 	const [score, setScore] = useState<number | null>(null);
 
-
-	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string });
-
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
 	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
 	const boardingId = boarding?.id as string;
+	console.log("boarding id", boardingId);
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
+	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -82,12 +78,11 @@ const Boarding: NextPage = () => {
 			// store the pet ID of the first pet in the petData array as default
 			const initialPetId = petData && petData[0]?.id;
 
-
 			initialPetId && setPetID(initialPetId);
 		}
 	}, [petData])
 
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
 	});
 
@@ -107,24 +102,15 @@ const Boarding: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
 		console.log("form data", formData);
 		try {
-			// check if boardingId is truthy and then set the id of the service
-			if (boardingId) {
-				formData.serviceId = boardingId;
-			}
-
-			// if data (user session) is truthy, set the userId
-			if (data) {
-				formData.userId = data?.id;
-			}
-
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
-			formData.petId = petId ? petId : id;
 
-			// set the service name to Boarding
+			formData.petId = petId ? petId : id;
+			formData.userId = userId;
+			formData.serviceId = boardingId;
 			formData.serviceName = "Boarding";
 
 			verifyRecaptcha.mutate({ token, secret });
@@ -139,8 +125,6 @@ const Boarding: NextPage = () => {
 
 			// reset the form state
 			reset();
-
-			if (!formData.petName || formData.petName.length === 0) return;
 
 			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailToAdmin(
@@ -157,7 +141,7 @@ const Boarding: NextPage = () => {
 				formData?.checkOutDate,
 				formData.startTime,
 				formData.endTime,
-				"Boarding",
+				formData?.serviceName,
 				formData?.notes
 			);
 
@@ -170,7 +154,7 @@ const Boarding: NextPage = () => {
 				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
-				"Boarding",
+				formData?.serviceName,
 				formData?.checkOutDate,
 				formData?.notes
 			);
