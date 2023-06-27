@@ -10,7 +10,7 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailToAdmin } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
-import { FormSchemaType } from "../../types/form-shema";
+import { BookingFormType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
@@ -91,7 +91,7 @@ const Training: NextPage = () => {
 		}
 	}, [petData])
 
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
 	});
 
@@ -108,7 +108,7 @@ const Training: NextPage = () => {
 	}
 
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
 		try {
 			if (trainingId) {
 				formData.serviceId = trainingId;
