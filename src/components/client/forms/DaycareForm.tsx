@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
+<<<<<<< HEAD
+=======
+import { trpc } from "../../../utils/trpc";
+>>>>>>> ab5d81d (replaced type from router to prisma/client)
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
@@ -8,7 +12,10 @@ import {
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import type { FormTypeProps } from "../../../types/form-types";
 import type { Pet } from "@prisma/client";
+<<<<<<< HEAD
 import { getUserById } from "../../../api/users";
+=======
+>>>>>>> ab5d81d (replaced type from router to prisma/client)
 
 const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
 	const id = petData && petData?.map((pet: Pet) => pet.ownerId)[0] as string;
