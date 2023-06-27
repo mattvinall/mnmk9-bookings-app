@@ -1,7 +1,7 @@
 import { PetsArray } from "./router";
 import { Temperament, Sex } from "@prisma/client";
 
-export type FormSchemaType = {
+export type BookingFormType = {
 	firstName: string
 	lastName: string
 	phoneNumber: string
