@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, Dispatch, SetStateAction } from 'reac
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
-import { Pet, User } from '@prisma/client';
+import type { Pet, User } from '@prisma/client';
 import VaccineForm from './VaccineForm';
 import VetForm from './VetForm';
 
