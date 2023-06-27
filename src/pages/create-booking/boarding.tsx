@@ -8,7 +8,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import BoardingForm from "../../components/client/forms/BoardingForm";
+<<<<<<< HEAD
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
+=======
+import { BookingFormType } from "../../types/form-shema";
+import { bookingFormSchema } from "../../utils/schema";
+>>>>>>> 6510682 (update to boarding page)
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Pet } from "../../types/router";
@@ -102,6 +107,10 @@ const Boarding: NextPage = () => {
 	}
 
 	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
+<<<<<<< HEAD
+=======
+		console.log("form data", formData);
+>>>>>>> 6510682 (update to boarding page)
 		try {
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
