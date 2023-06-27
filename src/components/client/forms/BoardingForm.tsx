@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
-import { FormTypeProps } from "../../../types/form-types";
-import { Pet } from "../../../types/router";
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import type { FormTypeProps } from "../../../types/form-types";
+import type { Pet } from "@prisma/client";
 
 
 const BoardingForm = ({ petData, setValue, setToken, isSubmitting, register, handleSubmit, onSubmit, handleChange }: FormTypeProps): ReactJSXElement => {
