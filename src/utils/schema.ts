@@ -82,4 +82,4 @@ export const userDetailFormSchema = z.object({
 	phoneNumber: z.string().max(12)
 });
 
-export type userDetailFormType = z.infer<typeof userDetailFormSchema>;
+export type UserDetailFormType = z.infer<typeof userDetailFormSchema>;
