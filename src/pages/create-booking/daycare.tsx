@@ -9,6 +9,7 @@ import { trpc } from '../../utils/trpc';
 import { Pet } from '@prisma/client';
 import DaycareForm from "../../components/client/forms/DaycareForm";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 =======
@@ -16,6 +17,10 @@ import { BookingFormType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
 import { sendEmailToAdmin } from './../../lib/email';
 >>>>>>> 65c30ce (update to types import)
+=======
+import { bookingFormSchema, BookingFormType } from "../../utils/schema";
+import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
+>>>>>>> a7f0b3b (update to service pages)
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import Swal from "sweetalert2";
 import { useAuth, useUser } from "@clerk/nextjs";

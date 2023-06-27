@@ -10,11 +10,15 @@ import Swal from "sweetalert2";
 import { sendEmailToAdmin, sendEmailToClient } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 =======
 import { BookingFormType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
 >>>>>>> 65c30ce (update to types import)
+=======
+import { bookingFormSchema, BookingFormType } from "../../utils/schema";
+>>>>>>> a7f0b3b (update to service pages)
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
@@ -109,10 +113,14 @@ const Grooming: NextPage = () => {
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
 =======
 	const onSubmit: SubmitHandler<BookingFormType> = async (formData) => {
 >>>>>>> 65c30ce (update to types import)
+=======
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
+>>>>>>> a7f0b3b (update to service pages)
 		try {
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
