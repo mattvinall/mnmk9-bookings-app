@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import { Pet } from '@prisma/client';
 import DaycareForm from "../../components/client/forms/DaycareForm";
-import { FormSchemaType } from "../../types/form-shema";
+import { BookingFormType } from "../../types/form-shema";
 import { bookingFormSchema } from "../../utils/schema";
 import { sendEmailToAdmin } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
@@ -78,7 +78,7 @@ const Daycare: NextPage = () => {
 		}
 	});
 
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
 	});
 
@@ -105,7 +105,7 @@ const Daycare: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
 		try {
 			if (trainingId) {
 				formData.serviceId = trainingId;
