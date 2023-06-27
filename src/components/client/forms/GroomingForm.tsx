@@ -2,13 +2,13 @@
 
 import { useEffect, useCallback } from "react";
 import { trpc } from "../../../utils/trpc";
-import { FormTypeProps } from "../../../types/form-types";
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Pet } from "../../../types/router";
+import type { Pet } from "@prisma/client";
+import type { FormTypeProps } from "../../../types/form-types";
 
 const GroomingForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
 	const id = petData && petData?.map((pet: Pet) => pet.ownerId)[0] as string;
