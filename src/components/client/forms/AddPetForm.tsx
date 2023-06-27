@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import { sexOptions, temperamentOptions, rows } from "../../../constants";
 
 type Props = {
   secret: string;
@@ -102,16 +103,6 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
     }
   }
 
-  const sexOptions = ["MALE", "FEMALE"];
-
-  const temperamentOptions = [
-    "PASSIVE",
-    "NEUTRAL",
-    "AGGRESSIVE",
-  ];
-
-  const rows = 2;
-
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
@@ -156,7 +147,6 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
             {...register("sex")}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
             id="pet-select"
-          // onChange={handleChange}
           >
             {sexOptions?.map((sex, index) => (
               <option key={index} className="text-gray-900 w-[10%]" value={sex}>{sex.toLowerCase()}</option>
