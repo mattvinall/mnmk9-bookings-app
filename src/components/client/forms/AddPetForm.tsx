@@ -77,6 +77,7 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
   });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
     resolver: zodResolver(addPetFormSchema)
   });
@@ -89,6 +90,13 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
 
   const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
 >>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
+=======
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
+    resolver: zodResolver(addPetFormSchema)
+  });
+
+  const onSubmit: SubmitHandler<AddPetFormType> = async (formData: any) => {
+>>>>>>> 56a930a (import change)
     console.log("form data", formData);
 
     try {
