@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from "../../../utils/trpc";
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
-import { UserFormSchema } from '../../../types/form-shema';
+import type { UserDetailFormType } from "../../../utils/schema"
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { userDetailFormSchema } from '../../../utils/schema';
 import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -23,8 +23,6 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 	const [score, setScore] = useState<number | null>(null);
 
 	const { userId } = useAuth();
-
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
@@ -57,12 +55,12 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 		}
 	});
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserDetailFormType>({
 		resolver: zodResolver(userDetailFormSchema)
 	});
 
-	const onSubmit: SubmitHandler<UserFormSchema> = async (formData: any) => {
-		formData.id = userData?.id;
+	const onSubmit: SubmitHandler<UserDetailFormType> = async (formData: any) => {
+		formData.id = userId;
 
 		verifyRecaptcha.mutate({ token, secret });
 
@@ -78,7 +76,7 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 			Swal.fire({
 				icon: 'success',
 				title: `✅`,
-				text: `Successfully Added your profile information.`,
+				text: `Successfully added your profile information.`,
 			}).then((result) => {
 				if (result.isConfirmed) {
 					// navigate to previous page
