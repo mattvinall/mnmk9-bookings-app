@@ -14,19 +14,22 @@ export const bookingFormSchema = z.object({
 	startTime: z.string(),
 	endTime: z.string(),
 	petName: z.string(),
-	notes: z.string(),
-	petData: z.object({
-		id: z.string(),
-		breed: z.string(),
-		name: z.string(),
-		ownerId: z.string(),
-		profileImage: z.string(),
-		vaccinated: z.boolean(),
-	}).optional()
+	notes: z.string().optional(),
 });
 
+export type BookingFormType = z.infer<typeof bookingFormSchema>;
+
+export const editBookingFormSchema = z.object({
+	checkInDate: z.string().optional(),
+	checkOutDate: z.string().optional(),
+	startTime: z.string().optional(),
+	endTime: z.string().optional(),
+	notes: z.string().optional(),
+});
+
+export type EditBookingFormType = z.infer<typeof editBookingFormSchema>;
+
 export const addPetFormSchema = z.object({
-	// pet details
 	ownerId: z.string().optional(),
 	name: z.string(),
 	breed: z.string(),
@@ -40,19 +43,25 @@ export const addPetFormSchema = z.object({
 	feedingNotes: z.string().optional(),
 });
 
+export type AddPetFormType = z.infer<typeof addPetFormSchema>;
+
 export const vetDetailFormSchema = z.object({
 	name: z.string(),
 	address: z.string(),
 	city: z.string(),
 	phoneNumber: z.string(),
 	email: z.string().email(),
-})
+});
+
+export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;
 
 export const contactFormSchema = z.object({
 	name: z.string(),
 	email: z.string(),
 	message: z.string(),
 });
+
+export type ContactFormType = z.infer<typeof contactFormSchema>;
 
 export const editBookingsFormSchema = z.object({
 	checkInDate: z.string().optional(),
@@ -64,9 +73,13 @@ export const editBookingsFormSchema = z.object({
 	petName: z.string().optional(),
 });
 
+export type editBookingsFormType = z.infer<typeof editBookingsFormSchema>;
+
 export const userDetailFormSchema = z.object({
 	address: z.string().min(6).max(65),
 	city: z.string().min(1),
 	postalCode: z.string().min(6).max(7),
 	phoneNumber: z.string().max(12)
 });
+
+export type userDetailFormType = z.infer<typeof userDetailFormSchema>;
