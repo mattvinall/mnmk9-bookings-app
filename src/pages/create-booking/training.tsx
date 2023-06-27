@@ -9,7 +9,12 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailToAdmin, sendEmailToClient } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
+<<<<<<< HEAD
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
+=======
+import { BookingFormType } from "../../types/form-shema";
+import { bookingFormSchema } from "../../utils/schema";
+>>>>>>> 65c30ce (update to types import)
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';

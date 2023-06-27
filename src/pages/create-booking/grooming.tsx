@@ -9,7 +9,12 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailToAdmin, sendEmailToClient } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
+<<<<<<< HEAD
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
+=======
+import { BookingFormType } from "../../types/form-shema";
+import { bookingFormSchema } from "../../utils/schema";
+>>>>>>> 65c30ce (update to types import)
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
@@ -103,7 +108,11 @@ const Grooming: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
+<<<<<<< HEAD
 	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
+=======
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData) => {
+>>>>>>> 65c30ce (update to types import)
 		try {
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
