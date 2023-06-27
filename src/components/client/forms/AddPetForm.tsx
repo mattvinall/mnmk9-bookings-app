@@ -12,6 +12,9 @@ import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5a14bd3 (imported constants from their own file)
 import { sexOptions, temperamentOptions, rows } from "../../../constants";
 
 type Props = {
@@ -133,6 +136,7 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
@@ -153,6 +157,8 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
 
   const rows = 2;
 
+=======
+>>>>>>> 5a14bd3 (imported constants from their own file)
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
@@ -203,9 +209,12 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
             id="pet-select"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           // onChange={handleChange}
 >>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
+=======
+>>>>>>> 5a14bd3 (imported constants from their own file)
           >
             {sexOptions?.map((sex, index) => (
               <option key={index} className="text-gray-900 w-[10%]" value={sex}>{sex.toLowerCase()}</option>
