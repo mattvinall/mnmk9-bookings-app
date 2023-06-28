@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-import { trpc } from "../../../utils/trpc";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Link from "next/link";
 import { Booking } from "../../../types/router";
 import { formatTime } from "../../../utils/formatTime";
+import { confirmBooking, getAllBookings } from "../../../api/bookings";
+import { formatDate } from "../../../utils/formatDate";
 
 const ConfirmBookings = () => {
-	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
-	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
-		onSuccess: () => {
-			refetch()
-		}
-	});
+	const { data: bookingsData, refetch } = getAllBookings();
 
 	const filteredBookingsByNotConfirmed = bookingsData?.filter((booking: Booking) => booking.confirmedBooking === false);
 
@@ -32,18 +28,9 @@ const ConfirmBookings = () => {
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Booking) => {
-					const formattedCheckInDate = booking.checkInDate ? new Date(booking.checkInDate).toLocaleDateString("en-US", {
-						weekday: "long",
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					}) : '';
-					const formattedCheckOutDate = booking.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString("en-US", {
-						weekday: "long",
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					}) : '';
+					const formattedCheckInDate = formatDate(booking.checkInDate);
+					const formattedCheckOutDate = formatDate(booking.checkOutDate);
+
 					return (
 						<SplideSlide key={booking?.id}>
 							<li className="flex flex-col gap-4 rounded-xl  p-2 text-white ">
@@ -72,7 +59,7 @@ const ConfirmBookings = () => {
 												{!booking.confirmedBooking && (
 													<button
 														className="text-center bg-blue-700 w-[175px] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: booking.confirmedBooking })}
+														onClick={() => confirmBooking(booking.id, !booking.confirmedBooking, refetch)}
 													>
 														Confirm Booking
 													</button>
