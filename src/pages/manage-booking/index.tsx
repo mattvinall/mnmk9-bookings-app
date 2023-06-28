@@ -7,6 +7,7 @@ import { trpc } from "../../utils/trpc";
 import AdminBookings from '../../components/admin/bookings/AdminBookings';
 import ClientBookings from '../../components/client/bookings/ClientBookings';
 import { useAuth, useUser } from '@clerk/nextjs';
+import { getUserById } from '../../api/users';
 
 const ManageBooking = () => {
 	const router = useRouter();
@@ -15,7 +16,7 @@ const ManageBooking = () => {
 	const { userId } = useAuth();
 
 	// query user table by email to get user data
-	const { data: userData, isLoading, error, refetch } = trpc.user.byId.useQuery({ id: userId as string });
+	const { data: userData, isLoading, error, refetch } = getUserById(userId as string);
 
 	useEffect(() => {
 		// wait 1 second for page to load and refetch 
