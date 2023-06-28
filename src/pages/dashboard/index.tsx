@@ -1,15 +1,16 @@
 "use client";
 
-import { trpc } from "../../utils/trpc";
 import BookingsCalendar from "../../components/admin/widgets/BookingsCalendar";
 import DashboardOverview from "../../components/admin/widgets/DashboardOverview";
 import TodoList from "../../components/admin/widgets/TodoList";
 import ConfirmBookings from "../../components/admin/widgets/ConfirmBookings";
 import { useAuth } from "@clerk/nextjs";
+import { getUserById } from "../../api/users";
 
 const Dashboard = () => {
 	const { userId, isSignedIn } = useAuth();
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
+
+	const { data: userData } = getUserById(userId as string);
 	return (
 		<>
 			{userData?.role === "admin" && isSignedIn ? (
