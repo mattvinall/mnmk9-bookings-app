@@ -55,7 +55,6 @@ const AuthShowcase = ({ userData, isSignedIn }: Props) => {
 const Navbar: React.FC = () => {
 	const { userId, isSignedIn } = useAuth();
 
-	// const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 	const { data: userData } = getUserById(userId as string);
 	console.log("user data in navbar component", userData);
 
