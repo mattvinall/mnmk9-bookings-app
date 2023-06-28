@@ -1,39 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import { trpc } from "../../utils/trpc";
 import Image from "next/image";
 import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
 import { useAuth } from "@clerk/nextjs";
+import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
 
 const Users = () => {
+	// state for search
+	const [searchTerm, setSearchTerm] = useState<string>("");
+	const [searchResults, setSearchResults] = useState<[]>([]);
+
+	// useAuth hook to extract user id and isSignedIn from clerk
 	const { userId, isSignedIn } = useAuth();
-	console.log("user id test", userId);
 
 	// fetch all users
-	const { data: allUserData, refetch } = trpc.user.getAllUsers.useQuery();
+	const { data: allUserData, refetch } = getAllUsers();
 
 	// fetch user by id 
-	const { data: userData, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
+	const { data: userData, isLoading, error } = getUserById(userId as string);
 
-	const handleMakeUserAdmin = trpc.user.makeUserAdmin.useMutation({
-		onSuccess: () => refetch()
-	});
-
-	const handleRemoveUserAdmin = trpc.user.removeUserAdmin.useMutation({
-		onSuccess: () => refetch()
-	});
-
+	// pagination setup
 	const ITEMS_PER_PAGE = 6;
 	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, ITEMS_PER_PAGE)
 	const currentData = getCurrentData();
 
-	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [searchResults, setSearchResults] = useState<[]>([]);
+	const onPageChange = (event: any, value: number) => {
+		changePage(value);
 
+		setSearchResults([]);
+		setSearchTerm("");
+	}
+
+	// handle search handler
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const query = event.target.value;
 		setSearchTerm(query);
@@ -47,13 +49,6 @@ const Users = () => {
 		});
 		setSearchResults(filteredUsers as []);
 	};
-
-	const onPageChange = (event: any, value: number) => {
-		changePage(value);
-
-		setSearchResults([]);
-		setSearchTerm("");
-	}
 
 	if (!isSignedIn) return (
 		<div className="container text-center">
@@ -72,6 +67,7 @@ const Users = () => {
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Error....please contact support</h1>
 		</div>
 	);
+
 	return (
 		<>
 			{userData?.role === "admin" && isSignedIn ? (
@@ -104,14 +100,14 @@ const Users = () => {
 											{user?.role === "user" ? (
 												<button
 													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-													onClick={() => handleMakeUserAdmin.mutate({ id: user.id as string })}
+													onClick={() => makeUserAdmin(user.id, refetch)}
 												>
 													Make Admin
 												</button>
 											) : (
 												<button
 													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-													onClick={() => handleRemoveUserAdmin.mutate({ id: user.id as string })}
+													onClick={() => removeUserAdmin(user.id, refetch)}
 												>
 													Remove Admin
 												</button>
@@ -139,14 +135,14 @@ const Users = () => {
 												{user?.role === "user" ? (
 													<button
 														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleMakeUserAdmin.mutate({ id: user.id as string })}
+														onClick={() => makeUserAdmin(user.id, refetch)}
 													>
 														Make Admin
 													</button>
 												) : (
 													<button
 														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleRemoveUserAdmin.mutate({ id: user.id as string })}
+														onClick={() => removeUserAdmin(user.id, refetch)}
 													>
 														Remove Admin
 													</button>
