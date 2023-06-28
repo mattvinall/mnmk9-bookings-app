@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from 'react'
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { trpc } from "../../utils/trpc";
 import AdminBookings from '../../components/admin/bookings/AdminBookings';
 import ClientBookings from '../../components/client/bookings/ClientBookings';
 import { useAuth, useUser } from '@clerk/nextjs';
