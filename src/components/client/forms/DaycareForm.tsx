@@ -2,9 +2,12 @@
 
 import { useEffect, useCallback } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { trpc } from "../../../utils/trpc";
 >>>>>>> ab5d81d (replaced type from router to prisma/client)
+=======
+>>>>>>> 0a0bbbc (extract trpc logic from client components)
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
@@ -13,9 +16,13 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import type { FormTypeProps } from "../../../types/form-types";
 import type { Pet } from "@prisma/client";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getUserById } from "../../../api/users";
 =======
 >>>>>>> ab5d81d (replaced type from router to prisma/client)
+=======
+import { getUserById } from "../../../api/users";
+>>>>>>> 0a0bbbc (extract trpc logic from client components)
 
 const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
 	const id = petData && petData?.map((pet: Pet) => pet.ownerId)[0] as string;
