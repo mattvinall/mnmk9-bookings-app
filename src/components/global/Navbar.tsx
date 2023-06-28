@@ -56,9 +56,12 @@ const Navbar: React.FC = () => {
 	const { userId, isSignedIn } = useAuth();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	// const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 >>>>>>> ef2bd9f (removed trpc logic from navbar component, used the getUserById function)
+=======
+>>>>>>> 7c942e4 (removed commented out code)
 	const { data: userData } = getUserById(userId as string);
 	console.log("user data in navbar component", userData);
 
