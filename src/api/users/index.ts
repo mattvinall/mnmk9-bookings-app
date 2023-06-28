@@ -1,8 +1,8 @@
 import { trpc } from "../../utils/trpc";
 
 export const getUserById = (id: string) => {
-    const { data, isLoading, error } = trpc.user.byId.useQuery({ id });
-    return { data, isLoading, error };
+    const { data, isLoading, error, refetch } = trpc.user.byId.useQuery({ id });
+    return { data, isLoading, error, refetch };
 }
 
 export const getAllUsers = () => {
