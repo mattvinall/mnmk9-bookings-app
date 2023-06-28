@@ -20,7 +20,7 @@ const Users = () => {
 	// fetch all users
 	const { data: allUserData, refetch } = getAllUsers();
 
-	// fetch user by id 
+	// fetch user by id to check if admin role
 	const { data: userData, isLoading, error } = getUserById(userId as string);
 
 	// pagination setup
