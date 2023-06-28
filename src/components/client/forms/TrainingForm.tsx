@@ -2,9 +2,12 @@
 
 import { useEffect, useCallback } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { trpc } from "../../../utils/trpc";
 >>>>>>> ab5d81d (replaced type from router to prisma/client)
+=======
+>>>>>>> c20e096 (extract trpc logic from client components)
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
@@ -13,9 +16,13 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import type { Pet } from "@prisma/client";
 import type { FormTypeProps } from "../../../types/form-types";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getUserById } from "../../../api/users";
 =======
 >>>>>>> ab5d81d (replaced type from router to prisma/client)
+=======
+import { getUserById } from "../../../api/users";
+>>>>>>> c20e096 (extract trpc logic from client components)
 
 
 const TrainingForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
