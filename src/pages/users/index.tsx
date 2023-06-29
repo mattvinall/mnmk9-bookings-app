@@ -8,6 +8,7 @@ import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
 import { useAuth } from "@clerk/nextjs";
 import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
+import { trpc } from "../../utils/trpc";
 
 const Users = () => {
 	// state for search
@@ -22,6 +23,14 @@ const Users = () => {
 
 	// fetch user by id to check if admin role
 	const { data: userData, isLoading, error } = getUserById(userId as string);
+
+	const { mutate } = trpc.user.makeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
+
+	const { mutate: removeAdmin } = trpc.user.removeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
 
 	// pagination setup
 	const ITEMS_PER_PAGE = 6;
@@ -100,14 +109,16 @@ const Users = () => {
 											{user?.role === "user" ? (
 												<button
 													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-													onClick={() => makeUserAdmin(user.id, refetch)}
+													// onClick={() => makeUserAdmin(user.id, refetch)}
+													onClick={() => mutate({ id: user.id })}
 												>
 													Make Admin
 												</button>
 											) : (
 												<button
 													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-													onClick={() => removeUserAdmin(user.id, refetch)}
+													// onClick={() => removeUserAdmin(user.id, refetch)}
+													onClick={() => removeAdmin({ id: user.id })}
 												>
 													Remove Admin
 												</button>
@@ -135,14 +146,16 @@ const Users = () => {
 												{user?.role === "user" ? (
 													<button
 														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => makeUserAdmin(user.id, refetch)}
+														// onClick={() => makeUserAdmin(user.id, refetch)}
+														onClick={() => mutate({ id: user.id })}
 													>
 														Make Admin
 													</button>
 												) : (
 													<button
 														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => removeUserAdmin(user.id, refetch)}
+														// onClick={() => removeUserAdmin(user.id, refetch)}
+														onClick={() => removeAdmin({ id: user.id })}
 													>
 														Remove Admin
 													</button>
