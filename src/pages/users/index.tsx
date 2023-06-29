@@ -10,11 +10,15 @@ import { useAuth } from "@clerk/nextjs";
 <<<<<<< HEAD
 <<<<<<< HEAD
 import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
+<<<<<<< HEAD
 =======
 >>>>>>> b0081cd (remove useUser import from clerk)
 =======
 import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
 >>>>>>> aaf5f60 (refactor users page to extract trpc logic from component, import functions)
+=======
+import { trpc } from "../../utils/trpc";
+>>>>>>> cfd3fb7 (test commit)
 
 const Users = () => {
 	// state for search
@@ -37,6 +41,14 @@ const Users = () => {
 	// fetch user by id to check if admin role
 >>>>>>> 7b1de1a (extracted trpc logic related to pets into its own functions)
 	const { data: userData, isLoading, error } = getUserById(userId as string);
+
+	const { mutate } = trpc.user.makeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
+
+	const { mutate: removeAdmin } = trpc.user.removeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
 
 	// pagination setup
 	const ITEMS_PER_PAGE = 6;
@@ -115,14 +127,16 @@ const Users = () => {
 											{user?.role === "user" ? (
 												<button
 													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-													onClick={() => makeUserAdmin(user.id, refetch)}
+													// onClick={() => makeUserAdmin(user.id, refetch)}
+													onClick={() => mutate({ id: user.id })}
 												>
 													Make Admin
 												</button>
 											) : (
 												<button
 													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-													onClick={() => removeUserAdmin(user.id, refetch)}
+													// onClick={() => removeUserAdmin(user.id, refetch)}
+													onClick={() => removeAdmin({ id: user.id })}
 												>
 													Remove Admin
 												</button>
@@ -150,14 +164,16 @@ const Users = () => {
 												{user?.role === "user" ? (
 													<button
 														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => makeUserAdmin(user.id, refetch)}
+														// onClick={() => makeUserAdmin(user.id, refetch)}
+														onClick={() => mutate({ id: user.id })}
 													>
 														Make Admin
 													</button>
 												) : (
 													<button
 														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
-														onClick={() => removeUserAdmin(user.id, refetch)}
+														// onClick={() => removeUserAdmin(user.id, refetch)}
+														onClick={() => removeAdmin({ id: user.id })}
 													>
 														Remove Admin
 													</button>
