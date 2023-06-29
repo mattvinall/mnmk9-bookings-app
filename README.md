@@ -66,4 +66,5 @@ Admin can:
  - incident reporting
  - Waitlist feature (admin)
  - More robust booking experience (multi-step form)
+ - Recurring bookings (selected days for [#] weeks]
  - Email Confirmation sent to admin when a customer cancels an appointment
