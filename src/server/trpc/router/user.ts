@@ -68,22 +68,21 @@ export const userRouter = router({
   byId: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      console.log("input: ", input.id);
+      const { id } = input;
       try {
-        // const cache = await getCache(`user-${input?.id}}`);
-        // if (cache) {
-        // console.log("Cache successfully retrieved: ", cache);
-        // return cache;
-        // } else {
+        const cache = await getCache(`user-${id}}`);
+        if (cache) {
+        console.log("Cache successfully retrieved: ", cache);
+        return cache;
+        } else {
+
         const user = await ctx.prisma.user.findUnique({
-          where: { id: input?.id },
+          where: { id },
           include: { pets: true, bookings: true }
         });
-
-        console.log("user: ", user);
-        // await setCache(`user-${input?.id}`, user);
+        await setCache(`user-${id}`, user);
         return user;
-        // }
+        }
       } catch (err) {
         console.log(`Error fetching user by ID: ${err}`);
       }
