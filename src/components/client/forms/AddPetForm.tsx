@@ -11,10 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { GoogleReCaptcha, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5a14bd3 (imported constants from their own file)
 import { sexOptions, temperamentOptions, rows } from "../../../constants";
 
 type Props = {
@@ -22,18 +18,6 @@ type Props = {
 }
 
 const AddPetForm = ({ secret }: Props): ReactJSXElement => {
-=======
-
-type Props = {
-  secret: string;
-}
-
-<<<<<<< HEAD
-const AddPetForm = ({ setShowPetForm, secret }: Props): ReactJSXElement => {
->>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
-=======
-const AddPetForm = ({ secret }: Props): ReactJSXElement => {
->>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
   const [token, setToken] = useState<string>("");
   const [score, setScore] = useState<number | null>(null);
 
@@ -76,27 +60,11 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
     }
   });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
     resolver: zodResolver(addPetFormSchema)
   });
 
   const onSubmit: SubmitHandler<AddPetFormType> = async (formData: any) => {
-=======
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormSchema>({
-    resolver: zodResolver(addPetFormSchema)
-  });
-
-  const onSubmit: SubmitHandler<AddPetFormSchema> = async (formData: any) => {
->>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
-=======
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
-    resolver: zodResolver(addPetFormSchema)
-  });
-
-  const onSubmit: SubmitHandler<AddPetFormType> = async (formData: any) => {
->>>>>>> 56a930a (import change)
     console.log("form data", formData);
 
     try {
@@ -124,14 +92,6 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
         text: `Added a pet to your profile`,
       });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      setShowPetForm(false);
-
->>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
-=======
->>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
     } catch (error) {
       console.log("error subitting form", error)
       Swal.fire({
@@ -142,39 +102,9 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   return (
     <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
       <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
-=======
-  const handleCloseForm = () => {
-    setShowPetForm(false);
-  };
-
-=======
->>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
-  const sexOptions = ["MALE", "FEMALE"];
-
-  const temperamentOptions = [
-    "PASSIVE",
-    "NEUTRAL",
-    "AGGRESSIVE",
-  ];
-
-  const rows = 2;
-
-=======
->>>>>>> 5a14bd3 (imported constants from their own file)
-  return (
-    <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit(onSubmit, onErrors)}>
-      <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
-<<<<<<< HEAD
-      <svg onClick={handleCloseForm} style={{ cursor: "pointer", position: "absolute", right: "0", top: "-20%", color: "white" }} className="w-6 h-6 mt-4" fill="#fff" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
->>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
-=======
->>>>>>> f64f1e2 (removed setShowPetForm prop, no point to hide the form)
       <div className="grid md:grid-cols-1 md:gap-6">
         <div className="relative z-0 mb-6 w-full group">
           <input
@@ -216,13 +146,6 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
             {...register("sex")}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
             id="pet-select"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          // onChange={handleChange}
->>>>>>> 097bf2e (add pet form update to include more fields to add to DB)
-=======
->>>>>>> 5a14bd3 (imported constants from their own file)
           >
             {sexOptions?.map((sex, index) => (
               <option key={index} className="text-gray-900 w-[10%]" value={sex}>{sex.toLowerCase()}</option>

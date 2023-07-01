@@ -110,10 +110,6 @@ export const bookingFormSchema = z.object({
 	notes: z.string().optional(),
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4630b38 (infer types from schema and export them as types)
 export type BookingFormType = z.infer<typeof bookingFormSchema>;
 
 export const editBookingFormSchema = z.object({
@@ -126,15 +122,8 @@ export const editBookingFormSchema = z.object({
 
 export type EditBookingFormType = z.infer<typeof editBookingFormSchema>;
 
-<<<<<<< HEAD
+// pet details
 export const addPetFormSchema = z.object({
-=======
-export const addPetFormSchema = z.object({
-	// pet details
->>>>>>> 70ea759 (update to addPetFormSchema and added vetDetailFormSchema)
-=======
-export const addPetFormSchema = z.object({
->>>>>>> 4630b38 (infer types from schema and export them as types)
 	ownerId: z.string().optional(),
 	name: z.string(),
 	breed: z.string(),
@@ -148,35 +137,18 @@ export const addPetFormSchema = z.object({
 	feedingNotes: z.string().optional(),
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export type AddPetFormType = z.infer<typeof addPetFormSchema>;
 
-=======
->>>>>>> 70ea759 (update to addPetFormSchema and added vetDetailFormSchema)
-=======
-export type AddPetFormType = z.infer<typeof addPetFormSchema>;
 
->>>>>>> 4630b38 (infer types from schema and export them as types)
 export const vetDetailFormSchema = z.object({
 	name: z.string(),
 	address: z.string(),
 	city: z.string(),
 	phoneNumber: z.string(),
 	email: z.string().email(),
-<<<<<<< HEAD
-<<<<<<< HEAD
 });
 
 export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;
-=======
-})
->>>>>>> 70ea759 (update to addPetFormSchema and added vetDetailFormSchema)
-=======
-});
-
-export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;
->>>>>>> 4630b38 (infer types from schema and export them as types)
 
 export const contactFormSchema = z.object({
 	name: z.string(),
@@ -205,12 +177,4 @@ export const userDetailFormSchema = z.object({
 	phoneNumber: z.string().max(12)
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export type UserDetailFormType = z.infer<typeof userDetailFormSchema>;
-=======
-export type userDetailFormType = z.infer<typeof userDetailFormSchema>;
->>>>>>> 4630b38 (infer types from schema and export them as types)
-=======
-export type UserDetailFormType = z.infer<typeof userDetailFormSchema>;
->>>>>>> 6ffd63f (capitalizd UserDetailFormType)

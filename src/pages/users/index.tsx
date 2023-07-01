@@ -7,18 +7,8 @@ import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
 import { useAuth } from "@clerk/nextjs";
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
-<<<<<<< HEAD
-=======
->>>>>>> b0081cd (remove useUser import from clerk)
-=======
-import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
->>>>>>> aaf5f60 (refactor users page to extract trpc logic from component, import functions)
-=======
 import { trpc } from "../../utils/trpc";
->>>>>>> cfd3fb7 (test commit)
 
 const Users = () => {
 	// state for search
@@ -31,15 +21,7 @@ const Users = () => {
 	// fetch all users
 	const { data: allUserData, refetch } = getAllUsers();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	// fetch user by id to check if admin role
-=======
-	// fetch user by id 
->>>>>>> aaf5f60 (refactor users page to extract trpc logic from component, import functions)
-=======
-	// fetch user by id to check if admin role
->>>>>>> 7b1de1a (extracted trpc logic related to pets into its own functions)
 	const { data: userData, isLoading, error } = getUserById(userId as string);
 
 	const { mutate } = trpc.user.makeUserAdmin.useMutation({

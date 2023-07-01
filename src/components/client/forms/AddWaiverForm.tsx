@@ -12,17 +12,7 @@ interface AddWaiverFormProps {
     handleWaiverDocumentFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export const AddWaiverForm = ({ userDetail, handleChange, handleSubmit, fileName, handleWaiverDocumentFileChange }: AddWaiverFormProps) => {
-=======
-
-
-export const AddWaiverForm = ({userDetail, handleChange, handleSubmit, fileName, handleWaiverDocumentFileChange } : AddWaiverFormProps) => {
->>>>>>> 0d25210 (extracted AddWaiver form into its own component)
-=======
-export const AddWaiverForm = ({ userDetail, handleChange, handleSubmit, fileName, handleWaiverDocumentFileChange }: AddWaiverFormProps) => {
->>>>>>> 4676c15 (removed white space, added userDetail interface and prop)
     return (
         <form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit}>
             <div className="flex flex-col items-center justify-center md:grid-cols-1 md:gap-6">
