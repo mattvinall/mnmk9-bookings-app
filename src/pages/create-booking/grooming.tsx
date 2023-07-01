@@ -9,7 +9,6 @@ import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
 import { sendEmailToAdmin, sendEmailToClient } from "../../lib/email";
 import GroomingForm from "../../components/client/forms/GroomingForm";
-
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
