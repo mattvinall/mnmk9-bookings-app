@@ -13,7 +13,6 @@ const MainLayout = ({ children }: ILayoutProps) => {
                 <title>MNMK-9 Bookings App</title>
                 <meta name="description" content="MNMK-9 Booking App" />
                 <link rel="icon" href="/favicon.ico" />
-                {/* <script src="https://clerk.mnmk9-bookings.app/npm/@clerk/clerk-js@4/dist/clerk.browser.js"></script> */}
             </Head>
             <header>
                 <Navbar />
