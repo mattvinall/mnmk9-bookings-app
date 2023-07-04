@@ -141,11 +141,12 @@ export type AddPetFormType = z.infer<typeof addPetFormSchema>;
 
 
 export const vetDetailFormSchema = z.object({
+	ownerId: z.string(),
 	name: z.string(),
 	address: z.string(),
 	city: z.string(),
-	phoneNumber: z.string(),
-	email: z.string().email(),
+	phone: z.string(),
+	email: z.string().email().optional(),
 });
 
 export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;
