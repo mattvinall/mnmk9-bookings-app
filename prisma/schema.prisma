@@ -86,9 +86,9 @@ model Pet {
 model Vet {
   id        String   @id @default(cuid())
   name      String
-  address   String?
-  city      String?
-  phone     String?
+  address   String
+  city      String
+  phone     String
   email     String?
   user      User?    @relation(fields: [ownerId], references: [id])
   ownerId   String?
