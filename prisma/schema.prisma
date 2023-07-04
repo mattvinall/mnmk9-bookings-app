@@ -77,7 +77,6 @@ model Pet {
   petOwner           User             @relation(fields: [ownerId], references: [id])
   vaccinations       Vaccination[]
   Bookings           Bookings[]
-  VetInformation     Vet[]
   profileImages      Image[]
   IncidentReport     IncidentReport[]
 
@@ -91,11 +90,11 @@ model Vet {
   city      String?
   phone     String?
   email     String?
-  Pet       Pet?     @relation(fields: [petId], references: [id])
-  petId     String?
+  user      User?    @relation(fields: [ownerId], references: [id])
+  ownerId   String?
   createdAt DateTime @default(now())
 
-  @@index([petId])
+  @@index([ownerId])
 }
 
 model IncidentReport {
@@ -173,21 +172,22 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
-  name          String
-  email         String     @unique
-  emailVerified DateTime?
-  image         String?
-  address       String?
-  city          String?
-  phoneNumber   String?
-  postalCode    String?
-  role          String     @default("user")
-  pets          Pet[]
-  bookings      Bookings[]
-  accounts      Account[]
-  sessions      Session[]
-  Todo          Todo[]
+  id             String     @id @default(cuid())
+  name           String
+  email          String     @unique
+  emailVerified  DateTime?
+  image          String?
+  address        String?
+  city           String?
+  phoneNumber    String?
+  postalCode     String?
+  role           String     @default("user")
+  pets           Pet[]
+  bookings       Bookings[]
+  accounts       Account[]
+  sessions       Session[]
+  Todo           Todo[]
+  VetInformation Vet[]
 
   @@index([id])
 }
