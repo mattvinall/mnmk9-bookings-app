@@ -9,7 +9,7 @@ export const vetRouter = router({
 	}),
     create: protectedProcedure
         .input(z.object({
-            petId: z.string(),
+            ownerId: z.string(),
             name: z.string(),
             address: z.string(),
             city: z.string(),
@@ -17,9 +17,9 @@ export const vetRouter = router({
             phone: z.string()
         }))
         .mutation(async ({ ctx, input }) => { 
-            const { petId, name, address, city, email, phone } = input;
+            const { ownerId, name, address, city, email, phone } = input;
 
-            const { success } = await rateLimit.limit(petId)
+            const { success } = await rateLimit.limit(ownerId)
 
             if (!success) {
                 throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
@@ -28,7 +28,7 @@ export const vetRouter = router({
             try {
                 const addVetDetails = await ctx.prisma.vet.create({
                     data: {
-                        petId,
+                        ownerId,
                         name,
                         address,
                         city,
