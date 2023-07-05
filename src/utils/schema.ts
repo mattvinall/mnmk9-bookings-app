@@ -123,12 +123,11 @@ export type EditBookingFormType = z.infer<typeof editBookingFormSchema>;
 
 // pet details
 export const addPetFormSchema = z.object({
-	ownerId: z.string().optional(),
 	name: z.string(),
 	breed: z.string(),
 	sex: z.nativeEnum(Sex),
-	age: z.string().optional(),
-	weight: z.string().optional(),
+	age: z.string(),
+	weight: z.string(),
 	ovariohysterectomy: z.string(),
 	temperament: z.nativeEnum(Temperament),
 	microchipNumber: z.string().optional(),
@@ -140,7 +139,6 @@ export type AddPetFormType = z.infer<typeof addPetFormSchema>;
 
 
 export const vetDetailFormSchema = z.object({
-	// ownerId: z.string().optional(),
 	name: z.string(),
 	address: z.string(),
 	city: z.string(),
