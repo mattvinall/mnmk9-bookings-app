@@ -3,12 +3,13 @@ import { userRouter } from "./user";
 import { serviceRouter } from "./service";
 import { petRouter } from "./pet";
 import { bookingRouter } from "./booking";
-import { documentRouter } from "./document";
 import { contactRouter } from "./contact";
 import { todoRouter } from "./todo";
 import { vetRouter } from "./vet";
 import { recaptchaRouter } from "./recaptcha";
 import { incidentReportRouter } from "./incidentReport";
+import { waiverRouter } from "./waiver";
+import { vaccineRouter } from "./vaccine";
 
 export const appRouter = router({
   user: userRouter,
@@ -16,11 +17,12 @@ export const appRouter = router({
   vet: vetRouter,
   pet: petRouter,
   bookings: bookingRouter,
-  documents: documentRouter,
   contact: contactRouter,
   todo: todoRouter,
   recaptcha: recaptchaRouter,
   incidentReport: incidentReportRouter,
+  waiver: waiverRouter,
+  vaccine: vaccineRouter,
 });
 
 // export type definition of API
