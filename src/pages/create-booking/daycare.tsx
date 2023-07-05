@@ -20,7 +20,6 @@ const Daycare: NextPage = () => {
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null);
 	const [petId, setPetID] = useState<string>("");
 
 	useEffect(() => {
@@ -44,7 +43,7 @@ const Daycare: NextPage = () => {
 
 	const daycare = serviceData?.find(service => service.serviceName === "Daycare");
 
-	const daycareId = daycare?.id;
+	const daycareId = daycare?.id || "";
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -63,16 +62,7 @@ const Daycare: NextPage = () => {
 		},
 	});
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
@@ -101,25 +91,27 @@ const Daycare: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: BookingFormType) => {
 		try {
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
+			const serviceName = "Daycare";
 
-			formData.petId = petId ? petId : id;
-			formData.userId = userId;
-			formData.serviceId = daycareId;
-			formData.serviceName = "Daycare";
+			// formData.petId = petId ? petId : id;
+			// formData.userId = userId;
+			// formData.serviceId = daycareId;
+			// formData.serviceName = "Daycare";
 
 			verifyRecaptcha.mutate({ token, secret });
 
-			if (score && score < 0.5) {
-				console.log("score is less than 0.5");
-				return;
-			}
-
 			// mutate / POST request to bookings api endpoint and submit the form data
-			addNewDaycareBooking.mutate(formData);
+			userId && addNewDaycareBooking.mutate({
+				...formData,
+				petId: petId ? petId : id,
+				userId: userId as string,
+				serviceId: daycareId,
+				serviceName
+			});
 
 			// reset the form state
 			reset();
@@ -139,7 +131,7 @@ const Daycare: NextPage = () => {
 				formData?.checkOutDate,
 				formData.startTime,
 				formData.endTime,
-				formData?.serviceName,
+				serviceName,
 				formData?.notes
 			);
 
@@ -152,7 +144,7 @@ const Daycare: NextPage = () => {
 				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
-				formData?.serviceName,
+				serviceName,
 				formData?.checkOutDate,
 				formData?.notes
 			);
