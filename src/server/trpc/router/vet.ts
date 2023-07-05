@@ -13,11 +13,10 @@ export const vetRouter = router({
             name: z.string(),
             address: z.string(),
             city: z.string(),
-            email: z.string().email(),
             phone: z.string()
         }))
         .mutation(async ({ ctx, input }) => { 
-            const { ownerId, name, address, city, email, phone } = input;
+            const { ownerId, name, address, city, phone } = input;
 
             const { success } = await rateLimit.limit(ownerId)
 
@@ -32,7 +31,6 @@ export const vetRouter = router({
                         name,
                         address,
                         city,
-                        email,
                         phone
                     },
                 })

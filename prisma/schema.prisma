@@ -89,7 +89,7 @@ model Vet {
   address   String
   city      String
   phone     String
-  user      User?    @relation(fields: [ownerId], references: [id])
+  user      User     @relation(fields: [ownerId], references: [id])
   ownerId   String
   createdAt DateTime @default(now())
 

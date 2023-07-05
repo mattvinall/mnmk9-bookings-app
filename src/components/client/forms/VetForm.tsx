@@ -55,7 +55,7 @@ const VetForm = () => {
     }, [handleReCaptchaVerify]);
 
 
-    const { mutate: addVetDetails } = trpc.vet.create.useMutation({
+    const addVetDetails = trpc.vet.create.useMutation({
         onSuccess: () => {
             Swal.fire({
                 title: "Success!",
@@ -72,23 +72,15 @@ const VetForm = () => {
         }
     });
 
-    const { mutate: verifyRecaptcha } = trpc.recaptcha.verify.useMutation();
+    const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
+    console.log("form errors", errors);
     const onSubmit = (data: VetDetailFormType) => {
-        console.log("form data", data);
         try {
-            // if (!userId || !token) {
-            //     console.log("no user id or token");
-            //     return;
-            // }
 
-            // data.email = data.email ? data.email : "";
+            token && verifyRecaptcha.mutate({ token, secret });
 
-            data.ownerId = userId as string;
-
-            token && verifyRecaptcha({ token, secret });
-
-            addVetDetails(data);
+            userId && addVetDetails.mutate({ ...data, ownerId: userId });
         } catch (error) {
             console.log("error submitting", error);
         } finally {

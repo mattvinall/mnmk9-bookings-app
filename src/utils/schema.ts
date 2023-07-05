@@ -60,7 +60,6 @@ export const userSchema = z.object({
 			address: z.string(),
 			city: z.string(),
 			phone: z.string(),
-			email: z.string().email().optional(),
 			createdAt: z.date(),
 		}).optional(),
 		profileImages: z.object({
@@ -141,12 +140,11 @@ export type AddPetFormType = z.infer<typeof addPetFormSchema>;
 
 
 export const vetDetailFormSchema = z.object({
-	ownerId: z.string(),
+	// ownerId: z.string().optional(),
 	name: z.string(),
 	address: z.string(),
 	city: z.string(),
 	phone: z.string(),
-	email: z.string().email()
 });
 
 export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;
