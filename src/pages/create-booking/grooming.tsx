@@ -23,7 +23,6 @@ const Grooming: NextPage = () => {
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
 	const [petId, setPetID] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null);
 
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
@@ -33,7 +32,7 @@ const Grooming: NextPage = () => {
 
 	const grooming = serviceData?.find(service => service.serviceName === "Grooming");
 
-	const groomingId = grooming?.id;
+	const groomingId = grooming?.id || "";
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -54,16 +53,7 @@ const Grooming: NextPage = () => {
 
 	const addNewGroomingBooking = trpc.bookings.newBooking.useMutation();
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -103,26 +93,24 @@ const Grooming: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: BookingFormType) => {
 
 		try {
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
+			const serviceName = "Grooming";
 
-			formData.petId = petId ? petId : id;
-			formData.userId = userId;
-			formData.serviceId = groomingId;
-			formData.serviceName = "Grooming";
 
 			verifyRecaptcha.mutate({ token, secret });
 
-			if (score && score < 0.5) {
-				console.log("score is less than 0.5");
-				return;
-			}
-
 			// mutate / POST request to bookings api endpoint and submit the form data
-			addNewGroomingBooking.mutate(formData);
+			userId && addNewGroomingBooking.mutate({
+				...formData,
+				userId: userId as string,
+				petId: petId ? petId : id,
+				serviceId: groomingId,
+				serviceName
+			});
 
 			// reset the form state
 			reset();
@@ -142,7 +130,7 @@ const Grooming: NextPage = () => {
 				formData?.checkOutDate,
 				formData.startTime,
 				formData.endTime,
-				formData?.serviceName,
+				serviceName,
 				formData?.notes
 			);
 
@@ -155,7 +143,7 @@ const Grooming: NextPage = () => {
 				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
-				formData?.serviceName,
+				serviceName,
 				formData?.checkOutDate,
 				formData?.notes
 			);
