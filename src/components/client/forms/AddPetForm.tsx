@@ -19,7 +19,6 @@ type Props = {
 
 const AddPetForm = ({ secret }: Props): ReactJSXElement => {
   const [token, setToken] = useState<string>("");
-  const [score, setScore] = useState<number | null>(null);
 
   const { userId } = useAuth();
 
@@ -50,38 +49,47 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
 
   const onErrors = (errors: any) => console.error(errors);
 
-  const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-    onSuccess(data) {
-      if (!data) return;
-      setScore(data.score);
-    },
-    onError(error) {
-      console.log("error verify recaptcha mutation", error);
-    }
-  });
+  const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AddPetFormType>({
     resolver: zodResolver(addPetFormSchema)
   });
 
-  const onSubmit: SubmitHandler<AddPetFormType> = async (formData: any) => {
+  const onSubmit: SubmitHandler<AddPetFormType> = async (formData: AddPetFormType) => {
     console.log("form data", formData);
-
     try {
-      formData.ownerId = userId as string;
-      formData.ovariohysterectomy === "yes" ? formData.ovariohysterectomy = true : formData.ovariohysterectomy = false;
-      formData.age = parseInt(formData.age, 10);
-      formData.weight = parseInt(formData.weight, 10);
+      const {
+        name,
+        breed,
+        sex,
+        age,
+        weight,
+        ovariohysterectomy,
+        temperament,
+        microchipNumber,
+        medicalNotes,
+        feedingNotes,
+      } = formData;
 
       verifyRecaptcha.mutate({ token, secret });
 
-      if (score && score < 0.5) {
-        console.log("score is less than 0.5");
-        return;
-      }
+      const formattedWeight = weight && parseInt(weight, 10);
+      const formattedAge = age && parseInt(age, 10);
+      const formattedOvariohysterectomy = ovariohysterectomy && ovariohysterectomy === "yes" ? true : false;
 
-      console.log("form data before mutation", formData);
-      addPet.mutate(formData);
+      userId && age && formattedAge && weight && formattedWeight && addPet.mutate({
+        ownerId: userId,
+        name,
+        breed,
+        sex,
+        age: formattedAge,
+        weight: formattedWeight,
+        ovariohysterectomy: formattedOvariohysterectomy,
+        temperament,
+        microchipNumber,
+        medicalNotes,
+        feedingNotes,
+      });
 
       reset();
 
@@ -206,7 +214,6 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
             {...register("temperament")}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
             id="temperament"
-          // onChange={handleChangeTemperament}
           >
             {temperamentOptions?.map((temperament, index) => (
               <option key={index} className="text-gray-900 w-[10%]" defaultValue={temperament} value={temperament}>{temperament.toLowerCase()}</option>
@@ -234,7 +241,7 @@ const AddPetForm = ({ secret }: Props): ReactJSXElement => {
             name="microchipNumber"
             id="floating_microchipNumber"
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-            required
+          // required
           />
           <label
             htmlFor="floating_microchipNumber"
