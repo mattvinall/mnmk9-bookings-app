@@ -3,31 +3,22 @@ import { useCallback, useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod';
 import router from 'next/router';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { trpc } from '../../../utils/trpc';
 import Swal from 'sweetalert2';
-import { GoogleReCaptcha, GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useAuth } from '@clerk/nextjs';
-
-const vetSchema = z.object({
-    ownerId: z.string(),
-    name: z.string(),
-    address: z.string(),
-    city: z.string(),
-    phone: z.string().min(10).max(12),
-    email: z.string().email(),
-});
-
-type FormData = z.infer<typeof vetSchema>;
+import { vetDetailFormSchema, VetDetailFormType } from '../../../utils/schema';
 
 const VetForm = () => {
     const [token, setToken] = useState<string | null>(null);
     const [key, setKey] = useState<string>("");
-    const [score, setScore] = useState<number | null>(null);
     const [secret, setSecret] = useState<string>("");
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
-        resolver: zodResolver(vetSchema),
+
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<VetDetailFormType>({
+        resolver: zodResolver(vetDetailFormSchema),
     });
+
+    console.log("errors from form", errors);
 
     const { userId } = useAuth();
 
@@ -75,35 +66,30 @@ const VetForm = () => {
             }).then(() => {
                 router.push(`/profile/${userId}`);
             });
-        }
-    });
-
-    const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-        onSuccess(data) {
-            if (!data) return;
-            setScore(data.score);
         },
-        onError(error) {
-            console.log("error verify recaptcha mutation", error);
+        onError: (error) => {
+            console.log("error add vet details mutation", error);
         }
     });
 
-    const onSubmit = (data: FormData) => {
-        data.ownerId = userId as string;
+    const { mutate: verifyRecaptcha } = trpc.recaptcha.verify.useMutation();
 
-        token && verifyRecaptcha.mutate({ token, secret });
+    const onSubmit = (data: VetDetailFormType) => {
+        console.log("data", data);
+        try {
+            if (!userId || !token) {
+                console.log("no user id or token");
+                return;
+            }
 
-        if (score && score <= 0.5) {
-            Swal.fire({
-                title: "Error!",
-                text: "Please verify that you are human!",
-                icon: "error",
-                confirmButtonText: "Ok",
-                confirmButtonColor: "#1D4ED8",
-            });
+            data.ownerId = userId as string || "";
+
+            verifyRecaptcha({ token, secret });
+
+            addVetDetails.mutate(data);
+        } catch (error) {
+            console.log("error", error);
         }
-
-        addVetDetails.mutate(data);
     }
 
     return (
@@ -117,8 +103,9 @@ const VetForm = () => {
                         name="name"
                         id="floating_name"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                        required
+                    // required
                     />
+                    {errors.address && <span className="text-red-500 text-sm">This field is required</span>}
                     <label
                         htmlFor="floating_postal_code"
                         className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -129,11 +116,12 @@ const VetForm = () => {
                     <input
                         {...register("phone", { required: true })}
                         type="tel"
-                        name="phoneNumber"
+                        name="phone"
                         id="floating_phone_number"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                        required
+                    // required
                     />
+                    {errors.phone && <span className="text-red-500 text-sm">This field is required</span>}
                     <label
                         htmlFor="floating_phone_number"
                         className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -144,13 +132,19 @@ const VetForm = () => {
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 mb-6 w-full group">
                     <input
-                        {...register("address", { required: true })}
+                        {...register("address", { required: true, pattern: /^\S+@\S+$/i })}
                         type="text"
                         name="address"
                         id="floating_address"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                        required
+                    // required
                     />
+                    {errors.email && errors.email.type === 'required' && (
+                        <span className="text-red-500 text-sm">This field is required</span>
+                    )}
+                    {errors.email && errors.email.type === 'pattern' && (
+                        <span className="text-red-500 text-sm">Please enter a valid email address</span>
+                    )}
                     <label
                         htmlFor="floating_address"
                         className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -164,12 +158,29 @@ const VetForm = () => {
                         name="city"
                         id="floating_city"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                        required
+                    // required
                     />
                     <label
                         htmlFor="floating_city"
                         className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         City
+                    </label>
+                </div>
+            </div>
+            <div className="grid md:grid-cols-2 md:gap-6">
+                <div className="relative z-0 mb-6 w-full group">
+                    <input
+                        {...register("email", { required: true })}
+                        type="email"
+                        name="email"
+                        id="floating_email"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                    // required
+                    />
+                    <label
+                        htmlFor="floating_email"
+                        className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        Email
                     </label>
                 </div>
             </div>
