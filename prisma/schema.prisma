@@ -80,7 +80,7 @@ model Pet {
   profileImages      Image[]
   IncidentReport     IncidentReport[]
 
-  @@index([ownerId])
+  @@index([ownerId, id])
 }
 
 model Vet {
@@ -93,7 +93,7 @@ model Vet {
   ownerId   String
   createdAt DateTime @default(now())
 
-  @@index([ownerId])
+  @@index([ownerId, id])
 }
 
 model IncidentReport {
