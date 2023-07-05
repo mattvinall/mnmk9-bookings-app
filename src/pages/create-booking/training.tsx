@@ -33,7 +33,7 @@ const Training: NextPage = () => {
 
 	const training = serviceData?.find(service => service.serviceName === "Training");
 
-	const trainingId = training?.id;
+	const trainingId = training?.id as string;
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -54,15 +54,7 @@ const Training: NextPage = () => {
 
 	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation();
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -103,25 +95,22 @@ const Training: NextPage = () => {
 	}
 
 
-	const onSubmit: SubmitHandler<BookingFormType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: BookingFormType) => {
 		try {
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
-
-			formData.petId = petId ? petId : id;
-			formData.userId = userId;
-			formData.serviceId = trainingId;
-			formData.serviceName = "Training";
+			const serviceName = "Training";
 
 			verifyRecaptcha.mutate({ token, secret });
 
-			if (score && score < 0.5) {
-				console.log("score is less than 0.5");
-				return;
-			}
-
 			// mutate / POST request to bookings api endpoint and submit the form data
-			addNewTrainingBooking.mutate(formData);
+			userId && addNewTrainingBooking.mutate({
+				...formData,
+				petId: petId ? petId : id,
+				userId,
+				serviceId: trainingId,
+				serviceName
+			});
 
 			// reset the form state
 			reset();
@@ -141,7 +130,7 @@ const Training: NextPage = () => {
 				formData?.checkOutDate,
 				formData.startTime,
 				formData.endTime,
-				formData?.serviceName,
+				serviceName,
 				formData?.notes
 			);
 
@@ -154,7 +143,7 @@ const Training: NextPage = () => {
 				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
-				formData?.serviceName,
+				serviceName,
 				formData?.checkOutDate,
 				formData?.notes
 			);
