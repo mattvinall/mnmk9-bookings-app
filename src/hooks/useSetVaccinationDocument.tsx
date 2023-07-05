@@ -30,7 +30,7 @@ const useSetVaccinationDocument = (name: any) => {
 			setVaccinationDocument(file);
 			// 	// Upload the file to S3
 			const params = {
-				Bucket: `mnmk9-bookings/documents/${name}`,
+				Bucket: `mnmk9-bookings/documents/vaccinations/${name}`,
 				Key: file.name,
 				Body: file,
 			}
