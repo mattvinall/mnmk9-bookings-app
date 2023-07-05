@@ -25,7 +25,7 @@ export const waiverRouter = router({
             }
 
             try {
-                const addVetDetails = await ctx.prisma.waiver.create({
+                const addWaiverDocument = await ctx.prisma.waiver.create({
                     data: {
                         petId,
                         name,
@@ -34,7 +34,7 @@ export const waiverRouter = router({
                         fileName 
                     },
                 })
-                return addVetDetails;
+                return addWaiverDocument;
                
             } catch (err) {
                 console.log(`Vet ${name} cannot be created: ${err}`)
