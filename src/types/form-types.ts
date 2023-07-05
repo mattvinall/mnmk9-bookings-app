@@ -1,7 +1,6 @@
 import { UseFormSetValue } from "react-hook-form/dist/types";
 import { BookingFormType, ContactFormType, EditBookingFormType } from "../utils/schema";
 import { SubmitHandler, UseFormHandleSubmit } from "react-hook-form/dist/types/form";
-
 import { Pet } from "@prisma/client";
 
 export type FormTypeProps = {
