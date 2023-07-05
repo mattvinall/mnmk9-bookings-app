@@ -91,7 +91,7 @@ model Vet {
   phone     String
   email     String?
   user      User?    @relation(fields: [ownerId], references: [id])
-  ownerId   String?
+  ownerId   String
   createdAt DateTime @default(now())
 
   @@index([ownerId])
