@@ -1,4 +1,5 @@
 "use client";
+
 import { useCallback, useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod';
 import router from 'next/router';
@@ -17,8 +18,6 @@ const VetForm = () => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<VetDetailFormType>({
         resolver: zodResolver(vetDetailFormSchema),
     });
-
-    // console.log("errors from form", errors);
 
     const { userId } = useAuth();
 
