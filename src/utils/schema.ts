@@ -184,3 +184,12 @@ export const vaccineFormSchema = z.object({
 });
 
 export type VaccineFormType = z.infer<typeof vaccineFormSchema>;
+
+export const waiverFormSchema = z.object({
+	name: z.string(),
+	fileName: z.string(),
+	uploadedS3Url: z.string().url(),
+	validTo: z.date(),
+});
+
+export type WaiverFormType = z.infer<typeof waiverFormSchema>;
