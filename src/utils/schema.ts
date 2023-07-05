@@ -146,7 +146,7 @@ export const vetDetailFormSchema = z.object({
 	address: z.string(),
 	city: z.string(),
 	phone: z.string(),
-	email: z.string().email().optional()
+	email: z.string().email()
 });
 
 export type VetDetailFormType = z.infer<typeof vetDetailFormSchema>;

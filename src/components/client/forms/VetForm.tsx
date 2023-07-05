@@ -82,6 +82,8 @@ const VetForm = () => {
                 return;
             }
 
+            data.email = data.email ? data.email : "";
+
             data.ownerId = userId as string || "";
 
             verifyRecaptcha({ token, secret });
@@ -103,7 +105,7 @@ const VetForm = () => {
                         name="name"
                         id="floating_name"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                    // required
+                        required
                     />
                     {errors.address && <span className="text-red-500 text-sm">This field is required</span>}
                     <label
@@ -119,7 +121,7 @@ const VetForm = () => {
                         name="phone"
                         id="floating_phone_number"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                    // required
+                        required
                     />
                     {errors.phone && <span className="text-red-500 text-sm">This field is required</span>}
                     <label
@@ -132,19 +134,13 @@ const VetForm = () => {
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 mb-6 w-full group">
                     <input
-                        {...register("address", { required: true, pattern: /^\S+@\S+$/i })}
+                        {...register("address", { required: true })}
                         type="text"
                         name="address"
                         id="floating_address"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                    // required
+                        required
                     />
-                    {errors.email && errors.email.type === 'required' && (
-                        <span className="text-red-500 text-sm">This field is required</span>
-                    )}
-                    {errors.email && errors.email.type === 'pattern' && (
-                        <span className="text-red-500 text-sm">Please enter a valid email address</span>
-                    )}
                     <label
                         htmlFor="floating_address"
                         className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -158,7 +154,7 @@ const VetForm = () => {
                         name="city"
                         id="floating_city"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                    // required
+                        required
                     />
                     <label
                         htmlFor="floating_city"
@@ -170,13 +166,16 @@ const VetForm = () => {
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 mb-6 w-full group">
                     <input
-                        {...register("email", { required: true })}
+                        {...register("email")}
                         type="email"
                         name="email"
                         id="floating_email"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-                    // required
+
                     />
+                    {errors.email && errors.email.type === 'pattern' && (
+                        <span className="text-red-500 text-sm">Please enter a valid email address</span>
+                    )}
                     <label
                         htmlFor="floating_email"
                         className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
