@@ -175,3 +175,12 @@ export const userDetailFormSchema = z.object({
 });
 
 export type UserDetailFormType = z.infer<typeof userDetailFormSchema>;
+
+export const vaccineFormSchema = z.object({
+	name: z.string(),
+	fileName: z.string(),
+	uploadedS3Url: z.string().url(),
+	validTo: z.date(),
+});
+
+export type VaccineFormType = z.infer<typeof vaccineFormSchema>;
