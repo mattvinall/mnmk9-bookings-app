@@ -85,7 +85,7 @@ const GroomingForm = ({ register, setToken, setValue, handleSubmit, onSubmit, ha
 					<label
 						htmlFor="phone"
 						className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-						Phone number (123-456-7890)
+						Phone number (xxx-xxx-xxxx)
 					</label>
 				</div>
 				<div className="relative z-0 mb-6 w-full group">
