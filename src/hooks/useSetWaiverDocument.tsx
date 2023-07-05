@@ -2,7 +2,7 @@ import { useState } from "react";
 import { S3 } from 'aws-sdk';
 import Swal from "sweetalert2";
 
-const useSetWaiverDocument = (name: any) => {
+const useSetWaiverDocument = (name: string) => {
 	const [waiverDocument, setWaiverDocument] = useState({});
 	const [uploadedWaiverDocumentUrl, setUploadedWaiverDocumentUrl] = useState<string>("");
 	const [fileName, setFileName] = useState<string>("");
@@ -30,10 +30,11 @@ const useSetWaiverDocument = (name: any) => {
 			setWaiverDocument(file);
 			// 	// Upload the file to S3
 			const params = {
-				Bucket: `mnmk9-bookings/documents/${name}`,
+				Bucket: `mnmk9-bookings/documents/waiver/${name}`,
 				Key: file.name,
 				Body: file,
 			}
+
 			s3.upload(params, (error: any, data: any) => {
 				// throw error popup if upload failed
 				if (error) {
