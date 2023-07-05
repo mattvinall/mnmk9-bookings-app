@@ -9,7 +9,6 @@ import UserDetailForm from "../../components/client/forms/UserDetailForm";
 import AddPetForm from "../../components/client/forms/AddPetForm";
 import Swal from "sweetalert2";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-// import { Pet } from "../../types/router";
 import { Pet } from "@prisma/client";
 import useSetWaiverDocument from "../../hooks/useSetWaiverDocument";
 import React from "react";
