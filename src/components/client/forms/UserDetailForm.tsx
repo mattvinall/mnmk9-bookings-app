@@ -20,7 +20,6 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 	const router = useRouter();
 
 	const [token, setToken] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null);
 
 	const { userId } = useAuth();
 
@@ -45,31 +44,20 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 
 	const editProfile = trpc.user.editProfile.useMutation();
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserDetailFormType>({
 		resolver: zodResolver(userDetailFormSchema)
 	});
 
-	const onSubmit: SubmitHandler<UserDetailFormType> = async (formData: any) => {
-		formData.id = userId;
+	const onSubmit: SubmitHandler<UserDetailFormType> = async (formData: UserDetailFormType) => {
 
 		verifyRecaptcha.mutate({ token, secret });
 
-		if (score && score < 0.5) {
-			console.log("score is less than 0.5");
-			return;
-		}
-
-		editProfile.mutate(formData);
+		userId && editProfile.mutate({
+			id: userId,
+			...formData
+		});
 
 		try {
 			// success message 
