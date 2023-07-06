@@ -5,8 +5,8 @@ import { rateLimit } from "../../../lib/rateLimit";
 
 export const vaccineRouter = router({
     getAll: protectedProcedure.query(({ ctx }) => {
-		return ctx.prisma.vaccination.findMany();
-	}),
+        return ctx.prisma.vaccination.findMany();
+    }),
     create: protectedProcedure
         .input(z.object({
             petId: z.string(),
@@ -15,7 +15,7 @@ export const vaccineRouter = router({
             uploadedS3Url: z.string().url(),
             fileName: z.string()
         }))
-        .mutation(async ({ ctx, input }) => { 
+        .mutation(async ({ ctx, input }) => {
             const { petId, name, validTo, uploadedS3Url, fileName } = input;
             
             const { success } = await rateLimit.limit(petId)
@@ -31,7 +31,7 @@ export const vaccineRouter = router({
                         name,
                         validTo,
                         uploadedS3Url,
-                        fileName 
+                        fileName
                     },
                 })
                 return addVetDetails;
@@ -40,5 +40,54 @@ export const vaccineRouter = router({
                 console.log(`Vet ${name} cannot be created: ${err}`)
                 throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
             }
-        })
+        }),
+    delete: protectedProcedure
+        .input(z.object({
+            id: z.string()
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const { id } = input;
+            try {
+                const deleteVaccineDocument = await ctx.prisma.vaccination.delete({
+                    where: {
+                        id
+                    }
+                });
+
+                return deleteVaccineDocument;
+            } catch (err) {
+                console.log(`Vet ${id} cannot be deleted: ${err}`)
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+            }
+        }),
+    update: protectedProcedure
+        .input(z.object({
+            id: z.string(),
+            name: z.string(),
+            validTo: z.date(),
+            uploadedS3Url: z.string().url(),
+            fileName: z.string()
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const { id, name, validTo, uploadedS3Url, fileName } = input;
+            try {
+                const updateVaccineDocument = await ctx.prisma.vaccination.update({
+                    where: {
+                        id
+                    },
+                    data: {
+                        name,
+                        validTo,
+                        uploadedS3Url,
+                        fileName
+                    }
+                });
+
+                return updateVaccineDocument;
+            } catch (err) {
+                console.log(`Vet ${id} cannot be updated: ${err}`)
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+            }
+        }),
+    
 })
