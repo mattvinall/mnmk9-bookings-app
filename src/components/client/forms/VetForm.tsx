@@ -73,17 +73,22 @@ const VetForm = () => {
 
     const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
-    console.log("form errors", errors);
     const onSubmit = (data: VetDetailFormType) => {
         try {
-
             token && verifyRecaptcha.mutate({ token, secret });
-
             userId && addVetDetails.mutate({ ...data, ownerId: userId });
+            Swal.fire({
+                title: "Success!",
+                text: "Your Vet Details have been saved to your profile!",
+                icon: "success",
+            })
         } catch (error) {
             console.log("error submitting", error);
-        } finally {
-            console.log("finally");
+            Swal.fire({
+                title: "Error!",
+                text: "There was an error saving your Vet Details. Please try again.",
+                icon: "error",
+            })
         }
     }
 
