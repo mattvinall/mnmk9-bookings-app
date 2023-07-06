@@ -16,10 +16,12 @@ import { Pet } from "@prisma/client";
 type Props = {
     secret: string
     petId: string,
-    petDetail: Pet
+    petDetails: Pet[]
 }
 
-const EditPetForm = ({ secret, petId, petDetail }: Props): ReactJSXElement => {
+const EditPetForm = ({ secret, petId, petDetails }: Props): ReactJSXElement => {
+    const petDetail = petDetails[0];
+
     const [token, setToken] = useState<string>("");
 
     const { executeRecaptcha } = useGoogleReCaptcha()
@@ -51,10 +53,37 @@ const EditPetForm = ({ secret, petId, petDetail }: Props): ReactJSXElement => {
 
     const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
-    const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<EditPetFormType>({
+    const { register, handleSubmit, reset, setValue, formState: { isSubmitting } } = useForm<EditPetFormType>({
         resolver: zodResolver(editPetFormSchema)
     });
 
+    // iterate over petDetail and set values using setValue from react-hook-form
+    useEffect(() => {
+        if (!petDetail) return;
+
+        const {
+            name,
+            breed,
+            age,
+            sex,
+            weight,
+            temperament,
+            ovariohysterectomy,
+            microchipNumber,
+            medicalNotes,
+            feedingNotes,
+        } = petDetail;
+        setValue("name", name);
+        setValue("breed", breed);
+        setValue("age", age.toString());
+        setValue("sex", sex);
+        setValue("weight", weight.toString());
+        setValue("temperament", temperament);
+        setValue("ovariohysterectomy", ovariohysterectomy ? "yes" : "no");
+        setValue("microchipNumber", microchipNumber ? microchipNumber : "");
+        setValue("feedingNotes", feedingNotes ? feedingNotes : "");
+        setValue("medicalNotes", medicalNotes ? medicalNotes : "");
+    }, [])
     const onSubmit: SubmitHandler<EditPetFormType> = async (formData: EditPetFormType) => {
         console.log("form data", formData);
         try {
