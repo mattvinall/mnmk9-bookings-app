@@ -140,7 +140,7 @@ const PetDetail = () => {
 									</div>
 									<div className="my-4 border-slate-500 border-b-2 pb-4">
 										{pet?.feedingNotes && (
-											<p className="text-gray-600 font-medium text-lg">Feeding Notes: {pet.feedingNotes}</p>
+											<p className="text-gray-600 font-medium text-lg">Feeding Notes: <br /> {pet.feedingNotes}</p>
 										)}
 									</div>
 									{pet?.microchipNumber && (
@@ -155,7 +155,7 @@ const PetDetail = () => {
 				})}
 				{petId && key && petDetail && (
 					<GoogleReCaptchaProvider reCaptchaKey={key}>
-						<EditPetForm secret={secret} petId={petId} petDetail={petDetail || []} />
+						<EditPetForm secret={secret} petId={petId} petDetails={petDetail || {}} />
 					</GoogleReCaptchaProvider>
 				)}
 			</div>
