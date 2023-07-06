@@ -135,7 +135,7 @@ const PetDetail = () => {
 									</div>
 									<div className="my-4">
 										{pet?.medicalNotes && (
-											<p className="text-gray-600 font-medium text-lg">Medical Notes: {pet.medicalNotes}</p>
+											<p className="text-gray-600 font-medium text-lg">Medical Notes: <br /> {pet.medicalNotes}</p>
 										)}
 									</div>
 									<div className="my-4 border-slate-500 border-b-2 pb-4">
