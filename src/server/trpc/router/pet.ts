@@ -54,8 +54,8 @@ export const petRouter = router({
 	addPet: protectedProcedure
 		.input(
 			z.object({
-				name: z.string(),
 				ownerId: z.string(),
+				name: z.string(),
 				breed: z.string(),
 				sex: z.nativeEnum(Sex),
 				age: z.number(),
@@ -121,30 +121,62 @@ export const petRouter = router({
 				console.log(`Cannot update profile image of the pet: ${error}`)
 			}
 		}),
-	// editPet: protectedProcedure
-	// 	.input(
-	// 		z.object({
-	// 			id: z.string(),
-	// 			name: z.string().optional(),
-	// 			breed: z.string().optional(),
-				
-	// 		})
-	// 		.mutation(async ({ ctx, input }) => { 
-	// 			try {
-	// 				const { id, name, breed } = input;
+	editPet: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				name: z.string().optional(),
+				breed: z.string().optional(),
+				sex: z.nativeEnum(Sex).optional(),
+				age: z.number().optional(),
+				weight: z.number().optional(),
+				ovariohysterectomy: z.boolean().optional(),
+				temperament: z.nativeEnum(Temperament).optional(),
+				microchipNumber: z.string().optional(),
+				medicalNotes: z.string().optional(),
+				feedingNotes: z.string().optional(),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const {
+				id,
+				name,
+				breed,
+				sex,
+				age,
+				weight,
+				ovariohysterectomy,
+				temperament,
+				microchipNumber,
+				medicalNotes,
+				feedingNotes } = input;
+			
+			try { 
+				const { success } = await rateLimit.limit(id);
 
-	// 				return await ctx.prisma.pet.update({
-	// 					where: { id },
-	// 					data: {
-	// 						name,
-	// 						breed
-	// 					}
-	// 				})
-	// 			} catch (error) {
-					
-	// 			}
-	// 		})
-	// 	),
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+
+				return await ctx.prisma.pet.update({
+					where: { id },
+					data: {
+						name,
+						breed,
+						sex,
+						age,
+						weight,
+						ovariohysterectomy,
+						temperament,
+						microchipNumber,
+						medicalNotes,
+						feedingNotes
+					}
+				})
+			} catch(error) {
+				console.log(`Pet cannot be updated: ${error}`)
+			}
+		}),
 	deletePet: protectedProcedure
 		.input(
 			z.object({
