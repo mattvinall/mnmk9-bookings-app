@@ -2,7 +2,7 @@ import { useState } from "react";
 import { S3 } from 'aws-sdk';
 import Swal from "sweetalert2";
 
-const useSetVaccinationDocument = (name: any) => {
+const useSetVaccinationDocument = (name: string) => {
 	const [vaccinationDocument, setVaccinationDocument] = useState({});
 	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState("");
 	const [fileName, setFileName] = useState("");
@@ -28,15 +28,18 @@ const useSetVaccinationDocument = (name: any) => {
 
 		if (file) {
 			setVaccinationDocument(file);
-			// 	// Upload the file to S3
+
 			const params = {
 				Bucket: `mnmk9-bookings/documents/vaccinations/${name}`,
 				Key: file.name,
 				Body: file,
 			}
+
 			s3.upload(params, (error: any, data: any) => {
+				console.log("data when uploading", data);
 				// throw error popup if upload failed
 				if (error) {
+					console.log("error when uploading", error);
 					Swal.fire({
 						icon: 'error',
 						title: 'Oops...',
@@ -44,7 +47,7 @@ const useSetVaccinationDocument = (name: any) => {
 					});
 				}
 				// set url of file to state
-				setUploadedVaccinationDocumentUrl(data.Location);
+				setUploadedVaccinationDocumentUrl(data.Location as string);
 			})
 		}
 	};
