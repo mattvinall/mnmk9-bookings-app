@@ -63,6 +63,7 @@ const useSetVaccinationDocument = (name: string) => {
 	return {
 		uploadedVaccinationDocumentUrl,
 		handleVaccinationDocumentFileChange,
+		fileName,
 	}
 }
 
