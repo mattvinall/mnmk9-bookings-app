@@ -47,7 +47,7 @@ model Vaccination {
   name          String
   validTo       DateTime
   fileName      String
-  uploadedS3Url String
+  uploadedS3Url String?
   Pet           Pet      @relation(fields: [petId], references: [id])
   petId         String
 }
@@ -63,10 +63,10 @@ model Waiver {
 }
 
 model Image {
-  id            String @id @default(cuid())
+  id            String  @id @default(cuid())
   fileName      String
-  uploadedS3Url String
-  Pet           Pet    @relation(fields: [petId], references: [id])
+  uploadedS3Url String?
+  Pet           Pet     @relation(fields: [petId], references: [id])
   petId         String
 }
 
