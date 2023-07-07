@@ -8,10 +8,11 @@ import { useForm, SubmitHandler, set } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
 import Swal from "sweetalert2";
-import { Pet } from "@prisma/client";
+import { Pet, Vaccination } from "@prisma/client";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import EditPetForm from "../../components/client/forms/EditPetForm";
 import { PetDetailCard } from "../../components/client/ui/PetDetailCard";
+import VaccinationRecordCard from "../../components/client/ui/VaccinationRecordCard";
 
 const PetDetail = () => {
 	const [secret, setSecret] = useState<string>("");
@@ -19,15 +20,20 @@ const PetDetail = () => {
 	const [showPetDetails, setShowPetDetails] = useState<boolean>(true);
 	const [showVaccinationRecords, setShowVaccinationRecords] = useState<boolean>(false);
 	const [showBookings, setShowBookings] = useState<boolean>(false);
-
 	const router = useRouter();
 	const id = router.query.id as string;
-	const { data: petDetail, isLoading, error, refetch } = trpc.pet.byId.useQuery({ id });
+	const { data: petDetail, isLoading, error, refetch } = trpc.pet.vaccinationsByPetId.useQuery({ id });
+	const deleteVaccinationRecord = trpc.vaccine.delete.useMutation();
+
+	interface PetDetail extends Pet {
+		vaccinations: Vaccination[];
+	}
 
 	// get values of name, id and vaccinated to use for later
 	const name = petDetail?.map((pet: Pet) => pet.name as string)[0];
 	const petId = petDetail?.map((pet: Pet) => pet.id as string)[0];
 	const ownerId = petDetail?.map((pet: Pet) => pet.ownerId as string)[0];
+	const vaccinationRecords = petDetail && petDetail?.map((pet: PetDetail) => pet?.vaccinations)[0] || [];
 
 	// const {
 	// 	uploadedProfileImageUrl,
@@ -119,6 +125,15 @@ const PetDetail = () => {
 
 	const defaultImage = `https://mdbootstrap.com/img/new/standard/nature/190.jpg`;
 
+	const handleDeleteVaccinationRecord = (id: string) => {
+		try {
+			deleteVaccinationRecord.mutate({ id });
+			refetch();
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
 	return (
 		<div className="container flex flex-col gap-12 px-16 py-16 max-w-8xl">
 			<a className="flex justify-start text-left text-white font-bold text-2xl" href={`/profile/${ownerId}`}>Go Back</a>
@@ -153,21 +168,28 @@ const PetDetail = () => {
 						)}
 					</>
 				)}
-
-				{/* Vaccination Records */}
-				{/*
-					 Todo: 
-					 - create vaccination card component with vaccine name, valid to date, maybe an image for the top of the card
-					 - be able to filter by pet
-				*/}
-
-				{/* Bookings */}
-				{/*
-					 Todo: 
-					 - create vaccination card component with vaccine name, valid to date, maybe an image for the top of the card
-					 - be able to filter by pet
-				*/}
 			</div>
+
+			{/* Vaccination Records */}
+			{/*
+					 Todo: 
+					 - create vaccination card component with vaccine name, valid to date, maybe an image for the top of the card
+					 - create a form to edit a new vaccination record
+				*/}
+			{showVaccinationRecords && (
+				<>
+					{vaccinationRecords && vaccinationRecords.length > 0 && vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord))}
+					{/* Edit Vaccination Record Form */}
+				</>
+			)}
+
+			{/* Bookings */}
+			{/*
+					 Todo: 
+					 - create vaccination card component with vaccine name, valid to date, maybe an image for the top of the card
+					 - be able to filter by pet
+				*/}
+
 		</div >
 	)
 }
