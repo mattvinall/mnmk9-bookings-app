@@ -32,6 +32,16 @@ export const petRouter = router({
 				console.log(`Pet cannot be fetched by ID: ${err}`)
 			}
 		}),
+	vaccinationsByPetId: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.query(async ({ ctx, input }) => {
+			try {
+				const { id } = input;
+				return await ctx.prisma.pet.findMany({ where: { id }, include: {vaccinations: true} })
+			} catch (err) {
+				console.log(`Pet cannot be fetched by ID: ${err}`)
+			}
+		}),
 	byOwnerId: protectedProcedure
 		.input(z.object({ id: z.string() }))
 		.query(async ({ ctx, input }) => {
