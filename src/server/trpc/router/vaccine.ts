@@ -12,11 +12,10 @@ export const vaccineRouter = router({
             petId: z.string(),
             name: z.string(),
             validTo: z.date(),
-            uploadedS3Url: z.string().url(),
             fileName: z.string()
         }))
         .mutation(async ({ ctx, input }) => {
-            const { petId, name, validTo, uploadedS3Url, fileName } = input;
+            const { petId, name, validTo, fileName } = input;
             
             const { success } = await rateLimit.limit(petId)
 
@@ -30,7 +29,6 @@ export const vaccineRouter = router({
                         petId,
                         name,
                         validTo,
-                        uploadedS3Url,
                         fileName
                     },
                 })
@@ -63,10 +61,10 @@ export const vaccineRouter = router({
     update: protectedProcedure
         .input(z.object({
             id: z.string(),
-            name: z.string(),
-            validTo: z.date(),
-            uploadedS3Url: z.string().url(),
-            fileName: z.string()
+            name: z.string().optional(),
+            validTo: z.date().optional(),
+            uploadedS3Url: z.string().url().optional(),
+            fileName: z.string().optional(),
         }))
         .mutation(async ({ ctx, input }) => {
             const { id, name, validTo, uploadedS3Url, fileName } = input;
