@@ -4,7 +4,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
     return (
         <div key={pet.id} className="flex justify-center">
             <div className="rounded-lg shadow-lg bg-white max-w-full w-[90%] md:w-[32rem]">
-                <div className="p-6">
+                <div className="p-6 mt-6">
                     <div className="flex justify-betweem items-center border-slate-600 border-b-2 pb-2">
                         <h2 className="text-gray-900 text-3xl font-medium mb-2 w-3/4">{pet.name} - {pet.breed}</h2>
                         <figure className="w-1/4 flex justify-end align-center">
@@ -46,7 +46,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
                     </div>
                     {pet?.microchipNumber && (
                         <div className="mt-8 flex justify-end items-end">
-                            <p className="py-4 px-2 justify-center text-gray-600 font-bold text-sm  border-[rgb(103,163,161)] border-2 rounded-md">Microchip #: {pet.microchipNumber}</p>
+                            <p className="py-4 px-2 justify-center text-gray-600 font-bold text-sm  border-[rgb(103,163,161)] border-4 rounded-md">Microchip #: {pet.microchipNumber}</p>
                         </div>
                     )}
                 </div>
