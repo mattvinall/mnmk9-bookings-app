@@ -3,11 +3,11 @@ import { trpc } from "../../../utils/trpc";
 import { formatTime } from "../../../utils/formatTime";
 import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
-import { BookingsArray, Booking } from "../../../types/router";
+import { Bookings } from "@prisma/client";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
-const ClientBookings: React.FC = (): ReactJSXElement => {
+const ClientBookings = (): ReactJSXElement => {
 
 	const { userId } = useAuth();
 
@@ -16,8 +16,8 @@ const ClientBookings: React.FC = (): ReactJSXElement => {
 
 	// Pagination Logic
 	const ITEMS_PER_PAGE = 3;
-	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(userData?.bookings, ITEMS_PER_PAGE)
-	const currentBookingsData = getCurrentData();
+	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(userData?.bookings as Bookings[], ITEMS_PER_PAGE)
+	const currentBookingsData = getCurrentData() as Bookings[];
 
 	const onPageChange = (event: any, value: number) => {
 		changePage(value);
@@ -38,7 +38,7 @@ const ClientBookings: React.FC = (): ReactJSXElement => {
 	return (
 		<div className="flex flex-col items-center">
 			<ul className="flex grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
-				{currentBookingsData as BookingsArray && currentBookingsData?.length > 0 ? currentBookingsData?.map((booking: Booking) => {
+				{currentBookingsData && currentBookingsData?.length > 0 ? currentBookingsData?.map((booking: Bookings) => {
 					return (
 						<li key={booking?.id} className="flex w-[350px] justify-center flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 							<div className="flex justify-center">

@@ -1,6 +1,7 @@
+import { Bookings, User } from '@prisma/client';
 import { useState } from 'react';
 
-const usePagination = (data: [unknown], itemsPerPage: number) => {
+const usePagination = (data: Bookings[] | User[], itemsPerPage: number) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemCount: number = data?.length;
 
