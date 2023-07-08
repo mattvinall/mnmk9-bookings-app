@@ -13,8 +13,9 @@ const Vaccinations: NextPage = () => {
     const [key, setKey] = useState<string>("");
 
     const { data: vaccineDetail, refetch } = trpc.vaccine.byId.useQuery({ id })
-
-    console.log("vaccineDetail", vaccineDetail);
+    const { data: petDetail } = trpc.pet.getNameById.useQuery({ id: vaccineDetail?.petId as string })
+    const petName = petDetail && petDetail?.length > 0 && petDetail?.map((pet) => pet.name)[0] as string || "";
+    console.log("pet name", petName);
 
     useEffect(() => {
         const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -58,7 +59,7 @@ const Vaccinations: NextPage = () => {
                                 {vaccineDetail?.uploadedS3Url ? (
                                     <div className="my-4">
                                         <button className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
-                                            <a href={vaccineDetail?.uploadedS3Url} rel="noreferrer">View File</a>
+                                            <a href={vaccineDetail?.uploadedS3Url} target="_blank" rel="noreferrer">View File</a>
                                         </button>
                                     </div>
                                 ) : <p className="text-gray-600 font-medium text-lg">No file uploaded</p>}
@@ -67,9 +68,9 @@ const Vaccinations: NextPage = () => {
                     </div>
                 </div>
                 {/* form */}
-                {vaccineDetail && secret && key && (
+                {vaccineDetail && secret && key && petDetail && petName && (
                     <GoogleReCaptchaProvider reCaptchaKey={key}>
-                        <EditVaccineForm vaccineDetail={vaccineDetail} secret={secret} refetch={refetch} />
+                        <EditVaccineForm vaccineDetail={vaccineDetail} secret={secret} refetch={refetch} name={petName} />
                     </GoogleReCaptchaProvider>
                 )}
             </div>
