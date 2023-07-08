@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from "../../../utils/trpc";
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
-import { UserFormSchema } from '../../../types/form-shema';
+import type { UserDetailFormType } from "../../../utils/schema"
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { userDetailFormSchema } from '../../../utils/schema';
 import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -20,11 +20,8 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 	const router = useRouter();
 
 	const [token, setToken] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null);
 
 	const { userId } = useAuth();
-
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit
@@ -47,38 +44,27 @@ const UserDetailForm = ({ setShowUserForm, secret }: Props): ReactJSXElement => 
 
 	const editProfile = trpc.user.editProfile.useMutation();
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserFormSchema>({
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UserDetailFormType>({
 		resolver: zodResolver(userDetailFormSchema)
 	});
 
-	const onSubmit: SubmitHandler<UserFormSchema> = async (formData: any) => {
-		formData.id = userData?.id;
+	const onSubmit: SubmitHandler<UserDetailFormType> = async (formData: UserDetailFormType) => {
 
 		verifyRecaptcha.mutate({ token, secret });
 
-		if (score && score < 0.5) {
-			console.log("score is less than 0.5");
-			return;
-		}
-
-		editProfile.mutate(formData);
+		userId && editProfile.mutate({
+			id: userId,
+			...formData
+		});
 
 		try {
 			// success message 
 			Swal.fire({
 				icon: 'success',
 				title: `✅`,
-				text: `Successfully Added your profile information.`,
+				text: `Successfully added your profile information.`,
 			}).then((result) => {
 				if (result.isConfirmed) {
 					// navigate to previous page

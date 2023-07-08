@@ -8,9 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import { Pet } from '@prisma/client';
 import DaycareForm from "../../components/client/forms/DaycareForm";
-import { FormSchemaType } from "../../types/form-shema";
-import { bookingFormSchema } from "../../utils/schema";
-import { sendEmailToAdmin } from './../../lib/email';
+import { bookingFormSchema, BookingFormType } from "../../utils/schema";
+import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import Swal from "sweetalert2";
 import { useAuth, useUser } from "@clerk/nextjs";
@@ -21,7 +20,6 @@ const Daycare: NextPage = () => {
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null);
 	const [petId, setPetID] = useState<string>("");
 
 	useEffect(() => {
@@ -40,18 +38,15 @@ const Daycare: NextPage = () => {
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
 
-	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
-
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
-	const training = serviceData?.find(service => service.serviceName === "Daycare");
+	const daycare = serviceData?.find(service => service.serviceName === "Daycare");
 
-	const trainingId = training?.id;
+	const daycareId = daycare?.id || "";
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
+	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -67,18 +62,9 @@ const Daycare: NextPage = () => {
 		},
 	});
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
-
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
 	});
 
@@ -105,36 +91,35 @@ const Daycare: NextPage = () => {
 		petSelectedId && setPetID(petSelectedId);
 	}
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: BookingFormType) => {
 		try {
-			if (trainingId) {
-				formData.serviceId = trainingId;
-			}
-
-			if (data) {
-				formData.userId = data?.id;
-			}
-
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
-			console.log("id if there is only 1 pet", id);
-			formData.petId = petId ? petId : id;
+			const serviceName = "Daycare";
 
-			formData.serviceName = "Daycare";
+			// formData.petId = petId ? petId : id;
+			// formData.userId = userId;
+			// formData.serviceId = daycareId;
+			// formData.serviceName = "Daycare";
 
 			verifyRecaptcha.mutate({ token, secret });
 
-			if (score && score < 0.5) {
-				console.log("score is less than 0.5");
-				return;
-			}
+			// mutate / POST request to bookings api endpoint and submit the form data
+			userId && addNewDaycareBooking.mutate({
+				...formData,
+				petId: petId ? petId : id,
+				userId: userId as string,
+				serviceId: daycareId,
+				serviceName
+			});
 
-			addNewDaycareBooking.mutate(formData);
-
-			// reset form state
+			// reset the form state
 			reset();
 
+			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailToAdmin(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
 				formData?.email,
 				"matt.vinall7@gmail.com",
 				formData?.firstName,
@@ -143,9 +128,24 @@ const Daycare: NextPage = () => {
 				formData?.phoneNumber,
 				formData?.petName,
 				formData?.checkInDate,
+				formData?.checkOutDate,
+				formData.startTime,
+				formData.endTime,
+				serviceName,
+				formData?.notes
+			);
+
+			await sendEmailToClient(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+				formData?.email,
+				"matt.vinall7@gmail.com",
+				formData?.petName,
+				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
-				"Daycare",
+				serviceName,
+				formData?.checkOutDate,
 				formData?.notes
 			);
 

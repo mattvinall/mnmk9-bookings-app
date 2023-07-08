@@ -1,9 +1,12 @@
+import { getAllBookings } from "../../../api/bookings";
 import { trpc } from "../../../utils/trpc";
 import { Bookings } from "@prisma/client";
 
 const DashboardOverview = () => {
 	// fetch bookings if user role is admin
-	const { data: bookingsData, isLoading, error } = trpc.bookings.getAllBookings.useQuery();
+	const { data: bookingsData, isLoading, error } = getAllBookings();
+
+	console.log("bookings data calling getAllBookings", bookingsData);
 
 	const filteredCheckInBookings = bookingsData?.filter((booking: Bookings) => {
 		const checkInDate = new Date(booking?.checkInDate as string).toISOString();

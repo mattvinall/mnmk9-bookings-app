@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { trpc } from "../../../utils/trpc";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CheckInTable from "../../../components/admin/tables/checkInTable";
@@ -9,14 +8,16 @@ import CheckOutTable from "../../../components/admin/tables/checkOutTable";
 import { formatTime } from "../../../utils/formatTime";
 import { Bookings } from "@prisma/client";
 import { useAuth } from "@clerk/nextjs";
+import { getUserById } from "../../../api/users";
+import { getAllBookings } from "../../../api/bookings";
 
 const BookingsCalendar = () => {
 	const { userId, isSignedIn } = useAuth();
 
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
+	const { data: userData } = getUserById(userId as string);
 
 	// fetch bookings if user role is admin
-	const { data: bookingsData, isLoading, error } = trpc.bookings.getAllBookings.useQuery();
+	const { data: bookingsData, isLoading, error } = getAllBookings();
 
 	const filteredBookingsByConfirmedStatus = bookingsData?.filter((booking: Bookings) => booking.confirmedBooking === true);
 	console.log("filtered bookings by confirmed status", filteredBookingsByConfirmedStatus);

@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { rateLimit } from "../../../lib/rateLimit";
 import { getCache, setCache } from "../../../lib/cache";
+import { Sex, Temperament } from "@prisma/client";
 
 export const petRouter = router({
 	getAllPets: protectedProcedure.query(async ({ ctx }) => {
@@ -26,7 +27,27 @@ export const petRouter = router({
 		.query(async ({ ctx, input }) => {
 			try {
 				const { id } = input;
-				return await ctx.prisma.pet.findMany({ where: { id }, include: { documents: true } })
+				return await ctx.prisma.pet.findMany({ where: { id } })
+			} catch (err) {
+				console.log(`Pet cannot be fetched by ID: ${err}`)
+			}
+		}),
+	vaccinationsByPetId: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.query(async ({ ctx, input }) => {
+			try {
+				const { id } = input;
+				return await ctx.prisma.pet.findMany({ where: { id }, include: {vaccinations: true} })
+			} catch (err) {
+				console.log(`Pet cannot be fetched by ID: ${err}`)
+			}
+		}),
+	getNameById: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.query(async ({ ctx, input }) => {
+			try {
+				const { id } = input;
+				return await ctx.prisma.pet.findMany({ where: { id }, select: { name: true } })
 			} catch (err) {
 				console.log(`Pet cannot be fetched by ID: ${err}`)
 			}
@@ -53,17 +74,28 @@ export const petRouter = router({
 	addPet: protectedProcedure
 		.input(
 			z.object({
-				name: z.string(),
 				ownerId: z.string(),
+				name: z.string(),
 				breed: z.string(),
-				notes: z.string().optional(),
-				vaccinated: z.boolean()
+				sex: z.nativeEnum(Sex),
+				age: z.number(),
+				weight: z.number(),
+				ovariohysterectomy: z.boolean(),
+				temperament: z.nativeEnum(Temperament),
+				microchipNumber: z.string().optional(),
+				medicalNotes: z.string().optional(),
+				feedingNotes: z.string().optional(),
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
-			const { ownerId, name, breed, notes, vaccinated } = input;
+			const {
+				ownerId, name, breed, sex, age, weight,
+				ovariohysterectomy, temperament, microchipNumber,
+				medicalNotes, feedingNotes
+			} = input;
 			try {
-				const { success } = await rateLimit.limit(ownerId)
+				const { success } = await rateLimit.limit(ownerId);
+				console.log("success, did not hit over rate limit", success);
 
 				if (!success) {
 					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
@@ -74,8 +106,14 @@ export const petRouter = router({
 						ownerId,
 						name,
 						breed,
-						notes,
-						vaccinated
+						sex,
+						age,
+						weight,
+						ovariohysterectomy,
+						temperament,
+						microchipNumber,
+						medicalNotes,
+						feedingNotes
 					}
 				})
 			} catch (error) {
@@ -103,23 +141,60 @@ export const petRouter = router({
 				console.log(`Cannot update profile image of the pet: ${error}`)
 			}
 		}),
-	editPetNotes: protectedProcedure
+	editPet: protectedProcedure
 		.input(
 			z.object({
 				id: z.string(),
-				notes: z.string().min(1).max(250)
+				name: z.string().optional(),
+				breed: z.string().optional(),
+				sex: z.nativeEnum(Sex).optional(),
+				age: z.number().optional(),
+				weight: z.number().optional(),
+				ovariohysterectomy: z.boolean().optional(),
+				temperament: z.nativeEnum(Temperament).optional(),
+				microchipNumber: z.string().optional(),
+				medicalNotes: z.string().optional(),
+				feedingNotes: z.string().optional(),
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
-			const { id, notes } = input;
+			const {
+				id,
+				name,
+				breed,
+				sex,
+				age,
+				weight,
+				ovariohysterectomy,
+				temperament,
+				microchipNumber,
+				medicalNotes,
+				feedingNotes } = input;
+			
+			try { 
+				const { success } = await rateLimit.limit(id);
 
-			try {
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+
 				return await ctx.prisma.pet.update({
 					where: { id },
-					data: { notes },
+					data: {
+						name,
+						breed,
+						sex,
+						age,
+						weight,
+						ovariohysterectomy,
+						temperament,
+						microchipNumber,
+						medicalNotes,
+						feedingNotes
+					}
 				})
-			} catch (error) {
-				console.log(`pet notes could not be updated: ${error}`)
+			} catch(error) {
+				console.log(`Pet cannot be updated: ${error}`)
 			}
 		}),
 	deletePet: protectedProcedure
@@ -139,27 +214,4 @@ export const petRouter = router({
 				console.log(`pet could not be deleted: ${error}`)
 			}
 		}),
-	updateVaccinatedStatus: protectedProcedure
-		.input(
-			z.object({
-				id: z.string(),
-				vaccinated: z.boolean(),
-			})
-		)
-		.mutation(async ({ ctx, input }) => {
-			const { id, vaccinated } = input;
-
-			try {
-				if (!vaccinated) {
-					return await ctx.prisma.pet.update({
-						where: { id },
-						data: {
-							vaccinated: true
-						}
-					})
-				}
-			} catch (error) {
-				console.log(`failed to update vaccination status: ${error}`);
-			}
-		})
 });

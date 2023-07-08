@@ -1,18 +1,19 @@
 "use client";
+
 import { useEffect, useCallback } from "react";
-import { trpc } from "../../../utils/trpc";
-import { FormTypeProps } from "../../../types/form-types";
 import {
 	useGoogleReCaptcha,
 	GoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Pet } from "../../../types/router";
-
+import type { FormTypeProps } from "../../../types/form-types";
+import type { Pet } from "@prisma/client";
+import { getUserById } from "../../../api/users";
 
 const DaycareForm = ({ register, setToken, setValue, handleSubmit, onSubmit, handleChange, petData, isSubmitting }: FormTypeProps): ReactJSXElement => {
 	const id = petData && petData?.map((pet: Pet) => pet.ownerId)[0] as string;
-	const { data: userData } = trpc.user.byId.useQuery({ id });
+
+	const { data: userData } = getUserById(id);
 
 	const { executeRecaptcha } = useGoogleReCaptcha()
 	// Create an event handler so you can call the verification on button click event or form submit

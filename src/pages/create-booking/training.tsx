@@ -1,17 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { type NextPage } from "next";
-import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
 import Swal from "sweetalert2";
-import { sendEmailToAdmin } from "../../lib/email";
+import { sendEmailToAdmin, sendEmailToClient } from "../../lib/email";
 import TrainingForm from "../../components/client/forms/TrainingForm";
-import { FormSchemaType } from "../../types/form-shema";
-import { bookingFormSchema } from "../../utils/schema";
+import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
@@ -30,18 +28,15 @@ const Training: NextPage = () => {
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
 
-	// query user table by email to get user data
-	const { data, isLoading, error } = trpc.user.byId.useQuery({ id: userId as string })
-
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
 	const training = serviceData?.find(service => service.serviceName === "Training");
 
-	const trainingId = training?.id;
+	const trainingId = training?.id as string;
 
 	// query the pets table and find the 
-	const { data: petData } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
+	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
 			if (!data || data.length === 0) {
 				Swal.fire({
@@ -59,15 +54,7 @@ const Training: NextPage = () => {
 
 	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation();
 
-	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-			setScore(data.score);
-		},
-		onError(error) {
-			console.log("error verify recaptcha mutation", error);
-		}
-	});
+	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -91,7 +78,7 @@ const Training: NextPage = () => {
 		}
 	}, [petData])
 
-	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormSchemaType>({
+	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
 	});
 
@@ -108,36 +95,30 @@ const Training: NextPage = () => {
 	}
 
 
-	const onSubmit: SubmitHandler<FormSchemaType> = async (formData: any) => {
+	const onSubmit: SubmitHandler<BookingFormType> = async (formData: BookingFormType) => {
 		try {
-			if (trainingId) {
-				formData.serviceId = trainingId;
-			}
-
-			if (data) {
-				formData.userId = data?.id;
-			}
-
 			// if there is only 1 pet set the id, if there is multiple pet use the petId in state based on user selection
 			const id = petData && petData[0]?.id;
-			console.log("id if there is only 1 pet", id);
-			formData.petId = petId ? petId : id;
-
-			formData.serviceName = "Training";
+			const serviceName = "Training";
 
 			verifyRecaptcha.mutate({ token, secret });
 
-			if (score && score < 0.5) {
-				console.log("score is less than 0.5");
-				return;
-			}
+			// mutate / POST request to bookings api endpoint and submit the form data
+			userId && addNewTrainingBooking.mutate({
+				...formData,
+				petId: petId ? petId : id,
+				userId,
+				serviceId: trainingId,
+				serviceName
+			});
 
-			addNewTrainingBooking.mutate(formData);
-
-			// reset form state
+			// reset the form state
 			reset();
 
+			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailToAdmin(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
 				formData?.email,
 				"matt.vinall7@gmail.com",
 				formData?.firstName,
@@ -146,9 +127,24 @@ const Training: NextPage = () => {
 				formData?.phoneNumber,
 				formData?.petName,
 				formData?.checkInDate,
+				formData?.checkOutDate,
+				formData.startTime,
+				formData.endTime,
+				serviceName,
+				formData?.notes
+			);
+
+			await sendEmailToClient(
+				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
+				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+				formData?.email,
+				"matt.vinall7@gmail.com",
+				formData?.petName,
+				formData?.checkInDate,
 				formData?.startTime,
 				formData?.endTime,
-				"Training",
+				serviceName,
+				formData?.checkOutDate,
 				formData?.notes
 			);
 

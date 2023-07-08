@@ -26,27 +26,96 @@ model Contact {
   createdAt DateTime @default(now())
 }
 
-model Pet {
-  id           String      @id @default(cuid())
-  name         String
-  ownerId      String
-  breed        String?
-  vaccinated   Boolean?    @default(false)
-  profileImage String?
-  notes        String?
-  petOwner     User        @relation(fields: [ownerId], references: [id])
-  documents    Documents[]
-  Bookings     Bookings[]
-
-  @@index([ownerId])
+enum Sex {
+  MALE
+  FEMALE
 }
 
-model Documents {
-  id       String  @id @default(cuid())
-  fileName String
-  petId    String?
-  url      String?
-  Pet      Pet?    @relation(fields: [petId], references: [id], onDelete: Cascade)
+enum Temperament {
+  PASSIVE
+  NEUTRAL
+  AGGRESSIVE
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Vaccination {
+  id            String   @id @default(cuid())
+  name          String
+  validTo       DateTime
+  fileName      String
+  uploadedS3Url String?
+  Pet           Pet      @relation(fields: [petId], references: [id])
+  petId         String
+}
+
+model Waiver {
+  id            String   @id @default(cuid())
+  name          String
+  validTo       DateTime
+  fileName      String
+  uploadedS3Url String?
+  Pet           Pet      @relation(fields: [petId], references: [id])
+  petId         String
+}
+
+model Image {
+  id            String  @id @default(cuid())
+  fileName      String
+  uploadedS3Url String?
+  Pet           Pet     @relation(fields: [petId], references: [id])
+  petId         String
+}
+
+model Pet {
+  id                 String           @id @default(cuid())
+  name               String
+  ownerId            String
+  breed              String
+  sex                Sex
+  age                Int?
+  weight             Int?
+  profileImage       String?
+  ovariohysterectomy Boolean          @default(false)
+  temperament        Temperament
+  microchipNumber    String?
+  medicalNotes       String?
+  feedingNotes       String?
+  petOwner           User             @relation(fields: [ownerId], references: [id])
+  vaccinations       Vaccination[]
+  Bookings           Bookings[]
+  profileImages      Image[]
+  IncidentReport     IncidentReport[]
+  Waiver             Waiver[]
+
+  @@index([ownerId, id])
+}
+
+model Vet {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  city      String
+  phone     String
+  user      User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
+
+  @@index([ownerId, id])
+}
+
+model IncidentReport {
+  id                  String   @id @default(cuid())
+  Pet                 Pet      @relation(fields: [petId], references: [id])
+  petId               String
+  petName             String
+  incidentDate        DateTime
+  incidentCount       Int      @default(0)
+  incidentDescription String
+  createdAt           DateTime @default(now())
 
   @@index([petId])
 }
@@ -127,7 +196,8 @@ model User {
   bookings      Bookings[]
   accounts      Account[]
   sessions      Session[]
-  Todo          Todo[]
+  todo          Todo[]
+  vetInfo       Vet[]
 
   @@index([id])
 }

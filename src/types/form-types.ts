@@ -1,31 +1,17 @@
-import { PetsArray } from "./router";
 import { UseFormSetValue } from "react-hook-form/dist/types";
-import { FormSchemaType } from "./form-shema";
+import { BookingFormType, ContactFormType, EditBookingFormType } from "../utils/schema";
 import { SubmitHandler, UseFormHandleSubmit } from "react-hook-form/dist/types/form";
-
-export type ContactFormType = {
-	name: string,
-	email: string,
-	message: string
-}
-
-export type EditBookingFormType = {
-	checkInDate?: string,
-	checkOutDate: string,
-	startTime?: string,
-	endTime?: string
-	notes?: string,
-}
+import { Pet } from "@prisma/client";
 
 export type FormTypeProps = {
-	petData: PetsArray,
+	petData: Pet[]
 	isSubmitting: boolean
 	register: any
-	handleSubmit: UseFormHandleSubmit<FormSchemaType>
-	onSubmit: SubmitHandler<FormSchemaType>
+	handleSubmit: UseFormHandleSubmit<BookingFormType>
+	onSubmit: SubmitHandler<BookingFormType>
 	handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 	setToken: (token: string) => void
-	setValue: UseFormSetValue<FormSchemaType>
+	setValue: UseFormSetValue<BookingFormType>
 }
 
 export type EditBookingFormTypeProps = {

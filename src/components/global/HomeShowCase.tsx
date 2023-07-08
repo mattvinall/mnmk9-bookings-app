@@ -1,12 +1,12 @@
 import React from 'react'
 import Link from "next/link";
-import { trpc } from "../../utils/trpc";
 import { useAuth } from '@clerk/nextjs';
+import { getUserById } from '../../api/users';
 
 const HomeShowCase = () => {
 	const { userId, sessionId } = useAuth();
 
-	const { data: userData } = trpc.user.byId.useQuery({ id: userId as string });
+	const { data: userData } = getUserById(userId as string);
 
 	const ClientShowCase = () => {
 		return (

@@ -16,8 +16,6 @@ export default withClerkMiddleware((request: NextRequest) => {
   }
   // if the user is not signed in redirect them to the sign in page.
   const { userId } = getAuth(request);
-  console.log("user id in middleware", userId)
-  console.log("get auth request middleware", getAuth(request));
 
     if (!userId) {
       // return NextResponse.redirect("/sign-in");

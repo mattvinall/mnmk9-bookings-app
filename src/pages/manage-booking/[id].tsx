@@ -8,8 +8,7 @@ import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from "sweetalert2";
 import EditBookingForm from "../../components/client/forms/EditBookingForm";
-import { editBookingsFormSchema } from "../../utils/schema";
-import { EditBookingFormType } from "../../types/form-types";
+import { editBookingsFormSchema, EditBookingFormType } from "../../utils/schema";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const BookingDetail: NextPage = () => {

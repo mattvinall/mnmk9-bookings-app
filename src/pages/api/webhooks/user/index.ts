@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
   }
 
   const payload = JSON.stringify(req.body);
-  console.log("payload", payload);
 
   const headers = req.headers;
 

@@ -2,9 +2,8 @@ import { useState } from "react";
 import { S3 } from 'aws-sdk';
 import Swal from "sweetalert2";
 
-const useSetVaccinationDocument = (name: any) => {
-	const [vaccinationDocument, setVaccinationDocument] = useState({});
-	const [uploadedVaccinationDocumentUrl, setUploadedVaccinationDocumentUrl] = useState("");
+const useUploadFileToS3 = (name: string, fileType: string) => {
+	const [uploadedS3Url, setUploadedS3Url] = useState("");
 	const [fileName, setFileName] = useState("");
 
 	interface File {
@@ -27,40 +26,42 @@ const useSetVaccinationDocument = (name: any) => {
 		});
 
 		if (file) {
-			setVaccinationDocument(file);
-			// 	// Upload the file to S3
 			const params = {
-				Bucket: `mnmk9-bookings/documents/${name}`,
+				Bucket: `mnmk9-bookings/documents/${fileType}/${name}`,
 				Key: file.name,
 				Body: file,
 			}
-			s3.upload(params, (error: any, data: any) => {
+
+			s3.upload(params, (error: Error, data: S3.ManagedUpload.SendData) => {
+				console.log("data when uploading", data);
 				// throw error popup if upload failed
 				if (error) {
+					console.log("error when uploading", error);
 					Swal.fire({
 						icon: 'error',
 						title: 'Oops...',
-						text: `Something went wrong uploading your pets profile image! ${error}`,
+						text: `Something went wrong uploading your pets vaccination document! ${error}`,
 					});
 				}
 				// set url of file to state
-				setUploadedVaccinationDocumentUrl(data.Location);
+				setUploadedS3Url(data.Location as string);
 			})
 		}
 	};
 
-	const handleVaccinationDocumentFileChange = (event: any) => {
+	const handleDocumentFileChange = (event: any) => {
 		const chosenFile = event.currentTarget.files[0];
 		const fileName = chosenFile && chosenFile.name;
 		fileName && setFileName(fileName)
-		console.log("file name", fileName);
+		console.log("file name", fileName as string);
 		handleUploadVaccinationDocuments(chosenFile, event);
 	}
 
 	return {
-		uploadedVaccinationDocumentUrl,
-		handleVaccinationDocumentFileChange,
+		uploadedS3Url,
+		handleDocumentFileChange,
+		fileName,
 	}
 }
 
-export default useSetVaccinationDocument;
+export default useUploadFileToS3

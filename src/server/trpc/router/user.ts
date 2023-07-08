@@ -50,7 +50,6 @@ export const userRouter = router({
         console.log(`Error fetching user by role: ${err}`);
       }
     }),
-
   byEmail: protectedProcedure
     .input(z.object({ email: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -68,22 +67,21 @@ export const userRouter = router({
   byId: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      console.log("input: ", input.id);
+      const { id } = input;
       try {
-        // const cache = await getCache(`user-${input?.id}}`);
-        // if (cache) {
-        // console.log("Cache successfully retrieved: ", cache);
-        // return cache;
-        // } else {
-        const user = await ctx.prisma.user.findUnique({
-          where: { id: input?.id },
-          include: { pets: true, bookings: true }
-        });
-
-        console.log("user: ", user);
-        // await setCache(`user-${input?.id}`, user);
-        return user;
-        // }
+        const cache = await getCache(`user-${id}}`);
+        console.log("cache by id", cache);
+        if (cache) {
+          console.log("Cache successfully retrieved: ", cache);
+          return cache;
+        } else {
+          const user = await ctx.prisma.user.findUnique({
+            where: { id },
+            include: { pets: true, bookings: true }
+          });
+          await setCache(`user-${id}`, user);
+          return user;
+        }
       } catch (err) {
         console.log(`Error fetching user by ID: ${err}`);
       }
@@ -165,5 +163,23 @@ export const userRouter = router({
       } catch (error) {
         console.log(`Error updating user role: ${error}`);
       }
-    })
+    }),
+  fetchVetInfo: protectedProcedure
+    .input(
+      z.object({
+        id: z.string()
+      }))
+    .query(async ({ ctx, input }) => { 
+      const { id } = input;
+      try {
+        const vet = await ctx.prisma.user.findUnique({
+          where: { id },
+          include: { vetInfo: true }
+        });
+        
+        return vet;
+      } catch (error) {
+        console.log(`Error fetching uservet info: ${error}`);
+      }
+   })
 });

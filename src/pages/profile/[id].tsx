@@ -7,11 +7,12 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import UserDetailForm from "../../components/client/forms/UserDetailForm";
 import AddPetForm from "../../components/client/forms/AddPetForm";
-import UserInfoTable from "../../components/client/UserInfoCard";
 import Swal from "sweetalert2";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { Pet } from "../../types/router";
+import { Pet } from "@prisma/client";
 import useSetWaiverDocument from "../../hooks/useSetWaiverDocument";
+import React from "react";
+import { AddWaiverForm } from "../../components/client/forms/AddWaiverForm";
 
 const UserDetail = () => {
 	const router = useRouter();
@@ -20,18 +21,18 @@ const UserDetail = () => {
 	const [showUserForm, setShowUserForm] = useState<boolean>(false);
 	const [showPetForm, setShowPetForm] = useState<boolean>(false);
 	const [showPets, setShowPets] = useState<boolean>(false);
-	const [showProfileTable, setShowProfileTable] = useState<boolean>(false);
 	const [showAddWaiverForm, setshowAddWaiverForm] = useState<boolean>(false)
 	const [key, setKey] = useState<string>("")
 	const [secret, setSecret] = useState<string>("");
-	const [petName, setPetName] = useState<string | null>(null)
+	const [petName, setPetName] = useState<string>("");
 	const [petId, setPetID] = useState<string>("");
+	const [menuShow, setMenuShow] = useState<boolean>(false);
 
 	const { data: userDetail, isLoading, refetch, error } = trpc.user.byId.useQuery({ id: userId });
 
 	const deletePet = trpc.pet.deletePet.useMutation();
 
-	const addWaiverDocument = trpc.documents.addWaiverDocument.useMutation({
+	const addWaiverDocument = trpc.waiver.create.useMutation({
 		onSuccess: () => refetch()
 	});
 
@@ -47,44 +48,44 @@ const UserDetail = () => {
 		setShowUserForm(true);
 		setShowPetForm(false);
 		setShowPets(false);
-		setShowProfileTable(false);
 		setshowAddWaiverForm(false);
+		setMenuShow(false);
 	}
 
 	const handleShowPetForm = () => {
 		setShowPetForm(true);
 		setShowUserForm(false);
 		setShowPets(false);
-		setShowProfileTable(false);
 		setshowAddWaiverForm(false);
+		setMenuShow(false);
 	}
 
 	const handleShowPets = () => {
 		setShowPets(true);
 		setShowPetForm(false);
 		setShowUserForm(false);
-		setShowProfileTable(false);
 		setshowAddWaiverForm(false);
-	}
-
-	const handleShowProfileTable = () => {
-		setShowProfileTable(true);
-		setShowPets(false);
-		setShowPetForm(false);
-		setShowUserForm(false);
-		setshowAddWaiverForm(false);
+		setMenuShow(false);
 	}
 
 	const handleShowAddWaiverForm = () => {
 		setshowAddWaiverForm(true);
-		setShowProfileTable(false);
 		setShowPets(false);
 		setShowPetForm(false);
 		setShowUserForm(false);
+		setMenuShow(false);
 	}
 
+	const handleAddButtonClick = () => {
+		setMenuShow(!menuShow);
+		setshowAddWaiverForm(false);
+		setShowPets(false);
+		setShowPetForm(false);
+		setShowUserForm(false);
+	};
+
 	useEffect(() => {
-		setShowPets(true);
+		setShowPetForm(true);
 	}, []);
 
 	useEffect(() => {
@@ -120,22 +121,21 @@ const UserDetail = () => {
 
 			console.log("pet id handle submit", petId);
 
-			addWaiverDocument.mutate({ id: petId, fileName, url: uploadedWaiverDocumentUrl });
+			addWaiverDocument.mutate({
+				petId,
+				name: "test",
+				validTo: new Date("2024-01-01"),
+				uploadedS3Url: uploadedWaiverDocumentUrl,
+				fileName
+			});
 
 			setFileName("");
-
-			// verifyRecaptcha.mutate({ token, secret });
-
-			// if (score && score < 0.5) {
-			// 	console.log("score is less than 0.5");
-			// 	return;
-			// }
 
 			// success message 
 			Swal.fire({
 				icon: 'success',
-				title: `🐶`,
-				text: `Successfully added the waiver to your pets' profile`,
+				title: `Success!`,
+				text: `Added the waiver to your pets' profile`,
 			});
 
 			setShowPetForm(false);
@@ -165,71 +165,6 @@ const UserDetail = () => {
 		petSelectedId && setPetID(petSelectedId);
 
 		petName && setPetName(petName);
-	}
-
-
-	const AddWaiverForm = () => {
-		return (
-			<form style={{ position: "relative" }} className="w-[90%] md:w-[90%] mt-6" onSubmit={handleSubmit}>
-				<div className="flex flex-col items-center justify-center md:grid-cols-1 md:gap-6">
-					<div className="relative z-0 mb-6 w-[40%] group">
-						<label
-							htmlFor="pet-select"
-							className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Select Pet
-						</label>
-						<select
-							className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
-							id="pet-select"
-							onChange={handleChange}
-						>
-							{userDetail?.pets && userDetail?.pets.map((pet: Pet) => {
-								const { name } = pet;
-								return (
-									<option key={name} className="text-gray-900 w-[10%]" value={name}>{name}</option>
-								)
-							})}
-						</select>
-						<svg
-							style={{ fill: "#fff", position: "absolute", right: "0", bottom: "15px", height: "20px" }}
-							className="ml-2 w-4 h-4"
-							aria-hidden="true"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2" d="M19 9l-7 7-7-7">
-							</path>
-						</svg>
-					</div>
-					<div className="relative z-0 mb-6">
-						<input
-							style={{ cursor: "pointer !important" }}
-							type="file"
-							accept=".pdf, .docx, image/*, .png, .jpg, .jpeg"
-							id="waiver-document"
-							className="hidden"
-							onChange={handleWaiverDocumentFileChange}
-						/>
-						<label
-							htmlFor="waiver-document"
-							className="cursor-pointer inline-block bg-gray-200 rounded-full px-5 py-2 text-sm font-semibold text-gray-700 mr-2 mb-5">
-							Upload Waiver
-						</label>
-						{fileName && <p className="font-medium text-white text-center">Waiver Document Selected: {fileName}. <br />Click Submit to upload.</p>}
-					</div>
-					<button
-						// disabled={}
-						type="submit"
-						className="mt-[25px] rounded-full bg-gradient-to-l from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-r from-[#112B4E] to-[#67A3A1] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-						Submit
-					</button>
-				</div >
-			</form>
-		)
 	}
 
 	const handleDeletePet = async (id: string, name: string) => {
@@ -266,7 +201,13 @@ const UserDetail = () => {
 		</div>
 	);
 
-	if (error) router.push("/");
+	if (error) {
+		return (
+			<div className="container text-center">
+				<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Sorry Something Went Wrong....</h1>
+			</div>
+		)
+	}
 
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
@@ -280,59 +221,67 @@ const UserDetail = () => {
 			{/* Tabs */}
 			<div className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">
 				<ul className="flex flex-wrap">
-					<li>
-						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
+					<li className="mr-2">
+						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""}  inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
 					</li>
 					<li>
-						<button onClick={handleShowProfileTable} className={`${showProfileTable === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Profile</button>
+						<button onClick={handleShowPets} className={`${showPets === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Your Pets</button>
 					</li>
 					<li className="mr-2">
 						<button onClick={handleShowUserForm} className={`${showUserForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Edit Profile</button>
 					</li>
 					<li className="mr-2">
-						<button onClick={handleShowPetForm} className={`${showPetForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""}  inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Add Pet</button>
-					</li>
-					<li className="mr-2">
-						<a href="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/documents/waiver/mnmk9-waiver.docx" className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100" download="MNMK-9 Waiver" >Download Waiver</a>
+						<a href="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/documents/waiver/mnmk9-waiver.docx" className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100" download="MNMK-9 Waiver">Download Waiver</a>
 					</li>
 					<li className="mr-2">
 						<button onClick={handleShowAddWaiverForm} className={`${showAddWaiverForm === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Upload Waiver</button>
+					</li>
+					<li className="relative">
+						<button onClick={handleAddButtonClick} className={`${menuShow === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`} id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover">
+							More +
+						</button>
+						{/* Dropdown Menu */}
+						<div id="dropdownHover" className={`${!menuShow ? `hidden` : "transition-block block absolute z-10 top-[4rem] right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-auto dark:bg-gray-700"}`}>
+							<ul className="py-4 text-sm text-gray-700 dark:text-gray-200 w-48" aria-labelledby="dropdownHoverButton">
+								<li>
+									<a href="/profile/vet-info" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vet Information</a>
+								</li>
+							</ul>
+						</div>
 					</li>
 				</ul>
 			</div>
 
 			{/* Content */}
-			{showUserForm && key !== undefined && key && (
+			{showUserForm && key && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
 					<UserDetailForm setShowUserForm={setShowUserForm} secret={secret} />
 				</GoogleReCaptchaProvider>)}
-			{showPetForm && key !== undefined && key && (
+			{showPetForm && key && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
-					<AddPetForm setShowPetForm={setShowPetForm} secret={secret} />
+					<AddPetForm secret={secret} />
 				</GoogleReCaptchaProvider>)}
-			{showAddWaiverForm && <AddWaiverForm />}
-			{userDetail && showProfileTable && (
-				<UserInfoTable
-					name={userDetail?.name as string}
-					address={userDetail?.address as string}
-					city={userDetail?.city as string}
-					postalCode={userDetail?.postalCode as string}
-					phoneNumber={userDetail?.phoneNumber as string}
-					image={userDetail?.image as string}
+			{showAddWaiverForm && userDetail &&
+				<AddWaiverForm
+					userDetail={userDetail || {}}
+					handleChange={handleChange}
+					handleSubmit={handleSubmit}
+					fileName={fileName}
+					handleWaiverDocumentFileChange={handleWaiverDocumentFileChange}
 				/>
-			)}
+			}
 
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
 				{showPets && userDetail?.pets?.map((pet: Pet, index: number) => {
 					return (
-						<div key={pet.name} className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
+						<div key={pet.name} className="flex max-w-sm md:max-w-md flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
 							<div className="flex justify-center">
 								<div className="rounded-lg shadow-lg bg-white max-w-md">
-									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-[300px] object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
+									<Image width={300} height={300} className="rounded-t-lg h-[300px] w-full object-cover" src={pet.profileImage || `https://mdbootstrap.com/img/new/standard/nature/19${index}.jpg`} alt={`an image of a ${pet.breed} named ${pet.name}`} />
 									<div className="p-6">
 										<h2 className="text-gray-900 text-xl font-medium mb-2">{pet.name}</h2>
 										<p className="text-gray-700 text-base mb-4">{pet.breed}</p>
-										<p className="text-gray-600 font-bold text-xs">Vaccinated: {pet?.vaccinated === false ? "❌" : "✅"}</p>
+										<p className="text-gray-600 font-bold text-xs">Neutered: {pet?.ovariohysterectomy === false ? "❌" : "✅"}</p>
 										<div className="flex bg-white">
 											<Link href={`/pet/${pet.id}`} className="mt-6 flex flex-col items-center justify-center w-12 h-12 mr-2 text-gray-900 transition-colors duration-150 bg-teal-600 rounded-full focus:shadow-outline hover:bg-teal-500">
 												<svg className="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
