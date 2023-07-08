@@ -76,10 +76,10 @@ model Pet {
   ownerId            String
   breed              String
   sex                Sex
-  age                Int
-  weight             Int
+  age                Int?
+  weight             Int?
   profileImage       String?
-  ovariohysterectomy Boolean
+  ovariohysterectomy Boolean          @default(false)
   temperament        Temperament
   microchipNumber    String?
   medicalNotes       String?
