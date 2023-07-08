@@ -14,9 +14,10 @@ type Props = {
     petId: string;
     petName: string
     secret: string;
+    refetch: () => void
 }
 
-const AddVaccineForm = ({ petId, petName, secret }: Props) => {
+const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
     const [token, setToken] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState<boolean>(false);
 
@@ -25,8 +26,12 @@ const AddVaccineForm = ({ petId, petName, secret }: Props) => {
     });
 
     const { mutate: verifyRecaptcha } = trpc.recaptcha.verify.useMutation();
-    const { mutate: addVaccine, isLoading } = trpc.vaccine.create.useMutation();
-    const { mutate: updateVaccination } = trpc.vaccine.update.useMutation();
+    const { mutate: addVaccine } = trpc.vaccine.create.useMutation({
+        onSuccess: () => refetch()
+    });
+    const { mutate: updateVaccination } = trpc.vaccine.update.useMutation({
+        onSuccess: () => refetch()
+    });
 
     const {
         uploadedS3Url,
