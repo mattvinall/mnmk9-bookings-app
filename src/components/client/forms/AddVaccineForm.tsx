@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { VaccineFormType, vaccineFormSchema } from '../../../utils/schema';
 import { vaccinationOptions } from '../../../constants';
-import useUploadFileToS3 from '../../../hooks/useSetVaccinationDocument';
+import useUploadFileToS3 from '../../../hooks/useUploadFileToS3';
 
 type Props = {
     petId: string;
