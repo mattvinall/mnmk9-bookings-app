@@ -87,5 +87,26 @@ export const vaccineRouter = router({
                 throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
             }
         }),
-    
+    updateS3Url: protectedProcedure
+        .input(z.object({
+            id: z.string(),
+            uploadedS3Url: z.string().url()
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const { id, uploadedS3Url } = input;
+            try {
+                const updateS3Url = await ctx.prisma.vaccination.update({
+                    where: {
+                        id
+                    },
+                    data: {
+                        uploadedS3Url
+                    }
+                });
+                return updateS3Url;
+            } catch (err) {
+                console.log(` ${uploadedS3Url} cannot be updated: ${err}`)
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+            }
+        })
 })
