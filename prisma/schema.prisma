@@ -71,14 +71,13 @@ model Image {
 }
 
 model Pet {
-  id      String @id @default(cuid())
-  name    String
-  ownerId String
-  breed   String
-  sex     Sex
-  age     Int    @default(0)
-
-  weight             Int              @default(0)
+  id                 String           @id @default(cuid())
+  name               String
+  ownerId            String
+  breed              String
+  sex                Sex
+  age                Int
+  weight             Int
   profileImage       String?
   ovariohysterectomy Boolean          @default(false)
   temperament        Temperament
