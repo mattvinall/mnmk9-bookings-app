@@ -75,9 +75,9 @@ const EditPetForm = ({ secret, petId, petDetails }: Props): ReactJSXElement => {
         } = petDetail;
         setValue("name", name);
         setValue("breed", breed);
-        setValue("age", age.toString());
+        age && setValue("age", age.toString());
         setValue("sex", sex);
-        setValue("weight", weight.toString());
+        weight && setValue("weight", weight.toString());
         setValue("temperament", temperament);
         setValue("ovariohysterectomy", ovariohysterectomy ? "yes" : "no");
         setValue("microchipNumber", microchipNumber ? microchipNumber : "");
@@ -102,19 +102,20 @@ const EditPetForm = ({ secret, petId, petDetails }: Props): ReactJSXElement => {
 
             verifyRecaptcha.mutate({ token, secret });
 
+            if (!age || !weight) return;
+
             const formattedWeight = weight && parseInt(weight, 10);
             const formattedAge = age && parseInt(age, 10);
             const formattedOvariohysterectomy = ovariohysterectomy && ovariohysterectomy === "yes" ? true : false;
-            if (!age) return;
-            if (!weight) return;
+
 
             petDetail && editPet.mutate({
                 id: petId,
                 name: name ? name : petDetail.name,
                 breed: breed ? breed : petDetail.breed,
                 sex: sex ? sex : petDetail.sex,
-                age: formattedAge ? formattedAge : petDetail.age,
-                weight: formattedWeight ? formattedWeight : petDetail.weight,
+                age: formattedAge ? formattedAge : petDetail.age || 0,
+                weight: formattedWeight ? formattedWeight : petDetail.weight || 0,
                 ovariohysterectomy: ovariohysterectomy ? formattedOvariohysterectomy : petDetail.ovariohysterectomy,
                 temperament: temperament ? temperament : petDetail.temperament,
                 microchipNumber,
