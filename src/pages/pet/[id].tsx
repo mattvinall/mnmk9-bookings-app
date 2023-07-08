@@ -15,7 +15,6 @@ const PetDetail: NextPage = () => {
 	const [key, setKey] = useState<string>("");
 	const [showPetDetails, setShowPetDetails] = useState<boolean>(true);
 	const [showVaccinationRecords, setShowVaccinationRecords] = useState<boolean>(false);
-	// const [showBookings, setShowBookings] = useState<boolean>(false);
 	const router = useRouter();
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.vaccinationsByPetId.useQuery({ id });
@@ -45,19 +44,16 @@ const PetDetail: NextPage = () => {
 	const handleShowPetDetails = () => {
 		setShowPetDetails(true);
 		setShowVaccinationRecords(false);
-		// setShowBookings(false);
 	}
 
 	const handleShowVaccinationRecords = () => {
 		setShowPetDetails(false);
 		setShowVaccinationRecords(true);
-		// setShowBookings(false);
 	}
 
 	const handleShowBookings = () => {
 		setShowPetDetails(false);
 		setShowVaccinationRecords(false);
-		// setShowBookings(true);
 	}
 
 
@@ -98,9 +94,6 @@ const PetDetail: NextPage = () => {
 					<li>
 						<button onClick={handleShowVaccinationRecords} className={`${showVaccinationRecords === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Vaccination Records</button>
 					</li>
-					{/* <li className="mr-2">
-						<button onClick={handleShowBookings} className={`${showBookings === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Bookings</button>
-					</li> */}
 				</ul>
 			</div>
 
@@ -136,14 +129,6 @@ const PetDetail: NextPage = () => {
 					</>
 				)}
 			</div>
-
-			{/* Bookings */}
-			{/*
-					 Todo: 
-					 - create vaccination card component with vaccine name, valid to date, maybe an image for the top of the card
-					 - be able to filter by pet
-				*/}
-
 		</div >
 	)
 }
