@@ -8,8 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ContactForm from '../components/client/forms/ContactForm';
 import Swal from "sweetalert2";
 import { sendEmailContactForm } from "../lib/email";
-import type { ContactFormType } from '../types/form-types';
-import { contactFormSchema } from '../utils/schema';
+import type { ContactFormType } from '../utils/schema';
+import type { contactFormSchema } from '../utils/schema';
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
