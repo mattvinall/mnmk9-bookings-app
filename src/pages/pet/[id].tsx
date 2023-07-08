@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import { trpc } from "../../utils/trpc";
 import useSetProfileImage from "../../hooks/useSetProfileImage";
-import useSetVaccinationDocument from "../../hooks/useSetVaccinationDocument";
-import { useForm, SubmitHandler, set } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from "zod";
-import Swal from "sweetalert2";
 import { Pet, Vaccination } from "@prisma/client";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import EditPetForm from "../../components/client/forms/EditPetForm";
 import { PetDetailCard } from "../../components/client/ui/PetDetailCard";
 import VaccinationRecordCard from "../../components/client/ui/VaccinationRecordCard";
+import AddVaccineForm from "../../components/client/forms/AddVaccineForm";
 
 const PetDetail = () => {
 	const [secret, setSecret] = useState<string>("");
@@ -35,51 +30,11 @@ const PetDetail = () => {
 	const ownerId = petDetail?.map((pet: Pet) => pet.ownerId as string)[0];
 	const vaccinationRecords = petDetail && petDetail?.map((pet: PetDetail) => pet?.vaccinations)[0] || [];
 
-	// const {
-	// 	uploadedProfileImageUrl,
-	// 	imageFileNamePreview,
-	// 	handleProfileImageFileChange,
-	// 	handleUploadProfileImage
-	// } = useSetProfileImage(name as string);
 
-	// const {
-	// 	uploadedVaccinationDocumentUrl,
-	// 	handleVaccinationDocumentFileChange,
-	// } = useSetVaccinationDocument(name as string);
 
-	// mutations to add profile image, vaccination document, delete document, and update vaccinated status
 
-	// const uploadPetProfileImage = trpc.pet.addPetProfilePicture.useMutation({
-	// 	onSuccess: () => refetch()
-	// });
-	// const uploadVaccinationDocument = trpc.vaccine.create.useMutation({
-	// 	onSuccess: () => refetch()
-	// });
-	// const deleteVaccinationDocument = trpc.vaccine.delete.useMutation({
-	// 	onSuccess: () => refetch()
-	// });
 
-	// once profile image has been updated, add to Pet DB tale by passing in the pet id and the image url from S3
 
-	// useEffect(() => {
-	// 	if (uploadedProfileImageUrl) {
-	// 		uploadPetProfileImage.mutate({ id, profileImage: uploadedProfileImageUrl as string });
-	// 	}
-	// }, [uploadedProfileImageUrl])
-
-	// if there is a vaccinated document url from S3, add to the Documents table by passing in the pet id and the file name
-
-	// useEffect(() => {
-	// 	if (uploadedVaccinationDocumentUrl && petId) {
-	// 		uploadVaccinationDocument.mutate({
-	// 			petId,
-	// 			fileName: uploadedVaccinationDocumentUrl.split(".")[0] as string,
-	// 			uploadedS3Url: uploadedVaccinationDocumentUrl,
-	// 			validTo: new Date("2024-01-01"),
-	// 			name: "Lepto Vaccine"
-	// 		});
-	// 	}
-	// }, [uploadedVaccinationDocumentUrl]);
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -171,17 +126,21 @@ const PetDetail = () => {
 			</div>
 
 			{/* Vaccination Records */}
-			{/*
-					 Todo: 
-					 - create vaccination card component with vaccine name, valid to date, maybe an image for the top of the card
-					 - create a form to edit a new vaccination record
-				*/}
-			{showVaccinationRecords && (
-				<>
-					{vaccinationRecords && vaccinationRecords.length > 0 && vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord))}
-					{/* Edit Vaccination Record Form */}
-				</>
-			)}
+			<div className="flex justify-between items-baseline">
+				{showVaccinationRecords && (
+					<>
+						<div className="flex flex-col">
+							{vaccinationRecords && vaccinationRecords.length > 0 && vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord))}
+						</div>
+						{/* Add Vaccination Record Form */}
+						{petId && key && name && (
+							<GoogleReCaptchaProvider reCaptchaKey={key}>
+								<AddVaccineForm petId={petId} petName={name} secret={secret} refetch={refetch} />
+							</GoogleReCaptchaProvider>
+						)}
+					</>
+				)}
+			</div>
 
 			{/* Bookings */}
 			{/*
