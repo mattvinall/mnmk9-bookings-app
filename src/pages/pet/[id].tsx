@@ -15,7 +15,7 @@ const PetDetail: NextPage = () => {
 	const [key, setKey] = useState<string>("");
 	const [showPetDetails, setShowPetDetails] = useState<boolean>(true);
 	const [showVaccinationRecords, setShowVaccinationRecords] = useState<boolean>(false);
-	const [showBookings, setShowBookings] = useState<boolean>(false);
+	// const [showBookings, setShowBookings] = useState<boolean>(false);
 	const router = useRouter();
 	const id = router.query.id as string;
 	const { data: petDetail, isLoading, error, refetch } = trpc.pet.vaccinationsByPetId.useQuery({ id });
@@ -45,19 +45,19 @@ const PetDetail: NextPage = () => {
 	const handleShowPetDetails = () => {
 		setShowPetDetails(true);
 		setShowVaccinationRecords(false);
-		setShowBookings(false);
+		// setShowBookings(false);
 	}
 
 	const handleShowVaccinationRecords = () => {
 		setShowPetDetails(false);
 		setShowVaccinationRecords(true);
-		setShowBookings(false);
+		// setShowBookings(false);
 	}
 
 	const handleShowBookings = () => {
 		setShowPetDetails(false);
 		setShowVaccinationRecords(false);
-		setShowBookings(true);
+		// setShowBookings(true);
 	}
 
 
@@ -98,9 +98,9 @@ const PetDetail: NextPage = () => {
 					<li>
 						<button onClick={handleShowVaccinationRecords} className={`${showVaccinationRecords === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Vaccination Records</button>
 					</li>
-					<li className="mr-2">
+					{/* <li className="mr-2">
 						<button onClick={handleShowBookings} className={`${showBookings === true ? "text-gray-100 !border-gray-100 border-b-2" : ""} inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-100 hover:border-gray-100`}>Bookings</button>
-					</li>
+					</li> */}
 				</ul>
 			</div>
 
@@ -125,7 +125,7 @@ const PetDetail: NextPage = () => {
 				{showVaccinationRecords && (
 					<>
 						<div className="flex flex-col">
-							{vaccinationRecords && vaccinationRecords.length > 0 && vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord))}
+							{vaccinationRecords && vaccinationRecords.length > 0 ? vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord)) : <p className="text-white text-2xl font-medium w-2/3">No Vaccination Added. Please fill out the form to the right to add your pet's vaccine records.</p>}
 						</div>
 						{/* Add Vaccination Record Form */}
 						{petId && key && name && (
