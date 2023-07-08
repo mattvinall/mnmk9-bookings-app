@@ -8,8 +8,9 @@ import EditPetForm from "../../components/client/forms/EditPetForm";
 import { PetDetailCard } from "../../components/client/ui/PetDetailCard";
 import VaccinationRecordCard from "../../components/client/ui/VaccinationRecordCard";
 import AddVaccineForm from "../../components/client/forms/AddVaccineForm";
+import { NextPage } from "next";
 
-const PetDetail = () => {
+const PetDetail: NextPage = () => {
 	const [secret, setSecret] = useState<string>("");
 	const [key, setKey] = useState<string>("");
 	const [showPetDetails, setShowPetDetails] = useState<boolean>(true);
@@ -29,12 +30,6 @@ const PetDetail = () => {
 	const petId = petDetail?.map((pet: Pet) => pet.id as string)[0];
 	const ownerId = petDetail?.map((pet: Pet) => pet.ownerId as string)[0];
 	const vaccinationRecords = petDetail && petDetail?.map((pet: PetDetail) => pet?.vaccinations)[0] || [];
-
-
-
-
-
-
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
