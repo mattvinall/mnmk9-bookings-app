@@ -56,7 +56,6 @@ const Navbar: React.FC = () => {
 	const { userId, isSignedIn } = useAuth();
 
 	const { data: userData } = getUserById(userId as string);
-	console.log("user data in navbar component", userData);
 
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
