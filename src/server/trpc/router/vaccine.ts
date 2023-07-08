@@ -7,6 +7,24 @@ export const vaccineRouter = router({
     getAll: protectedProcedure.query(({ ctx }) => {
         return ctx.prisma.vaccination.findMany();
     }),
+    byId: protectedProcedure
+        .input(z.object({
+            id: z.string()
+        }))
+        .query(async ({ ctx, input }) => {
+            const { id } = input;
+            try {
+                const getVaccineDocumentById = await ctx.prisma.vaccination.findUnique({
+                    where: {
+                        id
+                    }
+                });
+                return getVaccineDocumentById;
+            } catch (err) {
+                console.log(`Vaccine with the ${id} cannot be found: ${err}`)
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+            }
+        }),
     create: protectedProcedure
         .input(z.object({
             petId: z.string(),
