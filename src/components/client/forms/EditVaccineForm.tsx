@@ -13,9 +13,10 @@ type Props = {
     secret: string;
     vaccineDetail: Vaccination
     refetch: () => void;
+    name: string
 }
 
-const EditVaccineForm = ({ secret, vaccineDetail, refetch }: Props) => {
+const EditVaccineForm = ({ secret, vaccineDetail, refetch, name }: Props) => {
     const [token, setToken] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [newVaccineId, setNewVaccineId] = useState<string | null>(null);
@@ -41,7 +42,7 @@ const EditVaccineForm = ({ secret, vaccineDetail, refetch }: Props) => {
         uploadedS3Url,
         handleDocumentFileChange,
         fileName,
-    } = useUploadFileToS3("Ava", 'vaccinations');
+    } = useUploadFileToS3(name, 'vaccinations');
 
     const { executeRecaptcha } = useGoogleReCaptcha();
 
