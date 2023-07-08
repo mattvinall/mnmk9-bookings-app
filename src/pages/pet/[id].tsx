@@ -118,7 +118,7 @@ const PetDetail: NextPage = () => {
 				{showVaccinationRecords && (
 					<>
 						<div className="flex flex-col">
-							{vaccinationRecords && vaccinationRecords.length > 0 ? vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord)) : <p className="text-white text-2xl font-medium w-2/3">No Vaccination Added. Please fill out the form to the right to add your pet's vaccine records.</p>}
+							{vaccinationRecords && vaccinationRecords.length > 0 ? vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord)) : <p className="text-white text-2xl font-medium w-2/3"> No Vaccination Added.Please fill out the form to the right to add your pet&apos; vaccine records.</p>}
 						</div>
 						{/* Add Vaccination Record Form */}
 						{petId && key && name && (
