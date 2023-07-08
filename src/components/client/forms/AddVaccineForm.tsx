@@ -7,23 +7,35 @@ import { trpc } from '../../../utils/trpc';
 import Swal from 'sweetalert2';
 import { GoogleReCaptcha, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { VaccineFormType, vaccineFormSchema } from '../../../utils/schema';
+import { vaccinationOptions } from '../../../constants';
+import useUploadFileToS3 from '../../../hooks/useSetVaccinationDocument';
 
 type Props = {
     petId: string;
+    petName: string
+    secret: string;
 }
 
-const AddVaccineForm = ({ petId }: Props) => {
+const AddVaccineForm = ({ petId, petName, secret }: Props) => {
     const [token, setToken] = useState<string | null>(null);
-    const [key, setKey] = useState<string>("");
-    const [secret, setSecret] = useState<string>("");
+    const [submitted, setSubmitted] = useState<boolean>(false);
 
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<VaccineFormType>({
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<VaccineFormType>({
         resolver: zodResolver(vaccineFormSchema),
     });
 
+    const { mutate: verifyRecaptcha } = trpc.recaptcha.verify.useMutation();
     const { mutate: addVaccine, isLoading } = trpc.vaccine.create.useMutation();
+    const { mutate: updateVaccination } = trpc.vaccine.update.useMutation();
 
-    const { executeRecaptcha } = useGoogleReCaptcha()
+    const {
+        uploadedS3Url,
+        handleDocumentFileChange,
+        fileName,
+    } = useUploadFileToS3(petName as string, 'vaccinations');
+
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
     // Create an event handler so you can call the verification on button click event or form submit
     const handleReCaptchaVerify = useCallback(async () => {
         if (!executeRecaptcha) {
@@ -37,47 +49,46 @@ const AddVaccineForm = ({ petId }: Props) => {
         // Do whatever you want with the token
     }, [executeRecaptcha]);
 
-    useEffect(() => {
-        const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
-        const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
-
-        if (key && key !== undefined) {
-            setKey(key);
-        }
-
-        if (secret || secret !== undefined) {
-            setSecret(secret);
-        }
-    }, [key, secret]);
-
     // You can use useEffect to trigger the verification as soon as the component being loaded
     useEffect(() => {
         handleReCaptchaVerify();
     }, [handleReCaptchaVerify]);
 
-    // useEffect(() => {
-    // 	if (uploadedVaccinationDocumentUrl && petId) {
-    // 		uploadVaccinationDocument.mutate({
-    // 			petId,
-    // 			fileName: uploadedVaccinationDocumentUrl.split(".")[0] as string,
-    // 			uploadedS3Url: uploadedVaccinationDocumentUrl,
-    // 			validTo: new Date("2024-01-01"),
-    // 			name: "Lepto Vaccine"
-    // 		});
-    // 	}
-    // }, [uploadedVaccinationDocumentUrl]);
+    useEffect(() => {
+        if (uploadedS3Url && submitted) {
+            updateVaccination({
+                id: petId,
+                fileName: fileName,
+                uploadedS3Url
+            });
+        }
+
+        () => {
+            setSubmitted(false);
+        }
+    }, [uploadedS3Url, submitted]);
 
     const onSubmit = async (formData: VaccineFormType) => {
+        console.log("form data", formData);
         try {
-            addVaccine({
-                petId,
+            token && secret && verifyRecaptcha({ secret, token });
+
+            fileName && petId && addVaccine({
                 ...formData,
+                fileName,
+                petId,
+                validTo: new Date(formData.validTo),
             });
+
             Swal.fire({
                 icon: 'success',
                 title: 'Upload Successful',
                 text: 'Vaccine uploaded to your pets profile!',
-            })
+            });
+
+            reset();
+            setSubmitted(true);
+
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -89,7 +100,68 @@ const AddVaccineForm = ({ petId }: Props) => {
 
 
     return (
-        <div>VaccineForm</div>
+        <form style={{ position: "relative" }} className="w-full md:w-1/2 mt-6" onSubmit={handleSubmit(onSubmit)}>
+            <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
+            <div className="grid md:grid-cols-1 md:gap-6">
+                <div className="relative z-0 mb-6 w-full group">
+                    <label
+                        htmlFor="vaccine-select"
+                        className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        Vaccine Name
+                    </label>
+                    <select
+                        {...register("name")}
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                        id="vaccine-select"
+                    >
+                        {vaccinationOptions?.map((name, index) => (
+                            <option key={index} className="text-gray-900 w-[10%]" value={name}>{name}</option>
+                        ))}
+                    </select>
+                    <svg
+                        style={{ fill: "#fff", position: "absolute", right: "0", bottom: "15px", height: "20px" }}
+                        className="ml-2 w-4 h-4"
+                        aria-hidden="true"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2" d="M19 9l-7 7-7-7">
+                        </path>
+                    </svg>
+                </div>
+                <div className="relative z-0 mb-6 w-full group">
+                    <label htmlFor="file" className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Vaccination File</label>
+                    <input
+                        type="file"
+                        id="file"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                        placeholder="click to select file"
+                        onChange={handleDocumentFileChange}
+                    />
+                </div>
+                <div className="relative z-0 mb-6 w-full group">
+                    <label htmlFor="validToDate" className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Valid To:</label>
+                    <input
+                        {...register("validTo", { required: true })}
+                        type="date"
+                        id="validToDate"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                        placeholder="click to select file"
+                        required
+                    />
+                </div>
+                <button
+                    disabled={isSubmitting}
+                    type="submit"
+                    className="mt-[25px] rounded-full bg-gradient-to-l from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-r from-[#112B4E] to-[#67A3A1] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    Submit
+                </button>
+            </div>
+        </form>
     )
 }
 
