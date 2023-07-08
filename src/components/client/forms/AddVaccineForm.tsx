@@ -20,6 +20,7 @@ type Props = {
 const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
     const [token, setToken] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState<boolean>(false);
+    const [newVaccineId, setNewVaccineId] = useState<string | null>(null);
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<VaccineFormType>({
         resolver: zodResolver(vaccineFormSchema),
@@ -27,9 +28,13 @@ const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
 
     const { mutate: verifyRecaptcha } = trpc.recaptcha.verify.useMutation();
     const { mutate: addVaccine } = trpc.vaccine.create.useMutation({
-        onSuccess: () => refetch()
+        onSuccess: (data) => {
+            refetch();
+            setNewVaccineId(data.id);
+        }
     });
-    const { mutate: updateVaccination } = trpc.vaccine.update.useMutation({
+
+    const { mutate: updateVaccinationS3Url } = trpc.vaccine.updateS3Url.useMutation({
         onSuccess: () => refetch()
     });
 
@@ -60,16 +65,14 @@ const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
     }, [handleReCaptchaVerify]);
 
     useEffect(() => {
-        if (uploadedS3Url && submitted) {
-            updateVaccination({
-                id: petId,
-                fileName: fileName,
+        newVaccineId !== null && uploadedS3Url && submitted &&
+            updateVaccinationS3Url({
+                id: newVaccineId,
                 uploadedS3Url
             });
-        }
-
         () => {
             setSubmitted(false);
+            setNewVaccineId(null);
         }
     }, [uploadedS3Url, submitted]);
 
@@ -118,6 +121,7 @@ const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
                         {...register("name")}
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                         id="vaccine-select"
+
                     >
                         {vaccinationOptions?.map((name, index) => (
                             <option key={index} className="text-gray-900 w-[10%]" value={name}>{name}</option>
