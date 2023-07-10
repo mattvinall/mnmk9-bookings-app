@@ -2,8 +2,8 @@ import { Pet } from "@prisma/client";
 
 export const PetDetailCard = (pet: Pet, defaultImage: string) => {
     return (
-        <div key={pet.id} className="flex justify-center">
-            <div className="rounded-lg shadow-lg bg-white max-w-full w-[90%] md:w-[32rem]">
+        <div key={pet.id} className="flex justify-center items-stretch mb-6">
+            <div className="rounded-lg shadow-lg bg-white w-full md:w-[32rem]">
                 <div className="p-6 mt-6">
                     <div className="flex justify-betweem items-center border-slate-600 border-b-2 pb-2">
                         <h2 className="text-gray-900 text-3xl font-medium mb-2 w-3/4">{pet.name} - {pet.breed}</h2>
@@ -25,7 +25,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
                             <p className="text-gray-600 font-medium text-lg">Temperament: {pet.temperament.toLocaleLowerCase()}</p>
                         </div>
                     </div>
-                    <div className="flex flex-col md:flex-row justify-between items-center border-slate-500 border-b-2">
+                    <div className="flex align-center justify-between items-center border-slate-500 border-b-2">
                         <div className="mb-4">
                             <p className="text-gray-600 font-medium text-lg">{pet?.sex === "MALE" ? "Neutered: " : "Spayed: "}  <span className="inline-block ml-2">{pet?.ovariohysterectomy === false ? "❌" : "✅"}</span></p>
                         </div>
@@ -39,7 +39,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
                             <p className="text-gray-600 font-medium text-lg">Medical Notes: <br /> {pet.medicalNotes}</p>
                         )}
                     </div>
-                    <div className="my-4 border-slate-500 border-b-2 pb-4">
+                    <div className={`my-4 ${pet?.feedingNotes || pet.medicalNotes ? "border-slate-500 border-b-2 pb-4" : ""}`}>
                         {pet?.feedingNotes && (
                             <p className="text-gray-600 font-medium text-lg">Feeding Notes: <br /> {pet.feedingNotes}</p>
                         )}
