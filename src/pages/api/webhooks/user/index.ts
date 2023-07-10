@@ -16,6 +16,8 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
 
   const payload = JSON.stringify(req.body);
 
+  console.log("payload: ", JSON.parse(payload));
+
   const headers = req.headers;
 
   const wh = new Webhook(webhookSecret);
@@ -31,11 +33,13 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
   }
 
   const eventType = evt.type as EventType;
-  const { id, image_url, first_name, last_name, email_addresses } = evt.data;
-  const email = email_addresses?.length > 0 && email_addresses?.map((email: any) => email.email_address)[0];
+  console.log("evt data", evt.data);
+  const { id, image_url, first_name, last_name, email_addresses } = evt.data as User;
+  const email = email_addresses?.length > 0 && email_addresses?.map((email: Email) => email.email_address)[0] || "";
 
   if (eventType === "user.created") {
-    await prisma.user.create({
+    console.log("event type is user created")
+    const user = await prisma.user.create({
       data: {
         id: id as string,
         image: image_url as string,
@@ -43,10 +47,15 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
         email: email as string,
       }
     });
+
+    console.log("user created!", user);
+
+    return user;
   }
 
   if (eventType === "user.updated") {
-    await prisma.user.update({
+    console.log("event type is user updated");
+    const updatedUser = await prisma.user.update({
       where: {
         id: id as string,
       },
@@ -56,11 +65,16 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
         email: email as string,
       }
     });
+
+    console.log("user updated", updatedUser);
+
+    return updatedUser;
   }
 
-   if (eventType === "user.deleted") {
-      await prisma.user.delete({ where: { id: id as string } });
-    }
+  if (eventType === "user.deleted") {
+    console.log("user deleted")
+    await prisma.user.delete({ where: { id: id as string } });
+  }
   
   res.status(200).json({ message: "Webhook processed successfully" });
 }
@@ -76,3 +90,15 @@ type Event = {
   object: "event";
   type: EventType;
 } | WebhookEvent;
+
+interface User {
+  id: string;
+  image_url: string;
+  first_name: string;
+  last_name: string;
+  email_addresses: Email[]
+}
+
+interface Email {
+  email_address: string;
+}
