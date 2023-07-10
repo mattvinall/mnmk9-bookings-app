@@ -111,6 +111,24 @@ export const bookingFormSchema = z.object({
 
 export type BookingFormType = z.infer<typeof bookingFormSchema>;
 
+// define schema for the form 
+export const adminBookingFormSchema = z.object({
+	name: z.string().min(1, { message: "Name is required" }),
+	petName: z.string().min(1, { message: "Pet name is required" }),
+	serviceName: z.string(),
+	phoneNumber: z.string(),
+	email: z.string().min(1, { message: "Email is required" }).email({
+		message: "Must be a valid email",
+	}),
+	checkInDate: z.string(),
+	checkOutDate: z.string(),
+	startTime: z.string(),
+	endTime: z.string(),
+	notes: z.string().optional(),
+});
+
+export type AdminBookingFormType = z.infer<typeof adminBookingFormSchema>;
+
 export const editBookingFormSchema = z.object({
 	checkInDate: z.string().optional(),
 	checkOutDate: z.string().optional(),
