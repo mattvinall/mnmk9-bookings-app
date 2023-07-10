@@ -318,7 +318,7 @@ const EditPetForm = ({ secret, petId, petDetails }: Props): ReactJSXElement => {
                     />
                     <label
                         htmlFor="floating_ovariohysterectomy-yes"
-                        className="ml-2 mr-4 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        className="ml-2 mr-4 my-4 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Yes
                     </label>
                     <input
