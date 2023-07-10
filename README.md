@@ -35,36 +35,34 @@ Full Stack Application using T3 stack
 Client can:
 - book services (daycare, grooming, boarding, training).
 - cancel bookings
-- edit bookings
-- add pets, delete/remove pets, and edit pet profile
-- update their profile information (address, vet information, etc)
+- edit/manage their bookings
+- add pets to their profile by filling out vital information like breed, age, weight, ovariohysterectamy status, temperament, etc.
+- edit their pets profile information
+- delete/remove pets from their profile
+- update their own profile information such as phone number, address (for home training).
 - upload profile images for their pets
-- upload vaccination documents for their pets
-- download and upload waiver document
+- download and upload waiver documents
+- add their Vetrinary Information in case of an emergency
+- upload, edit and delete vaccination documents from their pet's profile
+- submit a contact form for any technical issues
+- clients receive email confirmation when booking a service
 
 Admin can:
-- do anything a client can do listed above
-- in the dashboard page, view how many bookings for each service
-- add/delete TODOs for the day
+- View a metric dashboard of all the current bookings for that day (how many clients are checking in and out for each of the core services)
+- add/delete TODOs for the day to stay on top of their priorities
 - use the calendar to view what bookings are scheduled for the date selected
-- can quickly confirm bookings from the dashboard page as
+- can quickly confirm bookings from the dashboard page
 - view the list of users; can search by name or by pet
 - from the list of users, can promote a user to admin
 - from the list of users, can click user details and will route you to their profile page
 
-## Coming Soon:
-- more data fields when adding or editing your pet's profile
-  - age
-  - weight
-  - temperament
-  - microchip #
-  - ovariohysterectomy (spayed/neutered)
-  - vaccination uploads (name of vaccine, when its valid until)
-  - feeding instructions
-  - medical instructions
- - vetrinary details (address, city, phone numner, email)
- - incident reporting
+## Coming Soon
+ - incident reporting (admin)
  - Waitlist feature (admin)
+ - have the admin be able to book a service for a client
+   - select from list of users
+   - select from users pets
+   - fill out booking form as a client would
+ - Email Confirmation sent to admin when a customer cancels an appointment
  - More robust booking experience (multi-step form)
  - Recurring bookings (selected days for [#] weeks]
- - Email Confirmation sent to admin when a customer cancels an appointment
