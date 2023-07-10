@@ -69,19 +69,24 @@ export const userRouter = router({
     .query(async ({ ctx, input }) => {
       const { id } = input;
       try {
-        // const cache = await getCache(`user-${id}}`);
-        // console.log("cache by id", cache);
-        // if (cache) {
-          // console.log("Cache successfully retrieved: ", cache);
-          // return cache;
-        // } else {
+        const cache = await getCache(`user-${id}}`);
+        console.log("cache by id", cache);
+        if (cache) {
+          console.log("Cache successfully retrieved: ", cache);
+          return cache;
+        } else {
           const user = await ctx.prisma.user.findUnique({
             where: { id },
             include: { pets: true, bookings: true }
           });
-          // await setCache(`user-${id}`, user);
+
+          if (!user) {
+           console.log(`no user found with user id: ${id}`)
+          }
+
+          await setCache(`user-${id}`, user);
           return user;
-        // }
+        }
       } catch (err) {
         console.log(`Error fetching user by ID: ${err}`);
       }
