@@ -81,7 +81,7 @@ const PetDetail: NextPage = () => {
 	}
 
 	return (
-		<div className="container flex flex-col gap-12 px-16 py-16 max-w-8xl">
+		<div className="container flex flex-col gap-8 py-8 px-8 lg:gap-12 lg:px-16 lg:py-16 max-w-8xl">
 			<a className="flex justify-start text-left text-white font-bold text-2xl" href={`/profile/${ownerId}`}>Go Back</a>
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[rgb(103,163,161)]">Details</span></h1>
 
@@ -98,7 +98,7 @@ const PetDetail: NextPage = () => {
 			</div>
 
 			{/* content  */}
-			<div className="flex justify-between items-baseline">
+			<div className="flex flex-col flex-wrap lg:flex-row lg:justify-between lg:items-baseline">
 				{showPetDetails && (
 					<>
 						{/* Pet Detail Card */}
@@ -114,11 +114,11 @@ const PetDetail: NextPage = () => {
 			</div>
 
 			{/* Vaccination Records */}
-			<div className="flex justify-between items-baseline">
+			<div className="flex flex-col lg:justify-between items-baseline">
 				{showVaccinationRecords && (
 					<>
 						<div className="flex flex-col">
-							{vaccinationRecords && vaccinationRecords.length > 0 ? vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord)) : <p className="text-white text-2xl font-medium w-2/3"> No Vaccination Added.Please fill out the form to the right to add your pet&apos; vaccine records.</p>}
+							{vaccinationRecords && vaccinationRecords.length > 0 ? vaccinationRecords.map((record: Vaccination) => VaccinationRecordCard(record, handleDeleteVaccinationRecord)) : <p className="text-white text-2xl font-medium w-2/3 mb-8"> No Vaccination Added.Please fill out the form to the right to add your pet&apos; vaccine records.</p>}
 						</div>
 						{/* Add Vaccination Record Form */}
 						{petId && key && name && (
