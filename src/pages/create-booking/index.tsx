@@ -10,6 +10,8 @@ import daycare from "../../../public/daycare.webp";
 import { useAuth } from "@clerk/nextjs";
 import { getUserById } from "../../api/users";
 import AdminBookingForm from "../../components/admin/forms/AdminBookingForm";
+import { useEffect, useState } from "react";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const cards = [
   {
@@ -45,6 +47,22 @@ const cards = [
 const CreateBooking: NextPage = () => {
   const { isSignedIn, userId } = useAuth();
   const { data: userData } = getUserById(userId as string);
+
+  const [key, setKey] = useState<string>("")
+  const [secret, setSecret] = useState<string>("");
+
+  useEffect(() => {
+    const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
+    const secret = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET;
+
+    if (!key) return;
+    if (!secret) return;
+
+    setKey(key);
+    setSecret(secret);
+  }, [key, secret]);
+
+
   return (
     <>
       {userData?.role === "user" ? (
@@ -91,9 +109,14 @@ const CreateBooking: NextPage = () => {
           }
         </>
       ) : (
-        <AdminBookingForm />
+        <>
+          {key && secret && (
+            <GoogleReCaptchaProvider reCaptchaKey={key}>
+              <AdminBookingForm secret={secret} />
+            </GoogleReCaptchaProvider>
+          )}
+        </>
       )}
-
     </>
   );
 };
