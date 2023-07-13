@@ -114,6 +114,9 @@ export const bookingRouter = router({
 					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 				}
 
+				await invalidateCache("allBookings");
+				await invalidateCache(`user-${userId}}`);
+
 				return await ctx.prisma.bookings.create({
 					data: {
 						firstName,
