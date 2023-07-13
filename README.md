@@ -52,17 +52,22 @@ Admin can:
 - add/delete TODOs for the day to stay on top of their priorities
 - use the calendar to view what bookings are scheduled for the date selected
 - can quickly confirm bookings from the dashboard page
+- book services for their clients if they are in the database
 - view the list of users; can search by name or by pet
 - from the list of users, can promote a user to admin
 - from the list of users, can click user details and will route you to their profile page
 
 ## Coming Soon
  - incident reporting (admin)
+ - Generate Invoice when they create a booking
+ - use Stripe for payment in the app 
  - Waitlist feature (admin)
- - have the admin be able to book a service for a client
-   - select from list of users
-   - select from users pets
-   - fill out booking form as a client would
  - Email Confirmation sent to admin when a customer cancels an appointment
  - More robust booking experience (multi-step form)
- - Recurring bookings (selected days for [#] weeks]
+   - fill out booking details
+   - add-on services
+   - summary
+   - invoice
+   - submit
+ - Recurring bookings (selected days of week for # of weeks]
+ - Revenue/Customer reporting once revenue is collected through the application (admin)
