@@ -5,6 +5,8 @@ import { AdminBookingFormType } from '../../../utils/schema';
 import { useForm } from 'react-hook-form';
 import { Pet, Services, User } from '@prisma/client';
 import LoadingSpinner from '../../client/ui/LoadingSpinner';
+import { trpc } from '../../../utils/trpc';
+import Swal from 'sweetalert2';
 
 interface UserData extends User {
     pets: Pet[]
@@ -18,30 +20,72 @@ const AdminBookingForm = ({ secret }: Props) => {
     const [userId, setUserId] = useState<string | null>(null);
     const [userData, setUserData] = useState<UserData | null>(null);
 
-    const { data: users, isLoading } = getAllUsers();
-    const { data: services, isLoading: loading } = getAllServices();
+
+    const { data: users, isLoading, refetch } = getAllUsers();
+    const { data: services, isLoading: loading } = getAllServices()
 
     useEffect(() => {
         const user = users?.filter((user: User) => user.id === userId)[0];
         console.log("user found", user);
         setUserData(user);
 
-        const { email, phone } = user || {};
+        const { email, phoneNumber } = user || {};
 
         setValue("email", email)
-        setValue("phoneNumber", phone)
+        setValue("phoneNumber", phoneNumber)
 
     }, [userId]);
 
-    const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<AdminBookingFormType>();
+    const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<AdminBookingFormType>();
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = e.target.value;
         id && setUserId(id as string);
     }
 
-    const onSubmit = (data: AdminBookingFormType) => {
-        console.log("form data", data);
+    const createBooking = trpc.bookings.newAdminBooking.useMutation({
+        onSuccess: () => refetch()
+    })
+
+    const onSubmit = async (data: AdminBookingFormType) => {
+
+        if (!userData || userData?.pets?.length === 0) return;
+
+        try {
+            data.petName = data.petName.split("-")[0] as string;
+            data.serviceName = data.serviceName.split("-")[0] as string;
+            const userId = userData && userData?.id as string;
+            const name = userData && userData?.name as string;
+            const petId = userData && userData?.pets?.length > 0 ? users.filter((user: User) => user.id === userId)[0].pets[0].id as string : "";
+            const service = services && services?.length > 0 && services?.filter((service: Services) => service.serviceName === data.serviceName);
+            const serviceId = service && service?.length > 0 && service[0]?.id as string;
+
+            petId && serviceId && userId && await createBooking.mutateAsync({
+                ...data,
+                firstName: name?.split(" ")[0] || "",
+                lastName: name?.split(" ")[1] || "",
+                userId,
+                petId,
+                serviceId,
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Booking created successfully',
+                showConfirmButton: false,
+            })
+
+            reset()
+
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            })
+        }
+
+        console.log("booking created");
     };
 
     return (
@@ -61,7 +105,7 @@ const AdminBookingForm = ({ secret }: Props) => {
                             <>
                                 <select
                                     id="user"
-                                    // {...register('name', { required: true })}
+                                    {...register('name', { required: true })}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                     onChange={handleChange}
                                 >
@@ -239,11 +283,11 @@ const AdminBookingForm = ({ secret }: Props) => {
                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                             id="pet-select"
                         >
-                            {/* <option value="" disabled selected>Select Pet</option> */}
+                            <option value="" disabled selected>Select Pet</option>
                             {userData?.pets && userData?.pets?.map((pet: Pet) => {
                                 const { name, id } = pet;
                                 return (
-                                    <option key={name} className="text-gray-900 w-[10%]" value={`${pet.name}-${pet.id}`}>{name}</option>
+                                    <option key={name} className="text-gray-900 w-[10%]" value={`${name}-${id}`}>{name}</option>
                                 )
                             })}
                         </select>
