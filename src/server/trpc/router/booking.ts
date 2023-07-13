@@ -87,6 +87,59 @@ export const bookingRouter = router({
 				console.log(`booking could not be created: ${error}`)
 			}
 		}),
+	newAdminBooking: protectedProcedure
+		.input(
+			z.object({
+				firstName: z.string(),
+				lastName: z.string(),
+				phoneNumber: z.string(),
+				email: z.string(),
+				checkInDate: z.string(),
+				checkOutDate: z.string(),
+				startTime: z.string(),
+				endTime: z.string(),
+				petName: z.string(),
+				notes: z.string().optional(),
+				serviceName: z.string(),
+				petId: z.string(),
+				serviceId: z.string(),
+				userId: z.string(),
+			}))
+		.mutation(async ({ ctx, input }) => { 
+			try {
+				const { firstName, lastName, phoneNumber, email, checkInDate, checkOutDate, petName, notes, startTime, endTime, serviceName, petId, serviceId, userId } = input
+				const { success } = await rateLimit.limit(userId)
+
+				if (!success) {
+					throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+				}
+
+				await invalidateCache("allBookings");
+				await invalidateCache(`user-${userId}}`);
+
+				return await ctx.prisma.bookings.create({
+					data: {
+						firstName,
+						lastName,
+						phoneNumber,
+						email,
+						checkInDate,
+						checkOutDate,
+						startTime,
+						endTime,
+						petName,
+						notes,
+						serviceName,
+						petId,
+						serviceId,
+						userId
+					}
+				})
+			} catch (error) {
+				console.log(`booking could not be created: ${error}`)
+			}
+		}),
+
 	editBooking: protectedProcedure
 		.input(
 			z.object({

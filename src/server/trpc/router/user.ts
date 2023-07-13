@@ -85,6 +85,8 @@ export const userRouter = router({
           }
 
           await setCache(`user-${id}`, user);
+          await invalidateCache("allUsers");
+    
           return user;
         }
       } catch (err) {

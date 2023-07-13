@@ -253,11 +253,11 @@ const UserDetail = () => {
 			</div>
 
 			{/* Content */}
-			{showUserForm && key && (
+			{showUserForm && key && secret && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
 					<UserDetailForm setShowUserForm={setShowUserForm} secret={secret} />
 				</GoogleReCaptchaProvider>)}
-			{showPetForm && key && (
+			{showPetForm && key && secret && (
 				<GoogleReCaptchaProvider reCaptchaKey={key}>
 					<AddPetForm secret={secret} />
 				</GoogleReCaptchaProvider>)}
