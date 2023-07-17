@@ -57,7 +57,9 @@ export const calculateSubtotal = (price: number, duration: number) => {
         throw new Error('Duration must be a number');
     }
 
-    return price * duration ;
+    const subTotal = price * duration;
+
+    return parseInt(subTotal.toFixed(2), 10);
 }
 
 export const calculateServiceDuration = (checkInDate: Date, checkOutDate: Date) => {
