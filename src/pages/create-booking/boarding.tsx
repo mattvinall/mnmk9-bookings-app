@@ -53,29 +53,60 @@ const Boarding: NextPage = () => {
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation({
 		onSuccess: (data) => {
+			console.log("data on success", data);
+
 			const checkInDate = new Date(data?.checkInDate as string);
 			const checkOutDate = new Date(data?.checkOutDate as string);
 			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+			const subtotal = calculateSubtotal(boardingPrice, serviceDuration);
+			const taxAmount = calculateTaxAmount(subtotal);
+			const total = calculateTotalAmount(subtotal + taxAmount);
+			// const invoice = {
+			// 	bookingId: data?.id as string,
+			// 	petName: data?.petName as string,
+			// 	serviceName: data?.serviceName as string,
+			// 	servicePrice: boardingPrice,
+			// 	serviceDuration: serviceDuration,
+			// 	customerName: `${data?.firstName} ${data?.lastName}`,
+			// 	customerEmail: data?.email as string,
+			// 	customerAddress: userData?.address as string,
+			// 	customerCity: userData?.city as string,
+			// 	subtotal: calculateSubtotal(boardingPrice, serviceDuration) as number,
+			// 	taxAmount: calculateTaxAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
+			// 	total: calculateTotalAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
+			// 	createdAt: new Date().toLocaleDateString() as string,
+			// 	dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
+			// }
 
-			const invoice = {
-				bookingId: data?.id as string,
-				petName: data?.petName as string,
-				serviceName: data?.serviceName as string,
-				servicePrice: boardingPrice,
-				serviceDuration: serviceDuration,
-				customerName: `${data?.firstName} ${data?.lastName}`,
-				customerEmail: data?.email as string,
-				customerAddress: userData?.address as string,
-				customerCity: userData?.city as string,
-				subtotal: calculateSubtotal(boardingPrice, serviceDuration) as number,
-				taxAmount: calculateTaxAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
-				total: calculateTotalAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
-				createdAt: new Date().toLocaleDateString() as string,
-				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
-			}
+			// if (invoice) {
+			// 	generateInvoice(invoice as Invoice);
+			// }
 
-			if (invoice) {
-				generateInvoice(invoice as Invoice);
+			const { mutate: createInvoice } = trpc.invoice.create.useMutation();
+
+			try {
+
+				createInvoice({
+					bookingId: data?.id as string,
+					petId: data?.petId as string,
+					petName: data?.petName as string,
+					clientId: data?.userId as string,
+					serviceId: boardingId as string,
+					serviceName: data?.serviceName as string,
+					servicePrice: boardingPrice,
+					serviceDuration: serviceDuration,
+					customerName: `${data?.firstName} ${data?.lastName}`,
+					customerEmail: data?.email as string,
+					customerAddress: userData?.address as string,
+					customerCity: userData?.city as string,
+					subtotal: subtotal,
+					taxAmount: taxAmount,
+					total: total,
+					createdAt: new Date().toLocaleDateString() as string,
+					dueDate: data?.checkOutDate ? new Date(data?.checkOutDate).toLocaleDateString() as string : "At Checkout",
+				});
+			} catch (error) {
+				console.log("error creating invoice", error);
 			}
 		}
 	});
