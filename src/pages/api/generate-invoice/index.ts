@@ -1,8 +1,12 @@
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
+import { formatDate } from '../../../utils/formatDate';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { Invoice } from '../../../utils/invoice';
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+    // how to use the Invoice interface to make bookingData properly
     const {
         bookingData
     } = JSON.parse(req.body);
@@ -22,19 +26,11 @@ export default async (req, res) => {
         total,
         createdAt,
         dueDate
-    } = bookingData;
+    } = bookingData as Invoice;
 
-    const formattedDueDate = new Date(dueDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const formattedDueDate = formatDate(dueDate);
 
-    const formattedCreatedAt = new Date(createdAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const formattedCreatedAt = formatDate(createdAt);
 
     try {
         // read our invoice-template.html file using node fs module
@@ -75,8 +71,8 @@ export default async (req, res) => {
         // send the result to the client
         res.statusCode = 200;
         res.send(pdf);
-    } catch (err) {
+    } catch (err: any) {
         console.log(err);
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message});
     }
 };
