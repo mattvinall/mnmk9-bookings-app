@@ -34,6 +34,8 @@ const Boarding: NextPage = () => {
 	const boardingId = boarding?.id as string;
 	const boardingPrice = boarding?.price as number;
 
+	const { mutate: createInvoice } = trpc.invoice.create.useMutation();
+
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
 		onSettled(data, error) {
@@ -81,8 +83,6 @@ const Boarding: NextPage = () => {
 			// if (invoice) {
 			// 	generateInvoice(invoice as Invoice);
 			// }
-
-			const { mutate: createInvoice } = trpc.invoice.create.useMutation();
 
 			try {
 
