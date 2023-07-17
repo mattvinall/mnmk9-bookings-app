@@ -53,22 +53,22 @@ const Boarding: NextPage = () => {
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation({
 		onSuccess: (data) => {
-			// generate invoice 
 			const checkInDate = new Date(data?.checkInDate as string);
 			const checkOutDate = new Date(data?.checkOutDate as string);
+			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
 
 			const invoice = {
 				bookingId: data?.id as string,
 				petName: data?.petName as string,
 				serviceName: data?.serviceName as string,
 				servicePrice: boardingPrice,
-				serviceDuration: calculateServiceDuration(checkInDate, checkOutDate),
+				serviceDuration: serviceDuration,
 				customerName: `${data?.firstName} ${data?.lastName}`,
 				customerEmail: data?.email as string,
 				customerAddress: userData?.address as string,
 				customerCity: userData?.city as string,
-				subtotal: calculateSubtotal(boardingPrice, 5) as number,
-				total: addTax(calculateSubtotal(boardingPrice, 5) as number),
+				subtotal: calculateSubtotal(boardingPrice, serviceDuration) as number,
+				total: addTax(calculateSubtotal(boardingPrice, serviceDuration) as number),
 				createdAt: new Date().toLocaleDateString() as string,
 				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
 			}
