@@ -13,6 +13,9 @@ import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import Swal from "sweetalert2";
 import { useAuth, useUser } from "@clerk/nextjs";
+import { getUserById } from "../../api/users";
+import { getAllServices } from "../../api/services";
+import { Invoice, addTax, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
 
 const Daycare: NextPage = () => {
 	const router = useRouter();
@@ -37,13 +40,15 @@ const Daycare: NextPage = () => {
 
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
+	const { data: userData } = getUserById(userId as string);
 
 	// query service table and find the service name of boarding and store the service ID
-	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+	const { data: serviceData } = getAllServices();
 
 	const daycare = serviceData?.find(service => service.serviceName === "Daycare");
 
-	const daycareId = daycare?.id || "";
+	const daycareId = daycare?.id as string;
+	const daycarePrice = daycare?.price as number;
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -68,7 +73,32 @@ const Daycare: NextPage = () => {
 		resolver: zodResolver(bookingFormSchema)
 	});
 
-	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation();
+	const addNewDaycareBooking = trpc.bookings.newBooking.useMutation({
+		onSuccess: (data) => {
+			const checkInDate = new Date(data?.checkInDate as string);
+			const checkOutDate = new Date(data?.checkOutDate as string);
+			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+			const invoice = {
+				bookingId: data?.id as string,
+				petName: data?.petName as string,
+				serviceName: data?.serviceName as string,
+				servicePrice: daycarePrice,
+				serviceDuration: serviceDuration,
+				customerName: `${data?.firstName} ${data?.lastName}`,
+				customerEmail: data?.email as string,
+				customerAddress: userData?.address as string,
+				customerCity: userData?.city as string,
+				subtotal: calculateSubtotal(daycarePrice, serviceDuration) as number,
+				total: addTax(calculateSubtotal(daycarePrice, serviceDuration) as number),
+				createdAt: new Date().toLocaleDateString() as string,
+				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
+			}
+
+			if (invoice) {
+				generateInvoice(invoice as Invoice);
+			}
+		}
+	});
 
 	useEffect(() => {
 		if (petData && petData?.length > 1) {
