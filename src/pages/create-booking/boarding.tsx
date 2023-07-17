@@ -69,7 +69,7 @@ const Boarding: NextPage = () => {
 				customerCity: userData?.city as string,
 				subtotal: calculateSubtotal(boardingPrice, 5) as number,
 				total: addTax(calculateSubtotal(boardingPrice, 5) as number),
-				createdAt: new Date().toLocaleDateString("en-US") as string,
+				createdAt: new Date().toLocaleDateString() as string,
 				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
 			}
 
