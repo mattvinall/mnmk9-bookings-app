@@ -12,7 +12,7 @@
 
         .invoice-box {
             width: 80%;
-            max-width: 800px;
+            max-width: 90%;
             margin: auto;
             padding: 30px;
             border: 1px solid #eee;
@@ -62,15 +62,15 @@
             padding-bottom: 20px;
         }
 
-        .invoice-box table tr.item td {
+        .invoice-box table tr.item {
             border-bottom: 1px solid #eee;
         }
 
-        .invoice-box table tr.item.last td {
+        .invoice-box table tr.item.last {
             border-bottom: none;
         }
 
-        .invoice-box table tr.total td:nth-child(2) {
+        .invoice-box table tr.total td {
             border-top: 2px solid #eee;
             font-weight: bold;
         }
@@ -109,21 +109,16 @@
     <div class="invoice-box">
         <table cellpadding="0" cellspacing="0">
             <tr class="top">
-                <td colspan="2">
-                    <table>
+                <td colspan="3">
+                    <table width="100%">
                         <tr>
-                            <td class="title">
-                                <svg width="100" max-width="300" height="86" viewBox="0 0 86 86" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M71.5413 30.5336C71.6237 29.9101 71.6667 29.2866 71.6667 28.6667C71.6667 20.1419 63.9876 13.3014 55.4664 14.4588C52.9832 10.0405 48.2532 7.16669 43 7.16669C37.7468 7.16669 33.0168 10.0405 30.5336 14.4588C21.9945 13.3014 14.3333 20.1419 14.3333 28.6667C14.3333 29.2866 14.3763 29.9101 14.4588 30.5336C10.0405 33.0204 7.16667 37.7504 7.16667 43C7.16667 48.2496 10.0405 52.9796 14.4588 55.4664C14.3761 56.0853 14.3342 56.709 14.3333 57.3334C14.3333 65.8581 21.9945 72.6808 30.5336 71.5413C33.0168 75.9595 37.7468 78.8334 43 78.8334C48.2532 78.8334 52.9832 75.9595 55.4664 71.5413C63.9876 72.6808 71.6667 65.8581 71.6667 57.3334C71.6667 56.7134 71.6237 56.0899 71.5413 55.4664C75.9595 52.9796 78.8333 48.2496 78.8333 43C78.8333 37.7504 75.9595 33.0204 71.5413 30.5336ZM39.2554 58.824L26.1153 45.5155L31.218 40.4845L39.3056 48.676L54.8107 33.2892L59.856 38.3775L39.2554 58.824Z"
-                                        fill="#58CAEA" />
-                                </svg>
+                            <td class="title" align="left">
+                                <img src="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/images/mnmk9-logo.png" alt="MNMK-9 company logo" title="MNMK-9 logo"  width="100" max-width="300" height="86"/>
                             </td>
-
-                            <td>
+                            <td></td>
+                            <td align="right">
                                 Invoice #: {{bookingId}}<br>
-                                Created: {{createdAt}}<br>
+                                Created: {{formattedCreatedAt}}<br>
                                 Due: due at checkout {{formattedDueDate}}
                             </td>
                         </tr>
@@ -132,7 +127,7 @@
             </tr>
 
             <tr class="information">
-                <td colspan="2">
+                <td colspan="3">
                     <table>
                         <tr>
                             <td>
@@ -140,7 +135,7 @@
                                 {{customerAddress}}, {{customerCity}}<br>
                                 {{customerEmail}}
                             </td>
-
+                            <td></td>
                             <td>
                                 MNMK-9<br>
                                 123 Main St. Port Cobourne, ON<br>
@@ -163,7 +158,7 @@
                 </td>
             </tr>
 
-            <tr class="item last">
+            <tr class="item">
                 <td>
                     {{serviceName}}
                 </td>
@@ -178,16 +173,16 @@
 
             <tr class="sub-total">
                 <td></td>
-                <td></td>
-                <td>
-                    Subtotal: ${{subtotal}}
+                <td>Subtotal:</td>
+                <td align="right">
+                    ${{subtotal}}.00
                 </td>
             </tr>
             <tr class="total">
                 <td></td>
-                <td></td>
-                <td>
-                    Total: ${{total}}
+                <td>Total:</td>
+                <td align="right">
+                    ${{total}}.00
                 </td>
             </tr>
         </table>
