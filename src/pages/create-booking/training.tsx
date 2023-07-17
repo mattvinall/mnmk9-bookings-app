@@ -13,8 +13,11 @@ import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
-import { Pet } from "../../types/router";
+import { Pet } from "@prisma/client";
 import { useAuth, useUser } from "@clerk/nextjs";
+import { getUserById } from "../../api/users";
+import { getAllServices } from "../../api/services";
+import { Invoice, addTax, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
 
 const Training: NextPage = () => {
 	const router = useRouter();
@@ -23,17 +26,19 @@ const Training: NextPage = () => {
 	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
 	const [petId, setPetID] = useState<string>("");
-	const [score, setScore] = useState<number | null>(null);
 
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
 
+	const { data: userData } = getUserById(userId as string);
+
 	// query service table and find the service name of boarding and store the service ID
-	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+	const { data: serviceData } = getAllServices();
 
 	const training = serviceData?.find(service => service.serviceName === "Training");
 
 	const trainingId = training?.id as string;
+	const trainingPrice = training?.price as number;
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -52,7 +57,33 @@ const Training: NextPage = () => {
 		},
 	});
 
-	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation();
+	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation({
+		onSuccess: (data) => {
+			const checkInDate = new Date(data?.checkInDate as string);
+			const checkOutDate = new Date(data?.checkOutDate as string);
+			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+
+			const invoice = {
+				bookingId: data?.id as string,
+				petName: data?.petName as string,
+				serviceName: data?.serviceName as string,
+				servicePrice: trainingPrice,
+				serviceDuration: serviceDuration,
+				customerName: `${data?.firstName} ${data?.lastName}`,
+				customerEmail: data?.email as string,
+				customerAddress: userData?.address as string,
+				customerCity: userData?.city as string,
+				subtotal: calculateSubtotal(trainingPrice, serviceDuration) as number,
+				total: addTax(calculateSubtotal(trainingPrice, serviceDuration) as number),
+				createdAt: new Date().toLocaleDateString() as string,
+				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
+			}
+
+			if (invoice) {
+				generateInvoice(invoice as Invoice);
+			}
+		}
+	});
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
