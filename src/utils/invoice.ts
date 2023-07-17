@@ -9,6 +9,7 @@ export interface Invoice {
     customerAddress: string;
     customerCity: string;
     subtotal: number;
+    taxAmount: number;
     total: number;
     createdAt: string
     dueDate: string
