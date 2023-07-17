@@ -18,6 +18,7 @@ export default async (req, res) => {
         customerAddress,
         customerCity,
         subtotal,
+        taxAmount,
         total,
         createdAt,
         dueDate
@@ -53,6 +54,7 @@ export default async (req, res) => {
             customerAddress,
             customerCity,
             subtotal,
+            taxAmount,
             total,
             formattedCreatedAt,
             formattedDueDate
