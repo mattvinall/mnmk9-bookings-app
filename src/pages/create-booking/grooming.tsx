@@ -17,7 +17,7 @@ import { Pet } from "@prisma/client";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { getAllServices } from "../../api/services";
 import { getUserById } from "../../api/users";
-import { Invoice, addTax, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
+import { Invoice, calculateTotalAmount, calculateTaxAmount, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
 
 const Grooming: NextPage = () => {
 	const router = useRouter();
@@ -74,7 +74,8 @@ const Grooming: NextPage = () => {
 				customerAddress: userData?.address as string,
 				customerCity: userData?.city as string,
 				subtotal: calculateSubtotal(groomingPrice, serviceDuration) as number,
-				total: addTax(calculateSubtotal(groomingPrice, serviceDuration) as number),
+				taxAmount: calculateTaxAmount(calculateSubtotal(groomingPrice, serviceDuration) as number),
+				total: calculateTotalAmount(calculateSubtotal(groomingPrice, serviceDuration) as number),
 				createdAt: new Date().toLocaleDateString() as string,
 				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
 			}

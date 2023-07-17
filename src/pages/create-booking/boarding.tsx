@@ -14,7 +14,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Pet } from "@prisma/client"
 import { useAuth, useUser } from "@clerk/nextjs";
 import { getUserById } from "../../api/users";
-import { Invoice, addTax, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
+import { Invoice, calculateServiceDuration, calculateSubtotal, calculateTaxAmount, calculateTotalAmount, generateInvoice } from "../../utils/invoice";
 
 const Boarding: NextPage = () => {
 	const { isSignedIn } = useUser();
@@ -68,7 +68,8 @@ const Boarding: NextPage = () => {
 				customerAddress: userData?.address as string,
 				customerCity: userData?.city as string,
 				subtotal: calculateSubtotal(boardingPrice, serviceDuration) as number,
-				total: addTax(calculateSubtotal(boardingPrice, serviceDuration) as number),
+				taxAmount: calculateTaxAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
+				total: calculateTotalAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
 				createdAt: new Date().toLocaleDateString() as string,
 				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
 			}

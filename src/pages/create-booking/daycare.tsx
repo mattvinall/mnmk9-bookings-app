@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { getUserById } from "../../api/users";
 import { getAllServices } from "../../api/services";
-import { Invoice, addTax, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
+import { Invoice, calculateTotalAmount, calculateServiceDuration, calculateSubtotal, generateInvoice, calculateTaxAmount } from "../../utils/invoice";
 
 const Daycare: NextPage = () => {
 	const router = useRouter();
@@ -89,7 +89,8 @@ const Daycare: NextPage = () => {
 				customerAddress: userData?.address as string,
 				customerCity: userData?.city as string,
 				subtotal: calculateSubtotal(daycarePrice, serviceDuration) as number,
-				total: addTax(calculateSubtotal(daycarePrice, serviceDuration) as number),
+				taxAmount: calculateTaxAmount(calculateSubtotal(daycarePrice, serviceDuration) as number),
+				total: calculateTotalAmount(calculateSubtotal(daycarePrice, serviceDuration) as number),
 				createdAt: new Date().toLocaleDateString() as string,
 				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
 			}
