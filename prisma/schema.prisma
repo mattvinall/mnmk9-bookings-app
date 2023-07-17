@@ -8,6 +8,22 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum Temperament {
+  PASSIVE
+  NEUTRAL
+  AGGRESSIVE
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
 model Todo {
   id        String  @id @default(cuid())
   title     String
@@ -24,22 +40,6 @@ model Contact {
   email     String
   message   String
   createdAt DateTime @default(now())
-}
-
-enum Sex {
-  MALE
-  FEMALE
-}
-
-enum Temperament {
-  PASSIVE
-  NEUTRAL
-  AGGRESSIVE
-}
-
-enum Role {
-  ADMIN
-  USER
 }
 
 model Vaccination {
@@ -90,6 +90,7 @@ model Pet {
   profileImages      Image[]
   IncidentReport     IncidentReport[]
   Waiver             Waiver[]
+  Invoice            Invoice[]
 
   @@index([ownerId, id])
 }
@@ -125,6 +126,7 @@ model Services {
   price       Int
   serviceName String     @unique
   bookings    Bookings[]
+  Invoice     Invoice[]
 
   @@index([serviceName])
 }
@@ -151,8 +153,34 @@ model Bookings {
   pet              Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
   service          Services  @relation(fields: [serviceId], references: [id])
   user             User      @relation(fields: [userId], references: [id])
+  Invoice          Invoice[]
 
   @@index([userId, petId])
+}
+
+model Invoice {
+  id              String   @id @default(uuid())
+  booking         Bookings @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId       String
+  pet             Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  petId           String
+  petName         String
+  createdAt       DateTime @default(now())
+  service         Services @relation(fields: [serviceId], references: [id])
+  serviceId       String
+  serviceName     String
+  servicePrice    Int
+  serviceDuration Int
+  customerName    String
+  customerEmail   String
+  customerAddress String
+  subtotal        Int
+  taxAmount       Int
+  total           Int
+  customerCity    String
+  client          User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId        String
+  dueDate         DateTime
 }
 
 model Account {
@@ -198,6 +226,7 @@ model User {
   sessions      Session[]
   todo          Todo[]
   vetInfo       Vet[]
+  Invoice       Invoice[]
 
   @@index([id])
 }
