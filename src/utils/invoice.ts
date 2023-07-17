@@ -40,13 +40,22 @@ export const generateInvoice = (bookingData: Invoice) => {
     saveAsPDF();
 };
 
-export const addTax = (price: number) => {
+export const calculateTotalAmount = (price: number) => {
     if (!price || isNaN(price)) {
         throw new Error('Price must be a number');
     } 
 
     const total = price * 1.13;
     return parseInt(total.toFixed(2), 10);
+}
+
+export const calculateTaxAmount = (price: number) => {
+    if (!price || isNaN(price)) {
+        throw new Error('Price must be a number');
+    }
+
+    const taxAmount = price * 0.13;
+    return parseInt(taxAmount.toFixed(2), 10);
 }
 
 export const calculateSubtotal = (price: number, duration: number) => {
