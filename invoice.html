@@ -115,11 +115,14 @@
                             <td class="title" align="left">
                                 <img src="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/images/mnmk9-logo.png" alt="MNMK-9 company logo" title="MNMK-9 logo"  width="100" max-width="300" height="86"/>
                             </td>
-                            <td></td>
+                            <td>Invoice #: <br />
+                                Created: <br />
+                                Due: 
+                            </td>
                             <td align="right">
-                                Invoice #: {{bookingId}}<br>
-                                Created: {{formattedCreatedAt}}<br>
-                                Due: due at checkout {{formattedDueDate}}
+                                {{bookingId}}<br>
+                                {{formattedCreatedAt}}<br>
+                                At checkout {{formattedDueDate}}
                             </td>
                         </tr>
                     </table>
