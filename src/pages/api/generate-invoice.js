@@ -29,6 +29,12 @@ export default async (req, res) => {
         day: 'numeric'
     });
 
+    const formattedCreatedAt = new Date(createdAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
     try {
         // read our invoice-template.html file using node fs module
         const file = fs.readFileSync("invoice.html", 'utf8');
@@ -48,7 +54,7 @@ export default async (req, res) => {
             customerCity,
             subtotal,
             total,
-            createdAt,
+            formattedCreatedAt,
             formattedDueDate
         });
 
