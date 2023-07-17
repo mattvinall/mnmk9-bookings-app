@@ -11,7 +11,7 @@
         }
 
         .invoice-box {
-            width: 600px;
+            width: 80%;
             max-width: 800px;
             margin: auto;
             padding: 30px;
@@ -163,7 +163,7 @@
                 </td>
             </tr>
 
-            <tr class="item">
+            <tr class="item last">
                 <td>
                     {{serviceName}}
                 </td>
@@ -171,7 +171,7 @@
                     {{serviceDuration}}
                 </td>
                 <td align="right">
-                    {{servicePrice}}
+                    ${{servicePrice}}.00
                 </td>
             </tr>
 
@@ -180,14 +180,14 @@
                 <td></td>
                 <td></td>
                 <td>
-                    Subtotal: {{subtotal}}
+                    Subtotal: ${{subtotal}}
                 </td>
             </tr>
             <tr class="total">
                 <td></td>
                 <td></td>
                 <td>
-                    Total: {{total}}
+                    Total: ${{total}}
                 </td>
             </tr>
         </table>
