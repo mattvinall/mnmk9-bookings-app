@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
@@ -33,10 +34,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const formattedCreatedAt = formatDate(createdAt);
 
     try {
-        // read our invoice-template.html file using node fs module
-        const file = fs.readFileSync("https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/html/invoice.html", 'utf8');
-        console.log("file found", file);
+        const isProduction = process.env.NODE_ENV === 'production';
+        console.log('isProduction', isProduction);
 
+        const filePath = isProduction
+        ? path.join(process.cwd(), 'public', 'invoice.html')
+        : path.join(__dirname, '..', 'public', 'invoice.html');
+
+        const file = fs.readFileSync(filePath, 'utf8');
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
 
