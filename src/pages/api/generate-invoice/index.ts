@@ -68,7 +68,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         // simulate a chrome browser with puppeteer and navigate to a new page
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: false
+        });
 
         const page = await browser.newPage();
 
