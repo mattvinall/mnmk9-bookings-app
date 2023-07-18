@@ -1,7 +1,6 @@
 import fs from 'fs';
 import chromium from 'chrome-aws-lambda';
 import puppeteer from 'puppeteer-core';
-
 import { join } from "path";
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
@@ -43,8 +42,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         : join(__dirname, '..', 'public', 'invoice.html');
         
         const file = fs.readFileSync(filePath, 'utf8');
-       
-        console.log("file", file);
 
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
