@@ -44,10 +44,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // console.log('filePath', filePath);
         
         const file = fs.readFileSync(filePath, 'utf8');
-        console.log("file", fs.readFileSync(filePath, 'utf8'));
+        // console.log("file", fs.readFileSync(filePath, 'utf8'));
 
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
+        console.log("template", template);
 
         const html = template({
             bookingId,
