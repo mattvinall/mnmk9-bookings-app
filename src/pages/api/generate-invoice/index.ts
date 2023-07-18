@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
         // read our invoice-template.html file using node fs module
-       const file = fs.readFileSync(path.join(process.cwd(), 'public', 'invoice.html'), 'utf8');
+       const file = fs.readFileSync("/invoice.html", 'utf8');
 
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
