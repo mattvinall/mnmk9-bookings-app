@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
@@ -35,7 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
         // read our invoice-template.html file using node fs module
-        const file = fs.readFileSync("./invoice.html", 'utf8');
+        const file = fs.readFileSync("https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/html/invoice.html", 'utf8');
         console.log("file found", file);
 
         // compile the file with handlebars and inject the customerName variable
