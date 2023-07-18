@@ -55,8 +55,6 @@ const Boarding: NextPage = () => {
 
 	const addNewBooking = trpc.bookings.newBooking.useMutation({
 		onSuccess: (data) => {
-			console.log("data on success", data);
-
 			const checkInDate = new Date(data?.checkInDate as string);
 			const checkOutDate = new Date(data?.checkOutDate as string);
 			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
