@@ -13,8 +13,11 @@ import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
-import { Pet } from "../../types/router";
+import { Pet } from "@prisma/client";
 import { useAuth, useUser } from "@clerk/nextjs";
+import { getAllServices } from "../../api/services";
+import { getUserById } from "../../api/users";
+import { Invoice, calculateTotalAmount, calculateTaxAmount, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
 
 const Grooming: NextPage = () => {
 	const router = useRouter();
@@ -27,12 +30,15 @@ const Grooming: NextPage = () => {
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
 
+	const { data: userData } = getUserById(userId as string);
+
 	// query service table and find the service name of boarding and store the service ID
-	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+	const { data: serviceData } = getAllServices();
 
 	const grooming = serviceData?.find(service => service.serviceName === "Grooming");
 
-	const groomingId = grooming?.id || "";
+	const groomingId = grooming?.id as string;
+	const groomingPrice = Number(grooming?.price);
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -51,7 +57,43 @@ const Grooming: NextPage = () => {
 		},
 	});
 
-	const addNewGroomingBooking = trpc.bookings.newBooking.useMutation();
+	const { mutate: createInvoice } = trpc.invoice.create.useMutation();
+
+	const addNewGroomingBooking = trpc.bookings.newBooking.useMutation({
+		onSuccess: (data) => {
+			const checkInDate = new Date(data?.checkInDate as string);
+			const checkOutDate = new Date(data?.checkOutDate as string);
+			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+			const subtotal = calculateSubtotal(groomingPrice, serviceDuration);
+			const taxAmount = calculateTaxAmount(subtotal);
+			const total = calculateTotalAmount(subtotal + taxAmount);
+
+			try {
+
+				createInvoice({
+					bookingId: data?.id as string,
+					petId: data?.petId as string,
+					petName: data?.petName as string,
+					clientId: data?.userId as string,
+					serviceId: groomingId as string,
+					serviceName: data?.serviceName as string,
+					servicePrice: groomingPrice,
+					serviceDuration: serviceDuration,
+					customerName: `${data?.firstName} ${data?.lastName}`,
+					customerEmail: data?.email as string,
+					customerAddress: userData?.address as string,
+					customerCity: userData?.city as string,
+					subtotal: subtotal,
+					taxAmount: taxAmount,
+					total: total,
+					createdAt: new Date().toLocaleDateString() as string,
+					dueDate: data?.checkOutDate ? new Date(data?.checkOutDate).toLocaleDateString() as string : "At Checkout",
+				});
+			} catch (error) {
+				console.log("error creating invoice", error);
+			}
+		}
+	});
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 

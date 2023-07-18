@@ -4,40 +4,51 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from "sweetalert2";
 import EditBookingForm from "../../components/client/forms/EditBookingForm";
 import { editBookingsFormSchema, EditBookingFormType } from "../../utils/schema";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { generateInvoice } from "../../utils/invoice";
+import { Invoice, calculateServiceDuration, calculateSubtotal, calculateTaxAmount, calculateTotalAmount } from "../../utils/invoice";
+import { getUserById } from "../../api/users";
+import { Services } from "@prisma/client";
 
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 
-	const [score, setScore] = useState<number | null>(null);
+	// state
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("")
 	const [secret, setSecret] = useState<string>("");
+	const [showForm, setShowForm] = useState(true);
 
+	// trpc queries and mutations
 	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
-		resolver: zodResolver(editBookingsFormSchema)
-	});
+	const { data: userData } = getUserById(bookingDetail?.userId as string);
+
+	const { data: invoiceData } = trpc.invoice.getByBookingId.useQuery({ bookingId: bookingId as string });
+
+	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+
+	const service = serviceData && serviceData?.find((service: Services) => service.id === bookingDetail?.serviceId);
+	const servicePrice = Number(service?.price);
 
 	const editBooking = trpc.bookings.editBooking.useMutation();
 
 	const cancelBooking = trpc.bookings.cancelBooking.useMutation();
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-			setScore(data.score);
-		},
 		onError(error) {
 			console.log("error verify recaptcha mutation", error);
 		}
+	});
+
+	// react hook form
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
+		resolver: zodResolver(editBookingsFormSchema)
 	});
 
 	useEffect(() => {
@@ -51,8 +62,46 @@ const BookingDetail: NextPage = () => {
 		setSecret(secret);
 	}, [key, secret]);
 
-	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
+	// logic to generate invoice on click
+	const handleGenerateInvoice = async () => {
+		const checkInDate = new Date(bookingDetail?.checkInDate as string);
+		const checkOutDate = new Date(bookingDetail?.checkOutDate as string);
+		const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+		const subtotal = calculateSubtotal(servicePrice, serviceDuration);
+		const taxAmount = calculateTaxAmount(subtotal);
+		const total = calculateTotalAmount(subtotal + taxAmount);
 
+		const invoice = {
+			bookingId: bookingId as string,
+			petName: invoiceData?.petName as string || bookingDetail?.petName as string,
+			serviceName: invoiceData?.serviceName as string,
+			servicePrice: servicePrice,
+			serviceDuration: serviceDuration,
+			customerName: invoiceData?.customerName || userData?.name as string,
+			customerEmail: invoiceData?.customerEmail as string || userData?.email as string,
+			customerAddress: userData?.address as string,
+			customerCity: userData?.city as string,
+			subtotal,
+			taxAmount,
+			total,
+			createdAt: new Date().toLocaleDateString() as string,
+			dueDate: bookingDetail?.checkOutDate && new Date(bookingDetail?.checkOutDate).toLocaleDateString() as string,
+		} as Invoice;
+
+		Swal.fire({
+			title: 'Are you sure you want to generate invoice?',
+			showDenyButton: true,
+			confirmButtonText: 'Yes',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				generateInvoice(invoice as Invoice);
+				Swal.fire('Successfully Generated Invoice', '', 'success');
+			}
+		})
+	}
+
+	// on submit logic to create booking
+	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
 		try {
 			Swal.fire({
 				title: 'Are you sure you want to Edit?',
@@ -63,12 +112,7 @@ const BookingDetail: NextPage = () => {
 					// mutate / POST request to bookings api endpoint and submit the form data
 					formData.id = bookingDetail?.id;
 
-					verifyRecaptcha.mutate({ token, secret });
-
-					if (score && score < 0.5) {
-						console.log("score is less than 0.5");
-						return;
-					}
+					token && secret && verifyRecaptcha.mutate({ token, secret });
 
 					editBooking.mutate(formData);
 
@@ -89,8 +133,6 @@ const BookingDetail: NextPage = () => {
 		// reset the form state
 		reset();
 	}
-
-	const [showForm, setShowForm] = useState(true);
 
 	const handleShowEditBookingForm = () => {
 		setShowForm(true);
@@ -149,6 +191,9 @@ const BookingDetail: NextPage = () => {
 					</li>
 					<li>
 						<button onClick={() => handleCancelBooking(bookingDetail?.id as string)} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Cancel Booking</button>
+					</li>
+					<li>
+						<button onClick={handleGenerateInvoice} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Generate Invoice</button>
 					</li>
 				</ul>
 			</nav>

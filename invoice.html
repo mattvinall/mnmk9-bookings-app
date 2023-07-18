@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            margin-top: 5rem;
+        }
+
+        .invoice-box {
+            width: 80%;
+            max-width: 90%;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr td:nth-child(2) {
+            text-align: right;
+        }
+
+        .invoice-box table tr.top table td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        .invoice-box table tr.information table td {
+            padding-bottom: 40px;
+        }
+
+        .invoice-box table tr.heading td {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-box table tr.item.last {
+            border-bottom: none;
+        }
+
+        .invoice-box table tr.total td {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+            .invoice-box table tr.information table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+        }
+
+        /** RTL **/
+        .rtl {
+            direction: rtl;
+            font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        }
+
+        .rtl table {
+            text-align: right;
+        }
+
+        .rtl table tr td:nth-child(2) {
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="3">
+                    <table width="100%">
+                        <tr>
+                            <td class="title" align="left">
+                                <img src="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/images/mnmk9-logo.png" alt="MNMK-9 company logo" title="MNMK-9 logo"  width="100" max-width="300" height="86"/>
+                            </td>
+                            <td>Invoice #: <br />
+                                Created: <br />
+                                Due: 
+                            </td>
+                            <td align="right">
+                                {{bookingId}}<br>
+                                {{formattedCreatedAt}}<br>
+                                At checkout {{formattedDueDate}}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="3">
+                    <table>
+                        <tr>
+                            <td>
+                                {{customerName}} | {{petName}}<br>
+                                {{customerAddress}}, {{customerCity}}<br>
+                                {{customerEmail}}
+                            </td>
+                            <td></td>
+                            <td align="right">
+                                MNMK-9<br>
+                                123 Main St. Port Cobourne, ON<br>
+                                tymelnike@mnmk9.ca
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="heading">
+                <td>
+                    Item
+                </td>
+                <td>
+                    Quantity (days)
+                </td>
+                <td align="right">
+                    Price
+                </td>
+            </tr>
+
+            <tr class="item">
+                <td>
+                    {{serviceName}}
+                </td>
+                <td>
+                    {{serviceDuration}}
+                </td>
+                <td align="right">
+                    ${{servicePrice}}
+                </td>
+            </tr>
+
+
+            <tr class="sub-total">
+                <td></td>
+                <td>Subtotal:</td>
+                <td align="right">
+                    ${{subtotal}}
+                </td>
+            </tr>
+            <tr class="tax-amount">
+                <td></td>
+                <td>GST + HST</td>
+                <td align="right">
+                    ${{taxAmount}}
+                </td>
+            </tr>
+            <tr class="total">
+                <td></td>
+                <td>Total:</td>
+                <td align="right">
+                    ${{total}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

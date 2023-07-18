@@ -11,17 +11,20 @@ import BoardingForm from "../../components/client/forms/BoardingForm";
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import { Pet } from "../../types/router";
+import { Pet } from "@prisma/client"
 import { useAuth, useUser } from "@clerk/nextjs";
+import { getUserById } from "../../api/users";
+import { Invoice, calculateServiceDuration, calculateSubtotal, calculateTaxAmount, calculateTotalAmount, generateInvoice } from "../../utils/invoice";
 
 const Boarding: NextPage = () => {
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
+	const { data: userData } = getUserById(userId as string);
 	const router = useRouter();
 
 	const [petId, setPetID] = useState<string>("");
 	const [token, setToken] = useState<string>("");
-	const [key, setKey] = useState<string>("")
+	const [key, setKey] = useState<string>("");
 	const [secret, setSecret] = useState<string>("");
 
 	// query service table and find the service name of boarding and store the service ID
@@ -29,6 +32,9 @@ const Boarding: NextPage = () => {
 
 	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
 	const boardingId = boarding?.id as string;
+	const boardingPrice = Number(boarding?.price);
+
+	const { mutate: createInvoice } = trpc.invoice.create.useMutation();
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -47,7 +53,61 @@ const Boarding: NextPage = () => {
 		},
 	});
 
-	const addNewBooking = trpc.bookings.newBooking.useMutation();
+	const addNewBooking = trpc.bookings.newBooking.useMutation({
+		onSuccess: (data) => {
+			const checkInDate = new Date(data?.checkInDate as string);
+			const checkOutDate = new Date(data?.checkOutDate as string);
+			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+			const subtotal = calculateSubtotal(boardingPrice, serviceDuration);
+			const taxAmount = calculateTaxAmount(subtotal);
+			const total = calculateTotalAmount(subtotal + taxAmount);
+			// const invoice = {
+			// 	bookingId: data?.id as string,
+			// 	petName: data?.petName as string,
+			// 	serviceName: data?.serviceName as string,
+			// 	servicePrice: boardingPrice,
+			// 	serviceDuration: serviceDuration,
+			// 	customerName: `${data?.firstName} ${data?.lastName}`,
+			// 	customerEmail: data?.email as string,
+			// 	customerAddress: userData?.address as string,
+			// 	customerCity: userData?.city as string,
+			// 	subtotal: calculateSubtotal(boardingPrice, serviceDuration) as number,
+			// 	taxAmount: calculateTaxAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
+			// 	total: calculateTotalAmount(calculateSubtotal(boardingPrice, serviceDuration) as number),
+			// 	createdAt: new Date().toLocaleDateString() as string,
+			// 	dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
+			// }
+
+			// if (invoice) {
+			// 	generateInvoice(invoice as Invoice);
+			// }
+
+			try {
+
+				createInvoice({
+					bookingId: data?.id as string,
+					petId: data?.petId as string,
+					petName: data?.petName as string,
+					clientId: data?.userId as string,
+					serviceId: boardingId as string,
+					serviceName: data?.serviceName as string,
+					servicePrice: boardingPrice,
+					serviceDuration: serviceDuration,
+					customerName: `${data?.firstName} ${data?.lastName}`,
+					customerEmail: data?.email as string,
+					customerAddress: userData?.address as string,
+					customerCity: userData?.city as string,
+					subtotal: subtotal,
+					taxAmount: taxAmount,
+					total: total,
+					createdAt: new Date().toLocaleDateString() as string,
+					dueDate: data?.checkOutDate ? new Date(data?.checkOutDate).toLocaleDateString() as string : "At Checkout",
+				});
+			} catch (error) {
+				console.log("error creating invoice", error);
+			}
+		}
+	});
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
@@ -99,7 +159,7 @@ const Boarding: NextPage = () => {
 			const id = petData && petData[0]?.id;
 			const serviceName = "Boarding";
 
-			verifyRecaptcha.mutate({ token, secret });
+			token && secret && verifyRecaptcha.mutate({ token, secret });
 
 			// mutate / POST request to bookings api endpoint and submit the form data
 			userId && addNewBooking.mutate({

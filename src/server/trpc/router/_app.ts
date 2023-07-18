@@ -10,6 +10,7 @@ import { recaptchaRouter } from "./recaptcha";
 import { incidentReportRouter } from "./incidentReport";
 import { waiverRouter } from "./waiver";
 import { vaccineRouter } from "./vaccine";
+import { invoiceRouter } from "./invoice";
 
 export const appRouter = router({
   user: userRouter,
@@ -23,6 +24,7 @@ export const appRouter = router({
   incidentReport: incidentReportRouter,
   waiver: waiverRouter,
   vaccine: vaccineRouter,
+  invoice: invoiceRouter
 });
 
 // export type definition of API

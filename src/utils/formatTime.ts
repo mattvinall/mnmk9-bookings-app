@@ -1,5 +1,4 @@
 export const formatTime = (time: string) => {
-	console.log("time in format time function", time);
 	const hour = time.split(":")[0] as string;
 	const minute = time.split(":")[1] as string;
 	const hourAsNumber = parseInt(hour, 10);
