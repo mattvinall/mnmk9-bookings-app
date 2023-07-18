@@ -68,13 +68,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             formattedDueDate
         });
 
-        process.env.PUPPETEER_CACHE_DIR = path.join(process.cwd(), 'puppeteer-cache');
+        process.env.PUPPETEER_CACHE_DIR = path.join(process.cwd(), 'puppeteer-cache') as string;
         
         // simulate a chrome browser with puppeteer and navigate to a new page
         const browser = await puppeteer.launch({
             devtools: true,
-            headless: true,
-            args: ['--no-sandbox']
+            headless: "new",
+            args: ['--no-sandbox'],
+            executablePath: '/usr/bin/google-chrome',
         });
 
 
