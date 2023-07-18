@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { join } from "path";
 import puppeteer from 'puppeteer';
+import { join } from "path";
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -34,15 +34,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const formattedCreatedAt = formatDate(createdAt);
 
     try {
-        // const isProduction = process.env.NODE_ENV === 'production';
-        // console.log('isProduction', isProduction);
+        const isProduction = process.env.NODE_ENV === 'production';
+        console.log('isProduction', isProduction);
 
-        // const filePath = isProduction
-        // ? join(process.cwd(), 'public', 'invoice.html')
-        // : join(__dirname, '..', 'public', 'invoice.html');
+        const filePath = isProduction
+        ? join(process.cwd(), 'public', 'invoice.html')
+        : join(__dirname, '..', 'public', 'invoice.html');
 
-        const file = fs.readFileSync("invoice.html", 'utf8');
-        console.log("file", file);
+        const file = fs.readFileSync(filePath, 'utf8');
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
 
@@ -76,6 +75,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // convert the page to pdf with the .pdf() method
         const pdf = await page.pdf({ format: 'A4' });
+        console.log("pdf", pdf)
         await browser.close();
 
         // send the result to the client
