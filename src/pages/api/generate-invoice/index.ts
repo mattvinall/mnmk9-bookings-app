@@ -1,6 +1,5 @@
 import fs from 'fs';
 import chromium from 'chrome-aws-lambda';
-import puppeteer from 'puppeteer-core';
 import { join } from "path";
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
@@ -34,6 +33,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const formattedCreatedAt = formatDate(createdAt);
 
+    let browser = null;
+    
     try {
         const isProduction = process.env.NODE_ENV === 'production';
 
@@ -66,10 +67,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         
         // simulate a chrome browser with puppeteer and navigate to a new page
-        const browser = await puppeteer.launch({
+        browser = await chromium.puppeteer.launch({
             args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
             executablePath: await chromium.executablePath,
             headless: chromium.headless,
+            ignoreHTTPSErrors: true,
         });
 
         const page = await browser.newPage();
