@@ -48,7 +48,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
-        console.log("template", template);
+        // console.log("template", template);
 
         const html = template({
             bookingId,
