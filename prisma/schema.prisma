@@ -123,7 +123,7 @@ model IncidentReport {
 
 model Services {
   id          String     @id @default(cuid())
-  price       Int
+  price       Decimal    @db.Decimal(5, 2)
   serviceName String     @unique
   bookings    Bookings[]
   Invoice     Invoice[]
