@@ -19,7 +19,7 @@ export interface Invoice {
 export const generateInvoice = async  (bookingData: Invoice) => {
     // send a post request with the name to our API endpoint
     const fetchData = async () => {
-        const data = await fetch('http://localhost:3000/api/generate-invoice', {
+        const data = await fetch('https://mnmk9-bookings.app/api/generate-invoice', {
             method: 'POST',
             body: JSON.stringify({ bookingData }),
         });
