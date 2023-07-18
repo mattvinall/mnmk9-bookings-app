@@ -5,6 +5,7 @@ import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Invoice } from '../../../utils/invoice';
+import path from "path";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     // how to use the Invoice interface to make bookingData properly
@@ -68,10 +69,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         // simulate a chrome browser with puppeteer and navigate to a new page
-        const browser = await puppeteer.launch({
+       const browser = await puppeteer.launch({
             devtools: true,
             headless: true,
-            args: ['--no-sandbox']
+            args: ['--no-sandbox'],
+            userDataDir: path.join(process.cwd(), 'puppeteer-cache')
         });
 
         const page = await browser.newPage();
