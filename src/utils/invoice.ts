@@ -47,7 +47,10 @@ export const calculateTotalAmount = (price: number) => {
     } 
 
     const total = price * 1.13;
-    return parseInt(total.toFixed(2), 10);
+    const formattedTotal = parseFloat(total.toFixed(2));
+
+    return formattedTotal;
+
 }
 
 export const calculateTaxAmount = (price: number) => {
@@ -56,20 +59,24 @@ export const calculateTaxAmount = (price: number) => {
     }
 
     const taxAmount = price * 0.13;
-    return parseInt(taxAmount.toFixed(2), 10);
+    const formattedTaxAmount = parseFloat(taxAmount.toFixed(2));
+    
+    return formattedTaxAmount;
 }
 
 export const calculateSubtotal = (price: number, duration: number) => {
     if (!price || isNaN(price)) {
         throw new Error('Price must be a number');
     }
+
     if (!duration || isNaN(duration)) {
         throw new Error('Duration must be a number');
     }
 
     const subTotal = price * duration;
+    const formattedSubtotal = parseFloat(subTotal.toFixed(2));
 
-    return parseInt(subTotal.toFixed(2), 10);
+   return formattedSubtotal;
 }
 
 export const calculateServiceDuration = (checkInDate: Date, checkOutDate: Date) => {
