@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '../../utils/trpc';
-import { Pet } from '@prisma/client';
+import { Pet, Services } from '@prisma/client';
 import DaycareForm from "../../components/client/forms/DaycareForm";
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
@@ -45,7 +45,7 @@ const Daycare: NextPage = () => {
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = getAllServices();
 
-	const daycare = serviceData?.find(service => service.serviceName === "Daycare");
+	const daycare = serviceData?.find((service: Services) => service.serviceName === "Daycare");
 
 	const daycareId = daycare?.id as string;
 	const daycarePrice = Number(daycare?.price);

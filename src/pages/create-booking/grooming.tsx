@@ -13,7 +13,7 @@ import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import {
 	GoogleReCaptchaProvider,
 } from 'react-google-recaptcha-v3';
-import { Pet } from "@prisma/client";
+import { Pet, Services } from "@prisma/client";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { getAllServices } from "../../api/services";
 import { getUserById } from "../../api/users";
@@ -35,7 +35,7 @@ const Grooming: NextPage = () => {
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = getAllServices();
 
-	const grooming = serviceData?.find(service => service.serviceName === "Grooming");
+	const grooming = serviceData?.find((service: Services) => service.serviceName === "Grooming");
 
 	const groomingId = grooming?.id as string;
 	const groomingPrice = Number(grooming?.price);

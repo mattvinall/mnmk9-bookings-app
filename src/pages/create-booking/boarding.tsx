@@ -11,7 +11,7 @@ import BoardingForm from "../../components/client/forms/BoardingForm";
 import { bookingFormSchema, BookingFormType } from "../../utils/schema";
 import { sendEmailToAdmin, sendEmailToClient } from './../../lib/email';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import { Pet } from "@prisma/client"
+import { Pet, Services } from "@prisma/client"
 import { useAuth, useUser } from "@clerk/nextjs";
 import { getUserById } from "../../api/users";
 import { Invoice, calculateServiceDuration, calculateSubtotal, calculateTaxAmount, calculateTotalAmount, generateInvoice } from "../../utils/invoice";
@@ -30,7 +30,7 @@ const Boarding: NextPage = () => {
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
-	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
+	const boarding = serviceData?.find((service: Services) => service.serviceName === "Boarding");
 	const boardingId = boarding?.id as string;
 	const boardingPrice = Number(boarding?.price);
 
