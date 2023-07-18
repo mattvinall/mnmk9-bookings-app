@@ -1,11 +1,10 @@
 import fs from 'fs';
+import { join } from "path";
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Invoice } from '../../../utils/invoice';
-
-const { join } = require('path');
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     // how to use the Invoice interface to make bookingData properly
