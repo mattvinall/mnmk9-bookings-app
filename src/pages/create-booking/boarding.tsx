@@ -32,7 +32,7 @@ const Boarding: NextPage = () => {
 
 	const boarding = serviceData?.find(service => service.serviceName === "Boarding");
 	const boardingId = boarding?.id as string;
-	const boardingPrice = boarding?.price as number;
+	const boardingPrice = Number(boarding?.price);
 
 	const { mutate: createInvoice } = trpc.invoice.create.useMutation();
 
