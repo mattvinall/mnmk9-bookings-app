@@ -48,7 +48,7 @@ const Daycare: NextPage = () => {
 	const daycare = serviceData?.find(service => service.serviceName === "Daycare");
 
 	const daycareId = daycare?.id as string;
-	const daycarePrice = daycare?.price as number;
+	const daycarePrice = Number(daycare?.price);
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -69,6 +69,8 @@ const Daycare: NextPage = () => {
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
+	const { mutate: createInvoice } = trpc.invoice.create.useMutation();
+
 	const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<BookingFormType>({
 		resolver: zodResolver(bookingFormSchema)
 	});
@@ -78,25 +80,33 @@ const Daycare: NextPage = () => {
 			const checkInDate = new Date(data?.checkInDate as string);
 			const checkOutDate = new Date(data?.checkOutDate as string);
 			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
-			const invoice = {
-				bookingId: data?.id as string,
-				petName: data?.petName as string,
-				serviceName: data?.serviceName as string,
-				servicePrice: daycarePrice,
-				serviceDuration: serviceDuration,
-				customerName: `${data?.firstName} ${data?.lastName}`,
-				customerEmail: data?.email as string,
-				customerAddress: userData?.address as string,
-				customerCity: userData?.city as string,
-				subtotal: calculateSubtotal(daycarePrice, serviceDuration) as number,
-				taxAmount: calculateTaxAmount(calculateSubtotal(daycarePrice, serviceDuration) as number),
-				total: calculateTotalAmount(calculateSubtotal(daycarePrice, serviceDuration) as number),
-				createdAt: new Date().toLocaleDateString() as string,
-				dueDate: data?.checkOutDate && new Date(data?.checkOutDate).toLocaleDateString() as string,
-			}
+			const subtotal = calculateSubtotal(daycarePrice, serviceDuration);
+			const taxAmount = calculateTaxAmount(subtotal);
+			const total = calculateTotalAmount(subtotal + taxAmount);
 
-			if (invoice) {
-				generateInvoice(invoice as Invoice);
+			try {
+
+				createInvoice({
+					bookingId: data?.id as string,
+					petId: data?.petId as string,
+					petName: data?.petName as string,
+					clientId: data?.userId as string,
+					serviceId: daycareId as string,
+					serviceName: data?.serviceName as string,
+					servicePrice: daycarePrice,
+					serviceDuration: serviceDuration,
+					customerName: `${data?.firstName} ${data?.lastName}`,
+					customerEmail: data?.email as string,
+					customerAddress: userData?.address as string,
+					customerCity: userData?.city as string,
+					subtotal: subtotal,
+					taxAmount: taxAmount,
+					total: total,
+					createdAt: new Date().toLocaleDateString() as string,
+					dueDate: data?.checkOutDate ? new Date(data?.checkOutDate).toLocaleDateString() as string : "At Checkout",
+				});
+			} catch (error) {
+				console.log("error creating invoice", error);
 			}
 		}
 	});
