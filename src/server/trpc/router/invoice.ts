@@ -22,30 +22,32 @@ export const invoiceRouter = router({
             console.log(`failed to fetch all invoices: ${error}`)
         }
     }),
-    getById: protectedProcedure
+    getByBookingId: protectedProcedure
         .input(z.object({
-            id: z.string()
+            bookingId: z.string()
         }))
         .query(async ({ ctx, input }) => {
             try {
-                const cache = await getCache(`invoice-${input.id}`);
+                const cache = await getCache(`invoice-${input.bookingId}`);
 
                 if (cache) {
                     return cache;
                 } else {
-                    const invoice = await ctx.prisma.invoice.findUnique({
+                    const invoice = await ctx.prisma.invoice.findFirst({
                         where: {
-                            id: input.id
+                            bookingId: input.bookingId
                         }
                     });
 
-                    await setCache(`invoice-${input.id}`, invoice);
+                    console.log("invoice by booking id", invoice)
+
+                    await setCache(`invoice-${input.bookingId}`, invoice);
                     return invoice;
                 }
             } catch (err) {
                 return new TRPCError({
                     code: "INTERNAL_SERVER_ERROR",
-                    message: `Failed to fetch invoice with id ${input.id}`
+                    message: `Failed to fetch invoice with booking id ${input.bookingId}`
                 })
             }
         }),
