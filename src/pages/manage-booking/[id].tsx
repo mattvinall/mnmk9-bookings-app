@@ -4,12 +4,15 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from "sweetalert2";
 import EditBookingForm from "../../components/client/forms/EditBookingForm";
 import { editBookingsFormSchema, EditBookingFormType } from "../../utils/schema";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { generateInvoice } from "../../utils/invoice";
+import { Invoice, calculateServiceDuration, calculateSubtotal, calculateTaxAmount, calculateTotalAmount } from "../../utils/invoice";
+import { getUserById } from "../../api/users";
+import { Services } from "@prisma/client";
 
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
@@ -22,6 +25,13 @@ const BookingDetail: NextPage = () => {
 
 	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
 
+	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+
+	const { data: userData } = getUserById(bookingDetail?.userId as string);
+
+	const service = serviceData && serviceData?.find((service: Services) => service.id === bookingDetail?.serviceId);
+	const servicePrice = Number(service?.price);
+
 	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
 		resolver: zodResolver(editBookingsFormSchema)
 	});
@@ -29,6 +39,10 @@ const BookingDetail: NextPage = () => {
 	const editBooking = trpc.bookings.editBooking.useMutation();
 
 	const cancelBooking = trpc.bookings.cancelBooking.useMutation();
+
+	const { data: invoiceData } = trpc.invoice.getByBookingId.useQuery({ bookingId: bookingId as string });
+
+	console.log("invoice data", invoiceData);
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
 		onSuccess(data) {
@@ -50,6 +64,33 @@ const BookingDetail: NextPage = () => {
 		setKey(key);
 		setSecret(secret);
 	}, [key, secret]);
+
+	const handleGenerateInvoice = () => {
+		const checkInDate = new Date(bookingDetail?.checkInDate as string);
+		const checkOutDate = new Date(bookingDetail?.checkOutDate as string);
+		const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
+		const subtotal = calculateSubtotal(servicePrice, serviceDuration);
+		const taxAmount = calculateTaxAmount(subtotal);
+		const total = calculateTotalAmount(subtotal + taxAmount);
+		const invoice = {
+			bookingId: bookingId,
+			petName: invoiceData?.petName as string,
+			serviceName: invoiceData?.serviceName as string,
+			servicePrice: servicePrice,
+			serviceDuration: serviceDuration,
+			customerName: `${invoiceData.firstName} ${invoiceData?.lastName}`,
+			customerEmail: invoiceData?.email as string,
+			customerAddress: userData?.address as string,
+			customerCity: userData?.city as string,
+			subtotal,
+			taxAmount,
+			total,
+			createdAt: new Date().toLocaleDateString() as string,
+			dueDate: invoiceData?.checkOutDate && new Date(invoiceData?.checkOutDate).toLocaleDateString() as string,
+		}
+
+		generateInvoice(invoice as Invoice);
+	}
 
 	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
 
@@ -149,6 +190,9 @@ const BookingDetail: NextPage = () => {
 					</li>
 					<li>
 						<button onClick={() => handleCancelBooking(bookingDetail?.id as string)} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Cancel Booking</button>
+					</li>
+					<li>
+						<button className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Generate Invoice</button>
 					</li>
 				</ul>
 			</nav>
