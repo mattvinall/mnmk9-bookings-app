@@ -41,7 +41,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? join(process.cwd(), 'public', 'invoice.html')
         : join(__dirname, '..', 'public', 'invoice.html');
 
+        console.log('filePath', filePath);
+        
         const file = fs.readFileSync(filePath, 'utf8');
+        console.log("file", fs.readFileSync(filePath, 'utf8'));
+
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
 
@@ -75,7 +79,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // convert the page to pdf with the .pdf() method
         const pdf = await page.pdf({ format: 'A4' });
-        console.log("pdf", pdf)
+
+        console.log("pdf", pdf);
+
         await browser.close();
 
         // send the result to the client
