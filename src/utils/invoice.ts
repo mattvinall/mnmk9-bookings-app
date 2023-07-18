@@ -16,7 +16,7 @@ export interface Invoice {
 }
     
 // container function to generate the Invoice
-export const generateInvoice = (bookingData: Invoice) => {
+export const generateInvoice = async  (bookingData: Invoice) => {
     // send a post request with the name to our API endpoint
     const fetchData = async () => {
         const data = await fetch('http://localhost:3000/api/generate-invoice', {
