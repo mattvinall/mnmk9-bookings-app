@@ -18,35 +18,37 @@ const BookingDetail: NextPage = () => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 
+	// state
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("")
 	const [secret, setSecret] = useState<string>("");
+	const [showForm, setShowForm] = useState(true);
 
+	// trpc queries and mutations
 	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
-
-	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
 	const { data: userData } = getUserById(bookingDetail?.userId as string);
 
+	const { data: invoiceData } = trpc.invoice.getByBookingId.useQuery({ bookingId: bookingId as string });
+
+	const { data: serviceData } = trpc.service.getAllServices.useQuery();
+
 	const service = serviceData && serviceData?.find((service: Services) => service.id === bookingDetail?.serviceId);
 	const servicePrice = Number(service?.price);
-
-	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
-		resolver: zodResolver(editBookingsFormSchema)
-	});
 
 	const editBooking = trpc.bookings.editBooking.useMutation();
 
 	const cancelBooking = trpc.bookings.cancelBooking.useMutation();
 
-	const { data: invoiceData } = trpc.invoice.getByBookingId.useQuery({ bookingId: bookingId as string });
-
-	console.log("invoice data", invoiceData);
-
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
 		onError(error) {
 			console.log("error verify recaptcha mutation", error);
 		}
+	});
+
+	// react hook form
+	const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<EditBookingFormType>({
+		resolver: zodResolver(editBookingsFormSchema)
 	});
 
 	useEffect(() => {
@@ -60,6 +62,7 @@ const BookingDetail: NextPage = () => {
 		setSecret(secret);
 	}, [key, secret]);
 
+	// logic to generate invoice on click
 	const handleGenerateInvoice = async () => {
 		const checkInDate = new Date(bookingDetail?.checkInDate as string);
 		const checkOutDate = new Date(bookingDetail?.checkOutDate as string);
@@ -69,13 +72,13 @@ const BookingDetail: NextPage = () => {
 		const total = calculateTotalAmount(subtotal + taxAmount);
 
 		const invoice = {
-			bookingId: bookingId,
-			petName: invoiceData?.petName,
+			bookingId: bookingId as string,
+			petName: invoiceData?.petName as string || bookingDetail?.petName as string,
 			serviceName: invoiceData?.serviceName as string,
 			servicePrice: servicePrice,
 			serviceDuration: serviceDuration,
-			customerName: invoiceData?.customerName,
-			customerEmail: invoiceData?.customerEmail as string,
+			customerName: invoiceData?.customerName || userData?.name as string,
+			customerEmail: invoiceData?.customerEmail as string || userData?.email as string,
 			customerAddress: userData?.address as string,
 			customerCity: userData?.city as string,
 			subtotal,
@@ -97,6 +100,7 @@ const BookingDetail: NextPage = () => {
 		})
 	}
 
+	// on submit logic to create booking
 	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
 		try {
 			Swal.fire({
@@ -129,8 +133,6 @@ const BookingDetail: NextPage = () => {
 		// reset the form state
 		reset();
 	}
-
-	const [showForm, setShowForm] = useState(true);
 
 	const handleShowEditBookingForm = () => {
 		setShowForm(true);
