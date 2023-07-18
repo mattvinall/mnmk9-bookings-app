@@ -37,16 +37,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const isProduction = process.env.NODE_ENV === 'production';
         // console.log('isProduction', isProduction);
 
-        // const filePath = isProduction
-        // ? join(process.cwd(), 'public', 'invoice.html')
-        // : join(__dirname, '..', 'public', 'invoice.html');
+        const filePath = isProduction
+        ? join(process.cwd(), 'public', 'invoice.html')
+        : join(__dirname, '..', 'public', 'invoice.html');
 
 
 
         // console.log('filePath', filePath);
         
-        // const file = fs.readFileSync(filePath, 'utf8');
-        const file = fs.readFileSync("public/invoice.html", 'utf8')
+        const file = fs.readFileSync(filePath, 'utf8');
+       
         console.log("file", file);
 
         // compile the file with handlebars and inject the customerName variable
