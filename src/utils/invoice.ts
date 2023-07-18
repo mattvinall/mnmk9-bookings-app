@@ -22,6 +22,7 @@ export const generateInvoice = async  (bookingData: Invoice) => {
         const data = await fetch('/api/generate-invoice', {
             method: 'POST',
             body: JSON.stringify({ bookingData }),
+            mode:'no-cors'
         });
 
         // convert the response into an array Buffer
