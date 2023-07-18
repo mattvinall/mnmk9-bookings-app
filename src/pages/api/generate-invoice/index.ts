@@ -1,10 +1,11 @@
 import fs from 'fs';
-import path from 'path';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Invoice } from '../../../utils/invoice';
+
+const { join } = require('path');
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     // how to use the Invoice interface to make bookingData properly
@@ -38,8 +39,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         console.log('isProduction', isProduction);
 
         const filePath = isProduction
-        ? path.join(process.cwd(), 'public', 'invoice.html')
-        : path.join(__dirname, '..', 'public', 'invoice.html');
+        ? join(process.cwd(), 'public', 'invoice.html')
+        : join(__dirname, '..', 'public', 'invoice.html');
 
         const file = fs.readFileSync(filePath, 'utf8');
         // compile the file with handlebars and inject the customerName variable
@@ -66,7 +67,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const browser = await puppeteer.launch({
             headless: "new"
         });
-        
+
         const page = await browser.newPage();
 
         // set our compiled html template as the pages content
