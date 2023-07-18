@@ -18,7 +18,6 @@ const BookingDetail: NextPage = () => {
 	const router = useRouter();
 	const bookingId = router.query.id as string;
 
-	const [score, setScore] = useState<number | null>(null);
 	const [token, setToken] = useState<string>("");
 	const [key, setKey] = useState<string>("")
 	const [secret, setSecret] = useState<string>("");
@@ -45,10 +44,6 @@ const BookingDetail: NextPage = () => {
 	console.log("invoice data", invoiceData);
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation({
-		onSuccess(data) {
-			if (!data) return;
-			setScore(data.score);
-		},
 		onError(error) {
 			console.log("error verify recaptcha mutation", error);
 		}
@@ -65,20 +60,21 @@ const BookingDetail: NextPage = () => {
 		setSecret(secret);
 	}, [key, secret]);
 
-	const handleGenerateInvoice = () => {
+	const handleGenerateInvoice = async () => {
 		const checkInDate = new Date(bookingDetail?.checkInDate as string);
 		const checkOutDate = new Date(bookingDetail?.checkOutDate as string);
 		const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
 		const subtotal = calculateSubtotal(servicePrice, serviceDuration);
 		const taxAmount = calculateTaxAmount(subtotal);
 		const total = calculateTotalAmount(subtotal + taxAmount);
+
 		const invoice = {
 			bookingId: bookingId,
-			petName: invoiceData?.petName as string,
+			petName: invoiceData?.petName,
 			serviceName: invoiceData?.serviceName as string,
 			servicePrice: servicePrice,
 			serviceDuration: serviceDuration,
-			customerName: `${invoiceData.firstName} ${invoiceData?.lastName}`,
+			customerName: invoiceData?.customerName,
 			customerEmail: invoiceData?.email as string,
 			customerAddress: userData?.address as string,
 			customerCity: userData?.city as string,
@@ -86,14 +82,22 @@ const BookingDetail: NextPage = () => {
 			taxAmount,
 			total,
 			createdAt: new Date().toLocaleDateString() as string,
-			dueDate: invoiceData?.checkOutDate && new Date(invoiceData?.checkOutDate).toLocaleDateString() as string,
-		}
+			dueDate: bookingDetail?.checkOutDate && new Date(bookingDetail?.checkOutDate).toLocaleDateString() as string,
+		} as Invoice;
 
-		generateInvoice(invoice as Invoice);
+		Swal.fire({
+			title: 'Are you sure you want to generate invoice?',
+			showDenyButton: true,
+			confirmButtonText: 'Yes',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				generateInvoice(invoice as Invoice);
+				Swal.fire('Successfully Generated Invoice', '', 'success');
+			}
+		})
 	}
 
 	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
-
 		try {
 			Swal.fire({
 				title: 'Are you sure you want to Edit?',
@@ -104,12 +108,7 @@ const BookingDetail: NextPage = () => {
 					// mutate / POST request to bookings api endpoint and submit the form data
 					formData.id = bookingDetail?.id;
 
-					verifyRecaptcha.mutate({ token, secret });
-
-					if (score && score < 0.5) {
-						console.log("score is less than 0.5");
-						return;
-					}
+					token && secret && verifyRecaptcha.mutate({ token, secret });
 
 					editBooking.mutate(formData);
 
@@ -192,7 +191,7 @@ const BookingDetail: NextPage = () => {
 						<button onClick={() => handleCancelBooking(bookingDetail?.id as string)} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Cancel Booking</button>
 					</li>
 					<li>
-						<button className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Generate Invoice</button>
+						<button onClick={handleGenerateInvoice} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Generate Invoice</button>
 					</li>
 				</ul>
 			</nav>
