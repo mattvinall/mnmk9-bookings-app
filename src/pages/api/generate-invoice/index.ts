@@ -41,10 +41,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? join(process.cwd(), 'public', 'invoice.html')
         : join(__dirname, '..', 'public', 'invoice.html');
 
-        console.log('filePath', filePath);
+        // console.log('filePath', filePath);
         
         const file = fs.readFileSync(filePath, 'utf8');
-        // console.log("file", fs.readFileSync(filePath, 'utf8'));
+        console.log("file", fs.readFileSync(filePath, 'utf8'));
 
         // compile the file with handlebars and inject the customerName variable
         const template = handlers.compile(`${file}`);
