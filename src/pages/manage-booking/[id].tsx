@@ -75,7 +75,7 @@ const BookingDetail: NextPage = () => {
 			servicePrice: servicePrice,
 			serviceDuration: serviceDuration,
 			customerName: invoiceData?.customerName,
-			customerEmail: invoiceData?.email as string,
+			customerEmail: invoiceData?.customerEmail as string,
 			customerAddress: userData?.address as string,
 			customerCity: userData?.city as string,
 			subtotal,
