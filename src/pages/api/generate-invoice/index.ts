@@ -1,5 +1,7 @@
 import fs from 'fs';
-import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer-core';
+
 import { join } from "path";
 import handlers from 'handlebars';
 import { formatDate } from '../../../utils/formatDate';
@@ -35,15 +37,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
         const isProduction = process.env.NODE_ENV === 'production';
-        // console.log('isProduction', isProduction);
 
         const filePath = isProduction
         ? join(process.cwd(), 'public', 'invoice.html')
         : join(__dirname, '..', 'public', 'invoice.html');
-
-
-
-        // console.log('filePath', filePath);
         
         const file = fs.readFileSync(filePath, 'utf8');
        
@@ -70,16 +67,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             formattedDueDate
         });
 
-        // process.env.PUPPETEER_CACHE_DIR = path.join(process.cwd(), 'puppeteer-cache') as string;
         
         // simulate a chrome browser with puppeteer and navigate to a new page
         const browser = await puppeteer.launch({
-            devtools: true,
-            headless: "new",
-            args: ['--no-sandbox'],
-            // executablePath: '/usr/bin/google-chrome',
+            args: chromium.args,
+            executablePath: await chromium.executablePath,
+            headless: chromium.headless,
         });
-
 
         const page = await browser.newPage();
 
@@ -88,9 +82,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await page.setContent(html, { waitUntil: 'networkidle0' });
 
         // convert the page to pdf with the .pdf() method
-        const pdf = await page.pdf({ format: 'A4' });
-
-        console.log("pdf", pdf);
+        const pdf = await page.pdf({
+            format: 'a4',
+        });
 
         await browser.close();
 

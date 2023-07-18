@@ -27,6 +27,7 @@
     "@upstash/ratelimit": "^0.4.1",
     "@upstash/redis": "^1.20.1",
     "aws-sdk": "^2.1290.0",
+    "chrome-aws-lambda": "^10.1.0",
     "handlebars": "^4.7.7",
     "ioredis": "^5.3.1",
     "next": "13.0.2",
