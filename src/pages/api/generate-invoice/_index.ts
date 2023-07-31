@@ -63,7 +63,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             dueDate
         });
 
-
         // simulate a chrome browser with puppeteer and navigate to a new page
         browser = await chromium.puppeteer.launch({
             args: chromium.args,
@@ -83,6 +82,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const pdf = await page.pdf({
             format: 'a4',
         });
+
+        console.log("pdf", pdf);
 
         await browser.close();
 
