@@ -2,7 +2,6 @@ import fs from 'fs';
 import chromium from 'chrome-aws-lambda';
 import { join } from "path";
 import handlers from 'handlebars';
-import { formatDate } from '../../../utils/formatDate';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Invoice } from '../../../utils/invoice';
 
@@ -29,19 +28,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         dueDate
     } = bookingData as Invoice;
 
-    const formattedDueDate = formatDate(dueDate);
-
-    const formattedCreatedAt = formatDate(createdAt);
 
     let browser = null;
-    
+
     try {
         const isProduction = process.env.NODE_ENV === 'production';
 
         const filePath = isProduction
-        ? join(process.cwd(), 'public', 'invoice.html')
-        : join(__dirname, '..', 'public', 'invoice.html');
-        
+            ? join(process.cwd(), 'public', 'invoice.html')
+            : join(__dirname, '..', 'public', 'invoice.html');
+
+        console.log("file path", filePath)
+
         const file = fs.readFileSync(filePath, 'utf8');
 
         // compile the file with handlebars and inject the customerName variable
@@ -61,11 +59,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             subtotal,
             taxAmount,
             total,
-            formattedCreatedAt,
-            formattedDueDate
+            createdAt,
+            dueDate
         });
 
-        
+
         // simulate a chrome browser with puppeteer and navigate to a new page
         browser = await chromium.puppeteer.launch({
             args: chromium.args,
@@ -90,9 +88,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // send the result to the client
         res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=invoice-${bookingId}.pdf`);
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         res.send(pdf);
     } catch (err: any) {
         console.log(err);
-        res.status(500).json({ message: err.message});
+        res.status(500).json({ message: err.message });
     }
 };
