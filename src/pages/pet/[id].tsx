@@ -114,7 +114,7 @@ const PetDetail: NextPage = () => {
 			</div>
 
 			{/* Vaccination Records */}
-			<div className="flex flex-col lg:justify-between items-baseline">
+			<div className="flex flex-col lg:flex-row lg:justify-between items-baseline">
 				{showVaccinationRecords && (
 					<>
 						<div className="flex flex-col">
