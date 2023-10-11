@@ -52,7 +52,7 @@ const ClientBookings = (): ReactJSXElement => {
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">End Time:</span> {booking.endTime ? formatTime(booking.endTime) : "--"}</p>
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">Notes:</span> {booking?.notes ? booking.notes : "--"}</p>
 										<div className="flex flex-wrap justify-between md:justify-start lg:justify-between">
-											<Link className="block w-[160px] bg-teal-600 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
+											<Link className="block w-[160px] bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 												Booking Details
 											</Link>
 										</div>

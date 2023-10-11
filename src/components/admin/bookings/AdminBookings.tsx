@@ -55,7 +55,7 @@ const AdminBookings: React.FC = (): ReactJSXElement => {
 
 										{!booking.confirmedBooking && (
 											<button
-												className="bg-teal-700 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded mt-4 mr-4"
+												className="bg-teal-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4 mr-4"
 												onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: booking.confirmedBooking })}
 											>
 												Confirm Booking
@@ -69,7 +69,7 @@ const AdminBookings: React.FC = (): ReactJSXElement => {
 												Cancel Booking
 											</button>
 										)}
-										<Link className="block w-[160px] bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
+										<Link className="block w-[160px] bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 											Booking Details
 										</Link>
 									</div>
