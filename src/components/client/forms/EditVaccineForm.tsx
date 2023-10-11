@@ -110,7 +110,7 @@ const EditVaccineForm = ({ secret, vaccineDetail, refetch, name }: Props) => {
         }
     }
     return (
-        <form style={{ position: "relative" }} className="w-full md:w-1/2 mt-6" onSubmit={handleSubmit(onSubmit)}>
+        <form style={{ position: "relative", bottom: "40px" }} className="w-full md:w-1/2 mt-6" onSubmit={handleSubmit(onSubmit)}>
             <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="editVaccineForm" />
             <div className="grid md:grid-cols-1 md:gap-6">
                 <div className="relative z-0 mb-6 w-full group">

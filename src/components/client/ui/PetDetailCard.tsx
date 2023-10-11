@@ -46,7 +46,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
                     </div>
                     {pet?.microchipNumber && (
                         <div className="mt-8 flex justify-end items-end">
-                            <p className="py-4 px-2 justify-center text-gray-600 font-bold text-sm  border-[rgb(103,163,161)] border-4 rounded-md">Microchip #: {pet.microchipNumber}</p>
+                            <p className="py-4 px-2 justify-center text-gray-600 font-bold text-sm  border-[rgb(168,13,14)] border-4 rounded-md">Microchip #: {pet.microchipNumber}</p>
                         </div>
                     )}
                 </div>

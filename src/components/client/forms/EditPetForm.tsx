@@ -143,7 +143,7 @@ const EditPetForm = ({ secret, petId, petDetails }: Props): ReactJSXElement => {
     }
 
     return (
-        <form style={{ position: "relative" }} className="w-full xl:w-1/2 my-6 py-12 xl:my-0 xl:py-0" onSubmit={handleSubmit(onSubmit, onErrors)}>
+        <form style={{ position: "relative", bottom: "40px" }} className="w-full xl:w-1/2 my-6 py-12 xl:my-0 xl:py-0" onSubmit={handleSubmit(onSubmit, onErrors)}>
             <GoogleReCaptcha onVerify={handleReCaptchaVerify} action="addPetForm" />
             <div className="grid md:grid-cols-1 md:gap-6">
                 <div className="relative z-0 mb-6 w-full group">
