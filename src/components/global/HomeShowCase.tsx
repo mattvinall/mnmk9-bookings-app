@@ -41,11 +41,12 @@ const HomeShowCase = () => {
 			</>
 		)
 	}
+
 	const AdminShowCase = () => {
 		return (
 			<>
 				<Link
-					className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+					className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-black/10"
 					href={`/dashboard`}
 				>
 					<h3 className="text-2xl font-bold">Dashboard →</h3>
@@ -54,7 +55,7 @@ const HomeShowCase = () => {
 					</p>
 				</Link>
 				<Link
-					className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+					className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-black/10"
 					href="/users"
 				>
 					<h3 className="text-2xl font-bold">Manage Users →</h3>
@@ -78,7 +79,7 @@ const HomeShowCase = () => {
 	return (
 		<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
 			<h1 className="text-5xl text-center font-extrabold tracking-tight text-white sm:text-[5rem]">
-				MNMK-9 <span className="text-[rgb(103,163,161)]">Bookings</span>
+				MNMK-9 <span className="text-[rgb(238,182,43)]">Bookings</span>
 			</h1>
 			<h2 className="text-12xl font-bold tracking-tight text-white text-center text-[2rem] sm:text-[3rem] my-8">Your One Stop Shop to Schedule and Manage Your Bookings.</h2>
 			{sessionId ? (

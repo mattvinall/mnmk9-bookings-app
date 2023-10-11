@@ -17,7 +17,7 @@ const MainLayout = ({ children }: ILayoutProps) => {
             <header>
                 <Navbar />
             </header>
-            <main className="min-h-[85vh] flex justify-center bg-gradient-to-b from-[#112C4F] to-[#15162c]">
+            <main className="min-h-[100vh] flex justify-center bg-gradient-to-b from-[#AC0D0D] to-[#201E1F]">
                 {children}
             </main>
             <Footer />

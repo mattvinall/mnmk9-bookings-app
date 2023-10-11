@@ -56,6 +56,7 @@ const Navbar: React.FC = () => {
 	const { userId, isSignedIn } = useAuth();
 
 	const { data: userData } = getUserById(userId as string);
+	console.log("userData", userData);
 
 	const [menuToggled, setMenuToggled] = useState(false);
 	const handleClick = () => {
@@ -66,11 +67,11 @@ const Navbar: React.FC = () => {
 		return (
 			<nav className="bg-white shadow-lg" role="navigation" aria-label="navigation">
 				<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0'}`}>
-					<div className="flex justify-center align-start">
-						<div className={`flex items-center h-32`}>
-							<Link href="https://www.mnmk9.ca" className="flex items-center md:py-4 md:px-2">
-								<Logo />
-							</Link>
+					<div className="flex justify-between align-start h-32">
+						<Link href="https://www.mnmk9.ca" className="flex items-center md:py-4 md:px-2">
+							<Logo />
+						</Link>
+						<div className={`flex items-center`}>
 							<div className="hidden md:flex items-center">
 								<Link
 									href="/"
@@ -177,11 +178,11 @@ const Navbar: React.FC = () => {
 		return (
 			<nav className="bg-white shadow-lg" role="navigation" aria-label="navigation">
 				<div className={`${!menuToggled ? 'transition-ease max-w-7xl mx-auto px-4' : 'px-0'}`}>
-					<div className="flex justify-center align-start">
-						<div className={`flex items-center h-32`}>
-							<Link href="https://www.mnmk9.ca" className="flex items-center md:py-4 md:px-2">
-								<Logo />
-							</Link>
+					<div className="flex justify-between align-start">
+						<Link href="https://www.mnmk9.ca" className="flex items-center md:py-4 md:px-2 h-32">
+							<Logo />
+						</Link>
+						<div className={`flex items-center`}>
 							<div className="hidden md:flex items-center">
 								<>
 									<Link
@@ -268,7 +269,7 @@ const Navbar: React.FC = () => {
 
 	return (
 		<>
-			{isSignedIn && userData && userData?.role === "user" ? (
+			{isSignedIn && userData?.role === "user" ? (
 				<ClientViewNavigation />
 			) : <AdminViewNavigation />}
 		</>
