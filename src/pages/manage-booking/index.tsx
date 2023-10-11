@@ -42,7 +42,7 @@ const ManageBooking = () => {
 				isSignedIn ? (
 					<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 						<h1 className="text-5xl font-extrabold tracking-tight text-center text-white sm:text-[5rem]">
-							Manage a  <span className="text-[rgb(103,163,161)]">Booking</span>
+							Manage a  <span className="text-[rgb(238,182,43)]">Booking</span>
 						</h1>
 						{userData?.role === "user" ? (
 							<ClientBookings />

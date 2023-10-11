@@ -95,7 +95,7 @@ const ContactUs = () => {
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-8 md:py-16">
-				Contact <span className="text-[rgb(103,163,161)]">Us</span>
+				Contact <span className="text-[rgb(238,182,43)]">Us</span>
 			</h1>
 			<section className="px-4 mx-auto max-w-screen-md">
 				<p className="mb-8 lg:mb-16 font-medium text-center dark:text-gray-100 sm:text-xl">Got a technical issue? Have trouble booking or managing a service? Let us know.</p>

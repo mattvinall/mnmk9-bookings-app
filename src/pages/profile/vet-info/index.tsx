@@ -11,7 +11,7 @@ const VetInfo: NextPage = () => {
         isSignedIn && key ? (
             <section className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
                 <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
-                    Add <span className="text-[rgb(103,163,161)]">Vet Information</span>
+                    Add <span className="text-[rgb(238,182,43)]">Vet Information</span>
                 </h1>
                 <GoogleReCaptchaProvider reCaptchaKey={key}>
                     <VetForm />

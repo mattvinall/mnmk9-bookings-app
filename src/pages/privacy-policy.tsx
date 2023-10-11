@@ -2,7 +2,7 @@ const PrivacyPolicy = () => {
 	return (
 		<div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
 			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl py-8 md:py-16">
-				Privacy <span className="text-[rgb(103,163,161)]">Policy</span>
+				Privacy <span className="text-[rgb(238,182,43)]">Policy</span>
 			</h1>
 			<section className="mx-auto max-w-screen-md text-white text-xl">
 				<p className="my-3">Last updated: May 30, 2023</p>
@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
 						href="https://www.privacypolicies.com/privacy-policy-generator/"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-[rgb(103,163,161)] underline"
+						className="ttext-[rgb(238,182,43)] underline"
 					>
 						Privacy Policy Generator
 					</a>

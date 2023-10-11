@@ -36,7 +36,7 @@ const Vaccinations: NextPage = () => {
         <section className="container flex flex-col gap-12 px-16 py-16 max-w-8xl">
             <a onClick={handleGoBack} className="flex justify-start text-left text-white font-bold text-2xl cursor-pointer">Go Back</a>
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
-                Edit <span className="text-[rgb(103,163,161)]">Vaccinations</span>
+                Edit <span className="text-[rgb(238,182,43)]">Vaccinations</span>
             </h1>
             <div className="flex justify-between items-baseline">
                 {/* vaccine detail card */}

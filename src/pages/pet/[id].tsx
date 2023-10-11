@@ -83,7 +83,7 @@ const PetDetail: NextPage = () => {
 	return (
 		<div className="container flex flex-col gap-8 py-8 px-8 lg:gap-12 lg:px-16 lg:py-16 max-w-8xl">
 			<a className="flex justify-start text-left text-white font-bold text-2xl" href={`/profile/${ownerId}`}>Go Back</a>
-			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[rgb(103,163,161)]">Details</span></h1>
+			<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Pet <span className="text-[rgb(238,182,43)]">Details</span></h1>
 
 			{/* Tabs */}
 			<div className="text-md font-medium text-center text-gray-500 border-b border-gray-500 dark:text-gray-400 dark:border-gray-500">

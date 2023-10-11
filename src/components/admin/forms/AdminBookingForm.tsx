@@ -91,7 +91,7 @@ const AdminBookingForm = ({ secret }: Props) => {
     return (
         <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] py-16">
-                Book a<span className="text-[rgb(103,163,161)]"> Service</span>
+                Book a<span className="text-[rgb(238,182,43)]"> Service</span>
             </h1>
             <form onSubmit={handleSubmit(onSubmit)} className="w-full md:w-[80%]">
                 <div className="grid md:grid-cols-2 md:gap-6">
