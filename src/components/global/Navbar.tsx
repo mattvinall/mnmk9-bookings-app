@@ -36,13 +36,13 @@ const AuthShowcase = ({ userData, isSignedIn }: Props) => {
 		<div className="flex items-center justify-center">
 			{isSignedIn ? (
 				<>
-					<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hover:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
+					<div className="rounded-full bg-gradient-to-b from-[#A70D0E] to-[#EEB62B] hover:bg-gradient-to-t from-[#EEB62B] to-[#A70D0E] px-10 py-3 font-semibold text-white hover:underline transition">
 						<SignOutButton />
 					</div>
 					<Link aria-label="Click to go to user profile detail page" href={`/profile/${userData?.id}`}><img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} alt={`profile image of ${userData?.name}`} /></Link>
 				</>
 			) : (
-				<div className="rounded-full bg-gradient-to-b from-[#67A3A1] to-[#112B4E] hov:bg-gradient-to-t from-[#112B4E] to-[#67A3A1] px-10 py-3 font-semibold text-white hover:underline transition">
+				<div className="rounded-full bg-gradient-to-b from-[#A70D0E] to-[#EEB62B]from-[#A70D0E] to-[#EEB62B] hov:bg-gradient-to-t from-[#EEB62B] to-[#A70D0E] px-10 py-3 font-semibold text-white hover:underline transition">
 					<SignInButton />
 				</div>
 			)}
