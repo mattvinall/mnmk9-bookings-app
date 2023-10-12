@@ -15,9 +15,7 @@ import {
 } from 'react-google-recaptcha-v3';
 import { Pet, Services } from "@prisma/client";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { getUserById } from "../../api/users";
 import { getAllServices } from "../../api/services";
-import { Invoice, calculateTaxAmount, calculateTotalAmount, calculateServiceDuration, calculateSubtotal, generateInvoice } from "../../utils/invoice";
 
 const Training: NextPage = () => {
 	const router = useRouter();
@@ -30,15 +28,12 @@ const Training: NextPage = () => {
 	const { isSignedIn } = useUser();
 	const { userId } = useAuth();
 
-	const { data: userData } = getUserById(userId as string);
-
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = getAllServices();
 
 	const training = serviceData?.find((service: Services) => service.serviceName === "Training");
 
 	const trainingId = training?.id as string;
-	const trainingPrice = Number(training?.price);
 
 	// query the pets table and find the 
 	const { data: petData, isLoading, error } = trpc.pet.byOwnerId.useQuery({ id: userId as string }, {
@@ -57,43 +52,8 @@ const Training: NextPage = () => {
 		},
 	});
 
-	const { mutate: createInvoice } = trpc.invoice.create.useMutation();
 
-	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation({
-		onSuccess: (data) => {
-			const checkInDate = new Date(data?.checkInDate as string);
-			const checkOutDate = new Date(data?.checkOutDate as string);
-			const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
-			const subtotal = calculateSubtotal(trainingPrice, serviceDuration);
-			const taxAmount = calculateTaxAmount(subtotal);
-			const total = calculateTotalAmount(subtotal + taxAmount);
-
-			try {
-
-				createInvoice({
-					bookingId: data?.id as string,
-					petId: data?.petId as string,
-					petName: data?.petName as string,
-					clientId: data?.userId as string,
-					serviceId: trainingId as string,
-					serviceName: data?.serviceName as string,
-					servicePrice: trainingPrice,
-					serviceDuration: serviceDuration,
-					customerName: `${data?.firstName} ${data?.lastName}`,
-					customerEmail: data?.email as string,
-					customerAddress: userData?.address as string,
-					customerCity: userData?.city as string,
-					subtotal: subtotal,
-					taxAmount: taxAmount,
-					total: total,
-					createdAt: new Date().toLocaleDateString() as string,
-					dueDate: data?.checkOutDate ? new Date(data?.checkOutDate).toLocaleDateString() as string : "At Checkout",
-				});
-			} catch (error) {
-				console.log("error creating invoice", error);
-			}
-		}
-	});
+	const addNewTrainingBooking = trpc.bookings.newBooking.useMutation();
 
 	const verifyRecaptcha = trpc.recaptcha.verify.useMutation();
 
