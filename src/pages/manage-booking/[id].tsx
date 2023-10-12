@@ -9,10 +9,6 @@ import Swal from "sweetalert2";
 import EditBookingForm from "../../components/client/forms/EditBookingForm";
 import { editBookingsFormSchema, EditBookingFormType } from "../../utils/schema";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { generateInvoice } from "../../utils/invoice";
-import { Invoice, calculateServiceDuration, calculateSubtotal, calculateTaxAmount, calculateTotalAmount } from "../../utils/invoice";
-import { getUserById } from "../../api/users";
-import { Services } from "@prisma/client";
 
 const BookingDetail: NextPage = () => {
 	const router = useRouter();
@@ -26,15 +22,6 @@ const BookingDetail: NextPage = () => {
 
 	// trpc queries and mutations
 	const { data: bookingDetail, isLoading, error } = trpc.bookings.byId.useQuery({ id: bookingId });
-
-	const { data: userData } = getUserById(bookingDetail?.userId as string);
-
-	const { data: invoiceData } = trpc.invoice.getByBookingId.useQuery({ bookingId: bookingId as string });
-
-	const { data: serviceData } = trpc.service.getAllServices.useQuery();
-
-	const service = serviceData && serviceData?.find((service: Services) => service.id === bookingDetail?.serviceId);
-	const servicePrice = Number(service?.price);
 
 	const editBooking = trpc.bookings.editBooking.useMutation();
 
@@ -61,44 +48,6 @@ const BookingDetail: NextPage = () => {
 		setKey(key);
 		setSecret(secret);
 	}, [key, secret]);
-
-	// logic to generate invoice on click
-	const handleGenerateInvoice = async () => {
-		const checkInDate = new Date(bookingDetail?.checkInDate as string);
-		const checkOutDate = new Date(bookingDetail?.checkOutDate as string);
-		const serviceDuration = calculateServiceDuration(checkInDate, checkOutDate);
-		const subtotal = calculateSubtotal(servicePrice, serviceDuration);
-		const taxAmount = calculateTaxAmount(subtotal);
-		const total = calculateTotalAmount(subtotal + taxAmount);
-
-		const invoice = {
-			bookingId: bookingId as string,
-			petName: invoiceData?.petName as string || bookingDetail?.petName as string,
-			serviceName: invoiceData?.serviceName as string,
-			servicePrice: servicePrice,
-			serviceDuration: serviceDuration,
-			customerName: invoiceData?.customerName || userData?.name as string,
-			customerEmail: invoiceData?.customerEmail as string || userData?.email as string,
-			customerAddress: userData?.address as string,
-			customerCity: userData?.city as string,
-			subtotal,
-			taxAmount,
-			total,
-			createdAt: new Date().toLocaleDateString() as string,
-			dueDate: bookingDetail?.checkOutDate && new Date(bookingDetail?.checkOutDate).toLocaleDateString() as string,
-		} as Invoice;
-
-		Swal.fire({
-			title: 'Are you sure you want to generate invoice?',
-			showDenyButton: true,
-			confirmButtonText: 'Yes',
-		}).then((result) => {
-			if (result.isConfirmed) {
-				generateInvoice(invoice as Invoice);
-				Swal.fire('Successfully Generated Invoice', '', 'success');
-			}
-		})
-	}
 
 	// on submit logic to create booking
 	const onSubmit: SubmitHandler<EditBookingFormType> = async (formData: any) => {
@@ -192,9 +141,9 @@ const BookingDetail: NextPage = () => {
 					<li>
 						<button onClick={() => handleCancelBooking(bookingDetail?.id as string)} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Cancel Booking</button>
 					</li>
-					<li>
+					{/* <li>
 						<button onClick={handleGenerateInvoice} className={"hover:text-gray-100 !border-gray-100 hover:border-b-2 inline-block p-4 hover:border-b-2 borded-t-lg text-gray-transparent rounded-100 hover:border-gray-100"}>Generate Invoice</button>
-					</li>
+					</li> */}
 				</ul>
 			</nav>
 			{key && key !== undefined && key !== "" && showForm ? (
