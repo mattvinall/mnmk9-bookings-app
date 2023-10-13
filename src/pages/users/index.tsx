@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,13 +5,16 @@ import usePagination from "../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { Pet } from "../../types/router";
 import { useAuth } from "@clerk/nextjs";
-import { getUserById, getAllUsers, makeUserAdmin, removeUserAdmin } from "../../api/users";
+import { getUserById, getAllUsers } from "../../api/users";
 import { trpc } from "../../utils/trpc";
+import LoadingSpinner from "../../components/client/ui/LoadingSpinner";
 
 const Users = () => {
-	// state for search
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState<[]>([]);
+	const [showAddUserForm, setShowAddUserForm] = useState(false);
+	const [newUserName, setNewUserName] = useState("");
+	const [newUserEmail, setNewUserEmail] = useState("");
 
 	// useAuth hook to extract user id and isSignedIn from clerk
 	const { userId, isSignedIn } = useAuth();
@@ -29,6 +30,10 @@ const Users = () => {
 	});
 
 	const { mutate: removeAdmin } = trpc.user.removeUserAdmin.useMutation({
+		onSuccess: () => refetch()
+	});
+
+	const { mutate: addUser } = trpc.user.createUser.useMutation({
 		onSuccess: () => refetch()
 	});
 
@@ -59,6 +64,27 @@ const Users = () => {
 		setSearchResults(filteredUsers as []);
 	};
 
+	// handle add user form
+	const handleAddUser = () => {
+		setShowAddUserForm(true);
+	};
+
+	const handleNewUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setNewUserName(event.target.value);
+	};
+
+	const handleNewUserEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setNewUserEmail(event.target.value);
+	};
+
+	const handleSubmitNewUser = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		await addUser({ name: newUserName, email: newUserEmail });
+		setNewUserName("");
+		setNewUserEmail("");
+		setShowAddUserForm(false);
+	};
+
 	if (!isSignedIn) return (
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
@@ -66,9 +92,7 @@ const Users = () => {
 	)
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
@@ -84,6 +108,30 @@ const Users = () => {
 					<h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
 						MNMK-9  <span className="text-[rgb(238,182,43)]">Users</span>
 					</h1>
+					<div className="flex justify-end">
+						<button onClick={handleAddUser} className="bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">
+							+
+						</button>
+					</div>
+					{showAddUserForm && (
+						<form onSubmit={handleSubmitNewUser}>
+							<label htmlFor="new-user-name">Name:</label>
+							<input
+								type="text"
+								id="new-user-name"
+								value={newUserName}
+								onChange={handleNewUserNameChange}
+							/>
+							<label htmlFor="new-user-email">Email:</label>
+							<input
+								type="email"
+								id="new-user-email"
+								value={newUserEmail}
+								onChange={handleNewUserEmailChange}
+							/>
+							<button type="submit">Add User</button>
+						</form>
+					)}
 					<label htmlFor="simple-search" className="sr-only">Search</label>
 					<div className="relative w-[35%]">
 						<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -108,7 +156,7 @@ const Users = () => {
 											</ul>
 											{user?.role === "user" ? (
 												<button
-													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
+													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
 													// onClick={() => makeUserAdmin(user.id, refetch)}
 													onClick={() => mutate({ id: user.id })}
 												>
@@ -116,7 +164,7 @@ const Users = () => {
 												</button>
 											) : (
 												<button
-													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
+													className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
 													// onClick={() => removeUserAdmin(user.id, refetch)}
 													onClick={() => removeAdmin({ id: user.id })}
 												>
@@ -124,7 +172,7 @@ const Users = () => {
 												</button>
 											)
 											}
-											<Link className="absolute top-[-25px] left-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/profile/${user.id}`}>User Details</Link>
+											<Link className="absolute top-[-25px] left-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/profile/${user.id}`}>User Details</Link>
 										</div>
 									</div>
 								</div>
@@ -145,7 +193,7 @@ const Users = () => {
 												</ul>
 												{user?.role === "user" ? (
 													<button
-														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
+														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
 														// onClick={() => makeUserAdmin(user.id, refetch)}
 														onClick={() => mutate({ id: user.id })}
 													>
@@ -153,7 +201,7 @@ const Users = () => {
 													</button>
 												) : (
 													<button
-														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4"
+														className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
 														// onClick={() => removeUserAdmin(user.id, refetch)}
 														onClick={() => removeAdmin({ id: user.id })}
 													>
@@ -161,7 +209,7 @@ const Users = () => {
 													</button>
 												)
 												}
-												<Link className="absolute top-[-25px] left-0 bg-gray-900 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/profile/${user.id}`}>User Details</Link>
+												<Link className="absolute top-[-25px] left-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" href={`/profile/${user.id}`}>User Details</Link>
 											</div>
 										</div>
 									</div>
