@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -96,7 +96,7 @@ const Users = () => {
             console.log("name", name);
             console.log("email", email);
 
-            addUser({ name, email });
+            await addUser({ name, email });
             reset();
 
             // success message 
@@ -200,7 +200,7 @@ const Users = () => {
                             <li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
                                 <div className="flex justify-center">
                                     <div className="rounded-lg shadow-lg bg-white max-w-md w-[350px] h-full min-h-[375px]">
-                                        <Image className="rounded-full scale-50 float-right" width={150} height={150} src={user?.image as string} alt={`profile image of ${user.name}`} />
+                                        <Image className="rounded-full scale-50 float-right" width={150} height={150} src={user?.image as string || "https://www.deviantart.com/karmaanddestiny/art/Default-user-icon-4-858661084"} alt={`profile image of ${user.name}`} />
                                         <div className="p-6">
                                             <h2 className="mt-6 text-gray-900 text-xl font-bold mb-2">{user?.name}</h2>
                                             {user?.phoneNumber ? <p className="text-gray-700 font-medium text-base mb-4">{user?.phoneNumber}</p> : <p className="text-gray-700 font-medium mb-4">No phone number added...</p>}
