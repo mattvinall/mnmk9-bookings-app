@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -117,10 +117,10 @@ const Users = () => {
     )
 
     if (isLoading) return (
-        // <LoadingSpinner />
-        <div className="container text-center">
-            <h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-        </div>
+        <LoadingSpinner />
+        // <div className="container text-center">
+        //     <h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+        // </div>
     );
 
     if (error) return (
