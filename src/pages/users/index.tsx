@@ -160,9 +160,9 @@ const Users = () => {
                         </button>
                     </div>
                     {showAddUserForm ? (
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <form onSubmit={handleSubmit(onSubmit)} className="w-2/3">
                             <div className="grid md:grid-cols-2 md:gap-6">
-                                <div className="relative z-0 mb-6 w-full group">
+                                <div className="relative z-0 mb-6 group">
                                     <input
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                         type="text"
@@ -177,7 +177,6 @@ const Users = () => {
                                     </label>
                                 </div>
                                 <div className="relative z-0 mb-6 w-full group">
-
                                     <input
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                         type="email"
