@@ -107,7 +107,7 @@ const Users = () => {
             });
 
             setShowAddUserForm(false);
-            getAllUsers();
+            getCurrentData();
 
         } catch (error) {
             // error message
