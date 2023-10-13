@@ -96,7 +96,7 @@ const Users = () => {
             console.log("name", name);
             console.log("email", email);
 
-            await addUser({ name, email });
+            addUser({ name, email });
             reset();
 
             // success message 
@@ -107,7 +107,7 @@ const Users = () => {
             });
 
             setShowAddUserForm(false);
-            refetch();
+            getAllUsers();
 
         } catch (error) {
             // error message
