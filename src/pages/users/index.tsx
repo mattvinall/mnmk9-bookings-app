@@ -13,13 +13,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import LoadingSpinner from "../../components/client/ui/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Swal from "sweetalert2";
 
 const Users = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<[]>([]);
     const [showAddUserForm, setShowAddUserForm] = useState(false);
-    const [newUserName, setNewUserName] = useState("");
-    const [newUserEmail, setNewUserEmail] = useState("");
 
     // useAuth hook to extract user id and isSignedIn from clerk
     const { userId, isSignedIn } = useAuth();
@@ -86,10 +85,27 @@ const Users = () => {
         resolver: zodResolver(addNewUserFormSchema)
     });
 
-    const onSubmit: SubmitHandler<AddNewUserFormType> = (formData: AddNewUserFormType) => {
-        const { newUserName, newUserEmail } = formData;
-        addUser({ name: newUserName, email: newUserEmail });
-        reset()
+    const onSubmit: SubmitHandler<AddNewUserFormType> = async (formData: AddNewUserFormType) => {
+        try {
+            const { newUserName, newUserEmail } = formData;
+            addUser({ name: newUserName, email: newUserEmail });
+            reset();
+
+            // success message 
+            Swal.fire({
+                icon: 'success',
+                title: `Success!`,
+                text: `Successfully added a user`,
+            });
+
+        } catch (error) {
+            // error message
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `Something went wrong! ${error}`,
+            });
+        }
     }
 
     if (!isSignedIn) return (
@@ -99,7 +115,10 @@ const Users = () => {
     )
 
     if (isLoading) return (
-        <LoadingSpinner />
+        // <LoadingSpinner />
+        <div className="container text-center">
+            <h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
+        </div>
     );
 
     if (error) return (
