@@ -148,7 +148,7 @@ const Users = () => {
                             +
                         </button>
                     </div>
-                    {showAddUserForm ? (
+                    {/* {showAddUserForm ? (
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="grid md:grid-cols-2 md:gap-6">
                                 <div className="relative z-0 mb-6 w-full group">
@@ -187,7 +187,7 @@ const Users = () => {
                                 Add User
                             </button>
                         </form>
-                    ) : null}
+                    ) : null} */}
 
                     {/* display results */}
                     <ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
