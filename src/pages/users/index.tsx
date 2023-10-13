@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 const Users = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<[]>([]);
-    const [showAddUserForm, setShowAddUserForm] = useState(false);
+    const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
 
     // useAuth hook to extract user id and isSignedIn from clerk
     const { userId, isSignedIn } = useAuth();
