@@ -129,7 +129,11 @@ const Users = () => {
 								value={newUserEmail}
 								onChange={handleNewUserEmailChange}
 							/>
-							<button type="submit">Add User</button>
+							<button
+								type="submit"
+								className="mt-[25px] rounded-full bg-gradient-to-l from-[#A70D0E] to-[#EEB62B] hover:bg-gradient-to-r from-[#EEB62B] to-[#A70D0E] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+								Add User
+							</button>
 						</form>
 					)}
 					<label htmlFor="simple-search" className="sr-only">Search</label>
