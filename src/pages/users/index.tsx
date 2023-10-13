@@ -106,7 +106,10 @@ const Users = () => {
                 text: `Successfully added a user`,
             });
 
+            // hide form when submitted
             setShowAddUserForm(false);
+
+            // call getCurrentData to get updated user data refetched
             getCurrentData();
 
         } catch (error) {
@@ -199,7 +202,7 @@ const Users = () => {
 
                     {/* display results */}
                     <ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
-                        {searchTerm && searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, index: number) => (
+                        {!showAddUserForm && searchTerm && searchResults && searchResults?.length > 0 ? searchResults?.map((user: any, index: number) => (
                             <li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
                                 <div className="flex justify-center">
                                     <div className="rounded-lg shadow-lg bg-white max-w-md w-[350px] h-full min-h-[375px]">
@@ -234,7 +237,7 @@ const Users = () => {
                                 </div>
                             </li>
                         )) : (
-                            currentData?.map((user: any, idx: number) => (
+                            !showAddUserForm && currentData?.map((user: any, idx: number) => (
                                 <li key={user?.id} className="relative flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
                                     <div className="flex justify-center">
                                         <div className="rounded-lg shadow-lg bg-white max-w-md w-[350px] h-full min-h-[375px]">
@@ -271,7 +274,7 @@ const Users = () => {
                             ))
                         )}
                     </ul>
-                    {currentData?.length > 6 ? (<Pagination
+                    {!showAddUserForm && currentData?.length > 6 ? (<Pagination
                         count={pageCount}
                         size="large"
                         page={currentPage}
