@@ -90,6 +90,12 @@ const Users = () => {
     const onSubmit: SubmitHandler<AddNewUserFormType> = async (formData: AddNewUserFormType) => {
         try {
             const { name, email } = formData;
+
+            if (!name || !email) return;
+
+            console.log("name", name);
+            console.log("email", email);
+
             addUser({ name, email });
             reset();
 
@@ -110,17 +116,14 @@ const Users = () => {
         }
     }
 
+    if (isLoading) return (
+        <LoadingSpinner />
+    );
+
     if (!isSignedIn) return (
         <div className="container text-center">
             <h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
         </div>
-    )
-
-    if (isLoading) return (
-        <LoadingSpinner />
-        // <div className="container text-center">
-        //     <h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-        // </div>
     );
 
     if (error) return (
