@@ -106,6 +106,9 @@ const Users = () => {
                 text: `Successfully added a user`,
             });
 
+            setShowAddUserForm(false);
+            refetch();
+
         } catch (error) {
             // error message
             Swal.fire({
@@ -268,7 +271,7 @@ const Users = () => {
                             ))
                         )}
                     </ul>
-                    <Pagination
+                    {currentData?.length > 6 ? (<Pagination
                         count={pageCount}
                         size="large"
                         page={currentPage}
@@ -276,7 +279,7 @@ const Users = () => {
                         color="secondary"
                         shape="rounded"
                         onChange={onPageChange}
-                    />
+                    />) : null}
                 </div>
             ) : (
                 <div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
