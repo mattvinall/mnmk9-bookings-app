@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -79,7 +81,7 @@ const Users = () => {
 
 	const handleSubmitNewUser = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		await addUser({ name: newUserName, email: newUserEmail });
+		addUser({ name: newUserName, email: newUserEmail });
 		setNewUserName("");
 		setNewUserEmail("");
 		setShowAddUserForm(false);
