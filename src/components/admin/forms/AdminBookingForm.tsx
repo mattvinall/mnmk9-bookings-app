@@ -106,7 +106,7 @@ const AdminBookingForm = ({ secret }: Props) => {
                                 <select
                                     id="user"
                                     {...register('name', { required: true })}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                     onChange={handleChange}
                                 >
                                     <option value="">Select a client</option>
