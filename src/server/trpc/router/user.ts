@@ -22,6 +22,31 @@ export const userRouter = router({
       console.log(`Error fetching all users: ${err}`);
     }
   }),
+  createUser: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string().email(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const {
+        name,
+        email,
+      } = input;
+
+      try {
+        const user = await ctx.prisma.user.create({
+          data: { 
+            name,
+            email,
+          }
+        });
+        return user;
+      } catch (err) {
+        console.log(`Error creating user: ${err}`);
+      }
+    }),
 
   getRoleById: protectedProcedure
     .input(

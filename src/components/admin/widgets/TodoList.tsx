@@ -66,7 +66,7 @@ const TodoList = () => {
 					onChange={handleInputChange}
 					className="w-full border border-gray-400 py-2 px-4 mb-4 rounded-lg"
 				/>
-				<button onClick={handleAddTodo} type="button" className="w-[100px] bg-teal-500 hover:bg-teal-400 text-black font-bold py-4 px-4 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-md text-sm px-5 py-2.5 text-center ml-2">Add</button>
+				<button onClick={handleAddTodo} type="button" className="w-[100px] bg-red-700 hover:bg-red-600 text-white font-bold py-4 px-4 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-md text-sm px-5 py-2.5 text-center ml-2">Add</button>
 			</div>
 			<ul>
 				{todos?.map((todo) => (
