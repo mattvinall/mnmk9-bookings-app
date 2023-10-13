@@ -148,27 +148,46 @@ const Users = () => {
                             +
                         </button>
                     </div>
-                    {showAddUserForm && (
+                    {showAddUserForm ? (
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <label htmlFor="new-user-name">Name:</label>
-                            <input
-                                type="text"
-                                id="new-user-name"
-                                {...register("newUserName")}
-                            />
-                            <label htmlFor="new-user-email">Email:</label>
-                            <input
-                                type="email"
-                                id="new-user-email"
-                                {...register("newUserEmail")}
-                            />
+                            <div className="grid md:grid-cols-2 md:gap-6">
+                                <div className="relative z-0 mb-6 w-full group">
+                                    <input
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                                        type="text"
+                                        id="new-user-name"
+                                        {...register("newUserName")}
+                                    />
+                                    <label
+                                        htmlFor="new-user-name"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Name:
+                                    </label>
+                                </div>
+                                <div className="relative z-0 mb-6 w-full group">
+
+                                    <input
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                                        type="email"
+                                        id="new-user-email"
+                                        {...register("newUserEmail")}
+                                    />
+                                    <label
+                                        className="peer-focus:font-medium absolute text-sm text-gray-100 dark:text-gray-100 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        htmlFor="new-user-email"
+                                    >
+                                        Email:
+                                    </label>
+                                </div>
+                            </div>
                             <button
                                 type="submit"
                                 className="mt-[25px] rounded-full bg-gradient-to-l from-[#A70D0E] to-[#EEB62B] hover:bg-gradient-to-r from-[#EEB62B] to-[#A70D0E] px-16 py-3 font-semibold text-white no-underline transition py-3 px-5 text-sm font-medium text-center rounded-lg bg--700 sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                 Add User
                             </button>
                         </form>
-                    )}
+                    ) : null}
 
                     {/* display results */}
                     <ul className="grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 mt-10">
@@ -225,7 +244,6 @@ const Users = () => {
                                                 {user?.role === "user" ? (
                                                     <button
                                                         className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
-                                                        // onClick={() => makeUserAdmin(user.id, refetch)}
                                                         onClick={() => mutate({ id: user.id })}
                                                     >
                                                         Make Admin
@@ -233,7 +251,6 @@ const Users = () => {
                                                 ) : (
                                                     <button
                                                         className="absolute top-[-25px] right-0 bg-gray-900 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
-                                                        // onClick={() => removeUserAdmin(user.id, refetch)}
                                                         onClick={() => removeAdmin({ id: user.id })}
                                                     >
                                                         Remove Admin
@@ -262,8 +279,7 @@ const Users = () => {
                 <div className="container flex flex-col items-center text-center justify-start gap-12 px-4 py-[32vh]">
                     <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">Error 403: Forbidden</h1>
                 </div>
-            )
-            }
+            )}
         </>
     )
 }
