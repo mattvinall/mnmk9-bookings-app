@@ -1,6 +1,7 @@
 import { getAllBookings } from "../../../api/bookings";
 import { trpc } from "../../../utils/trpc";
 import { Bookings } from "@prisma/client";
+import { LoadingSpinner } from "../../client/ui/LoadingSpinner";
 
 const DashboardOverview = () => {
 	// fetch bookings if user role is admin
@@ -38,9 +39,7 @@ const DashboardOverview = () => {
 	const totalDaycare = filteredCheckInBookings?.filter((booking: Bookings) => booking.serviceName === "Daycare").length;
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
