@@ -18,7 +18,7 @@ export const LoadingSpinner = () => {
 
 export const LoadingSpinnerDark = () => {
     return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center ml-4">
             <svg className="animate-spin h-10 w-5 mr-3" viewBox="0 0 24 24">
                 <circle className="opacity-0" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" />
                 <path
