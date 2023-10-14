@@ -58,13 +58,13 @@ const ConfirmBookings = () => {
 											<div className="flex flex-col flex-wrap justify-between md:justify-start lg:justify-between">
 												{!booking.confirmedBooking && (
 													<button
-														className="text-center bg-red-700 hover:bg-red-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
+														className="text-center bg-green-700 hover:bg-green-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
 														onClick={() => confirmBooking(booking.id, !booking.confirmedBooking, refetch)}
 													>
 														Confirm Booking
 													</button>
 												)}
-												<Link className="block w-[175px] text-center  bg-yellow-700 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
+												<Link className="block w-[175px] text-center  bg-yellow-700 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 													Booking Details
 												</Link>
 											</div>
