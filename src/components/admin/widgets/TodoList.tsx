@@ -1,6 +1,7 @@
 import { useAuth } from "@clerk/nextjs";
 import { trpc } from "../../../utils/trpc";
 import { useState } from "react";
+import { LoadingSpinner } from "../../client/ui/LoadingSpinner";
 
 const TodoList = () => {
 	const { userId } = useAuth();
@@ -44,9 +45,7 @@ const TodoList = () => {
 	}
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
