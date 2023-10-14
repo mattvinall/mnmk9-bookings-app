@@ -6,6 +6,7 @@ import AdminBookings from '../../components/admin/bookings/AdminBookings';
 import ClientBookings from '../../components/client/bookings/ClientBookings';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { getUserById } from '../../api/users';
+import { LoadingSpinner } from '../../components/client/ui/LoadingSpinner';
 
 const ManageBooking = () => {
 	const router = useRouter();
@@ -25,9 +26,7 @@ const ManageBooking = () => {
 	}, [router.pathname])
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
