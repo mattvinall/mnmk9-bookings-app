@@ -16,6 +16,7 @@ import {
 import { Pet, Services } from "@prisma/client";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { getAllServices } from "../../api/services";
+import { LoadingSpinner } from "../../components/client/ui/LoadingSpinner";
 
 
 const Grooming: NextPage = () => {
@@ -173,9 +174,7 @@ const Grooming: NextPage = () => {
 	}
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
