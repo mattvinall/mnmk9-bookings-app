@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import logo from "../../../public/mnmk9-logo.jpg";
 import { getUserById } from "../../api/users";
-import LoadingSpinner from "../client/ui/LoadingSpinner";
+import { LoadingSpinnerDark } from "../client/ui/LoadingSpinner";
 
 const Logo = () => {
 	return (
@@ -43,9 +43,9 @@ const AuthShowcase = ({ userData, isSignedIn }: Props) => {
 					<Link aria-label="Click to go to user profile detail page" href={`/profile/${userData?.id}`}>
 						{
 							userData?.image ? (
-								<img className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} alt={`profile image of ${userData?.name}`} />
+								<Image className="w-[100px] h-[100px] rounded-full scale-50 float-right" src={userData?.image as string} alt={`profile image of ${userData?.name}`} />
 							) : (
-								<LoadingSpinner />
+								<LoadingSpinnerDark />
 							)
 						}
 					</Link>
