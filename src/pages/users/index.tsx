@@ -10,7 +10,7 @@ import { useAuth } from "@clerk/nextjs";
 import { getUserById, getAllUsers } from "../../api/users";
 import { trpc } from "../../utils/trpc";
 import { useForm, SubmitHandler } from "react-hook-form";
-import LoadingSpinner from "../../components/client/ui/LoadingSpinner";
+import { LoadingSpinner } from "../../components/client/ui/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Swal from "sweetalert2";

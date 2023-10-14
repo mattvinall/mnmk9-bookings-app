@@ -4,7 +4,7 @@ import { getAllServices } from '../../../api/services';
 import { AdminBookingFormType } from '../../../utils/schema';
 import { useForm } from 'react-hook-form';
 import { Pet, Services, User } from '@prisma/client';
-import LoadingSpinner from '../../client/ui/LoadingSpinner';
+import { LoadingSpinner } from '../../client/ui/LoadingSpinner';
 import { trpc } from '../../../utils/trpc';
 import Swal from 'sweetalert2';
 
