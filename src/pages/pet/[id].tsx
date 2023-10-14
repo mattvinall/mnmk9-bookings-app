@@ -9,6 +9,7 @@ import { PetDetailCard } from "../../components/client/ui/PetDetailCard";
 import VaccinationRecordCard from "../../components/client/ui/VaccinationRecordCard";
 import AddVaccineForm from "../../components/client/forms/AddVaccineForm";
 import { NextPage } from "next";
+import { LoadingSpinner } from "../../components/client/ui/LoadingSpinner";
 
 const PetDetail: NextPage = () => {
 	const [secret, setSecret] = useState<string>("");
@@ -58,9 +59,7 @@ const PetDetail: NextPage = () => {
 
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
