@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
 
   if (eventType === "user.deleted") {
     console.log("user deleted")
-    await prisma.user.delete({ where: { id: id as string } });
+    await prisma.user.delete({ where: { email: email as string } });
   }
   
   res.status(200).json({ message: "Webhook processed successfully" });
