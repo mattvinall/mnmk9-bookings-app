@@ -13,6 +13,7 @@ import { Pet } from "@prisma/client";
 import useSetWaiverDocument from "../../hooks/useSetWaiverDocument";
 import React from "react";
 import { AddWaiverForm } from "../../components/client/forms/AddWaiverForm";
+import { LoadingSpinner } from "../../components/client/ui/LoadingSpinner";
 
 const UserDetail = () => {
 	const router = useRouter();
@@ -196,9 +197,7 @@ const UserDetail = () => {
 	}
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) {
