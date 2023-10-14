@@ -6,6 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import { Bookings } from "@prisma/client";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { useAuth } from "@clerk/nextjs";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 const ClientBookings = (): ReactJSXElement => {
 
@@ -24,9 +25,7 @@ const ClientBookings = (): ReactJSXElement => {
 	}
 
 	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
-		</div>
+		<LoadingSpinner />
 	);
 
 	if (error) return (
@@ -52,7 +51,7 @@ const ClientBookings = (): ReactJSXElement => {
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">End Time:</span> {booking.endTime ? formatTime(booking.endTime) : "--"}</p>
 										<p className="text-md text-gray-700 mb-2"><span className="font-bold">Notes:</span> {booking?.notes ? booking.notes : "--"}</p>
 										<div className="flex flex-wrap justify-between md:justify-start lg:justify-between">
-											<Link className="block w-[160px] bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
+											<Link className="block w-[160px] bg-yellow-700 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded mt-4" href={`/manage-booking/${booking.id}`}>
 												Booking Details
 											</Link>
 										</div>
