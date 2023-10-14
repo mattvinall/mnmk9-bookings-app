@@ -10,6 +10,7 @@ import { Bookings } from "@prisma/client";
 import { useAuth } from "@clerk/nextjs";
 import { getUserById } from "../../../api/users";
 import { getAllBookings } from "../../../api/bookings";
+import { LoadingSpinner } from "../../client/ui/LoadingSpinner";
 
 const BookingsCalendar = () => {
 	const { userId, isSignedIn } = useAuth();
@@ -95,15 +96,13 @@ const BookingsCalendar = () => {
 
 	}, [date]);
 
+	if (isLoading) return (
+		<LoadingSpinner />
+	);
+
 	if (!isSignedIn) return (
 		<div className="container text-center">
 			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Please Login....</h1>
-		</div>
-	)
-
-	if (isLoading) return (
-		<div className="container text-center">
-			<h1 className="text-1xl font-extrabold mt-[15%] tracking-tight text-white sm:text-[2rem]">Loading....</h1>
 		</div>
 	);
 
