@@ -57,9 +57,10 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
     console.log("event type is user updated");
     const updatedUser = await prisma.user.update({
       where: {
-        id: id as string,
+        email: email as string,
       },
       data: {
+        id: id as string,
         image: image_url as string,
         name: `${first_name} ${last_name}`,
         email: email as string,
