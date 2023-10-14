@@ -39,42 +39,57 @@ export default async function handler(req: NextApiRequestWithSvixRequiredHeaders
 
   if (eventType === "user.created") {
     console.log("event type is user created")
-    const user = await prisma.user.create({
-      data: {
-        id: id as string,
-        image: image_url as string,
-        name: `${first_name} ${last_name}`,
-        email: email as string,
-      }
-    });
+    try {
+      const user = await prisma.user.create({
+        data: {
+          id: id as string,
+          image: image_url as string,
+          name: `${first_name} ${last_name}`,
+          email: email as string,
+        }
+      });
+  
+      console.log("user created!", user);
+      return user;
 
-    console.log("user created!", user);
+    } catch (error) {
+        console.log("error creating user", error);
+    }
 
-    return user;
   }
 
   if (eventType === "user.updated") {
     console.log("event type is user updated");
-    const updatedUser = await prisma.user.update({
-      where: {
-        email: email as string,
-      },
-      data: {
-        id: id as string,
-        image: image_url as string,
-        name: `${first_name} ${last_name}`,
-        email: email as string,
-      }
-    });
+    try {
+      const updatedUser = await prisma.user.update({
+        where: {
+          email: email as string,
+        },
+        data: {
+          id: id as string,
+          image: image_url as string,
+          name: `${first_name} ${last_name}`,
+          email: email as string,
+        }
+      });
+  
+      console.log("user updated", updatedUser);
+  
+      return updatedUser;
 
-    console.log("user updated", updatedUser);
-
-    return updatedUser;
+    } catch (error) {
+      console.log("error updating user", error);
+    }
   }
 
   if (eventType === "user.deleted") {
-    console.log("user deleted")
-    await prisma.user.delete({ where: { email: email as string } });
+    try {
+      await prisma.user.delete({ where: { email: email as string } });
+      console.log("user deleted")
+
+    } catch (error) {
+      console.log("error deleting user", error);
+    }
   }
   
   res.status(200).json({ message: "Webhook processed successfully" });
