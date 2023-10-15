@@ -106,12 +106,12 @@ const AdminBookingForm = ({ secret }: Props) => {
                                 <select
                                     id="user"
                                     {...register('name', { required: true })}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                                    className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                     onChange={handleChange}
                                 >
                                     <option value="">Select a client</option>
                                     {users?.map((user: User) => (
-                                        <option key={user.id} value={user.id}>
+                                        <option className="!text-black" key={user.id} value={user.id}>
                                             {user.name}
                                         </option>
                                     ))}
@@ -147,11 +147,11 @@ const AdminBookingForm = ({ secret }: Props) => {
                                 <select
                                     id="service"
                                     {...register('serviceName', { required: true })}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
+                                    className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                 >
                                     <option value="">Select a service</option>
                                     {services?.map((service: Services) => (
-                                        <option key={service.id} value={`${service.serviceName}-${service.id}`}>
+                                        <option className="!text-black" key={service.id} value={`${service.serviceName}-${service.id}`}>
                                             {service.serviceName}
                                         </option>
                                     ))}
