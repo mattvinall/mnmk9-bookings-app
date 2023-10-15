@@ -109,7 +109,7 @@ const AdminBookingForm = ({ secret }: Props) => {
                                     className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                     onChange={handleChange}
                                 >
-                                    <option value="">Select a client</option>
+                                    <option className="!text-black" value="">Select a client</option>
                                     {users?.map((user: User) => (
                                         <option className="!text-black" key={user.id} value={user.id}>
                                             {user.name}
@@ -149,7 +149,7 @@ const AdminBookingForm = ({ secret }: Props) => {
                                     {...register('serviceName', { required: true })}
                                     className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-500 dark:focus:border-gray-100 focus:outline-none focus:ring-0 focus:border-gray-100 peer"
                                 >
-                                    <option value="">Select a service</option>
+                                    <option className="!text-black" value="">Select a service</option>
                                     {services?.map((service: Services) => (
                                         <option className="!text-black" key={service.id} value={`${service.serviceName}-${service.id}`}>
                                             {service.serviceName}
