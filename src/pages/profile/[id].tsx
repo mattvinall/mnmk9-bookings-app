@@ -240,7 +240,7 @@ const UserDetail = () => {
 							More +
 						</button>
 						{/* Dropdown Menu */}
-						<div id="dropdownHover" className={`${!menuShow ? `hidden` : "transition-block block absolute z-10 top-[4rem] right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-auto dark:bg-gray-700"}`}>
+						<div id="dropdownHover" className={`${!menuShow ? `hidden` : "transition-block block absolute z-10 top-[4rem] md:right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-auto dark:bg-gray-700"}`}>
 							<ul className="py-4 text-sm text-gray-700 dark:text-gray-200 w-48" aria-labelledby="dropdownHoverButton">
 								<li>
 									<Link href="/profile/vet-info" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vet Information</Link>
