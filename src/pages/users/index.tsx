@@ -145,7 +145,7 @@ const Users = () => {
                     <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
                         MNMK-9  <span className="text-[rgb(238,182,43)]">Users</span>
                     </h1>
-                    <div className="flex justify-between items-center w-3/4">
+                    <div className="flex justify-between items-center w-[90%] md:w-2/3">
                         <>
                             <label htmlFor="simple-search" className="sr-only">Search</label>
                             <div className="relative w-full mr-4">
@@ -160,7 +160,7 @@ const Users = () => {
                         </button>
                     </div>
                     {showAddUserForm ? (
-                        <form onSubmit={handleSubmit(onSubmit)} className="w-2/3">
+                        <form onSubmit={handleSubmit(onSubmit)} className="w-[90%] md:w-2/3">
                             <div className="grid md:grid-cols-2 md:gap-6">
                                 <div className="relative z-0 mb-6 group">
                                     <input
