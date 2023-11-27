@@ -1,4 +1,5 @@
 import { ses } from "../server/aws/ses/index";
+import { formatDate } from "../utils/formatDate";
 import { formatTime } from "../utils/formatTime";
 
 export const sendEmailToAdmin = async (
@@ -16,24 +17,9 @@ export const sendEmailToAdmin = async (
   serviceName: string,
   notes?: string
 ) => {
-  const formattedCheckInDate = checkInDate
-    ? new Date(checkInDate).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "";
+  const formattedCheckInDate = checkInDate ? formatDate(checkInDate) : "";
+  const formattedCheckOutDate = checkOutDate ? formatDate(checkOutDate) : "";
 
-  console.log("formatted check in date", formattedCheckInDate);
-  const formattedCheckOutDate = checkOutDate
-    ? new Date(checkOutDate).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "";
   const htmlTemplate = `
 	<html>
 		<body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
@@ -90,22 +76,8 @@ export const sendEmailToClient = async (
   checkOutDate?: string,
   notes?: string
 ) => {
-  const formattedCheckInDate = checkInDate
-    ? new Date(checkInDate).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "";
-  const formattedCheckOutDate = checkOutDate
-    ? new Date(checkOutDate).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "";
+  const formattedCheckInDate = checkInDate ? formatDate(checkInDate) : "";
+  const formattedCheckOutDate = checkOutDate ? formatDate(checkOutDate) : "";
   const htmlTemplate = `
 	<html>
 		<head>
