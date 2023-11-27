@@ -2,33 +2,39 @@ import { ses } from "../server/aws/ses/index";
 import { formatTime } from "../utils/formatTime";
 
 export const sendEmailToAdmin = async (
-	emailTo: string,
-	emailFrom: string,
-	firstName: string,
-	lastName: string,
-	email: string,
-	phoneNumber: string,
-	petName: string,
-	checkInDate: string,
-	checkOutDate: string,
-	startTime: string,
-	endTime: string,
-	serviceName: string,
-	notes?: string,
+  emailTo: string,
+  emailFrom: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  phoneNumber: string,
+  petName: string,
+  checkInDate: string,
+  checkOutDate: string,
+  startTime: string,
+  endTime: string,
+  serviceName: string,
+  notes?: string
 ) => {
-	const formattedCheckInDate = checkInDate ? new Date(checkInDate).toLocaleDateString("en-US", {
-		weekday: "long",
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	}) : '';
-	const formattedCheckOutDate = checkOutDate ? new Date(checkOutDate).toLocaleDateString("en-US", {
-		weekday: "long",
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	}) : '';
-	const htmlTemplate = `
+  const formattedCheckInDate = checkInDate
+    ? new Date(checkInDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+
+  console.log("formatted check in date", formattedCheckInDate);
+  const formattedCheckOutDate = checkOutDate
+    ? new Date(checkOutDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+  const htmlTemplate = `
 	<html>
 		<body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
 			<h1 style="text-align: center; font-size: 24px;">Booking Details |  ${serviceName}</h1>
@@ -39,60 +45,68 @@ export const sendEmailToAdmin = async (
 				<p style="font-size: 18px;"><strong>Pet Name:</strong> ${petName}</p>
 				<p style="font-size: 18px;"><strong>Check-In Date:</strong> ${formattedCheckInDate}</p>
 				<p style="font-size: 18px;"><strong>Check-Out Date:</strong> ${formattedCheckOutDate}</p>
-				<p style="font-size: 18px;"><strong>Drop Off Time:</strong> ${formatTime(startTime)}</p>
-				<p style="font-size: 18px;"><strong>Pick Up Time:</strong> ${formatTime(endTime)}</p>
+				<p style="font-size: 18px;"><strong>Drop Off Time:</strong> ${formatTime(
+          startTime
+        )}</p>
+				<p style="font-size: 18px;"><strong>Pick Up Time:</strong> ${formatTime(
+          endTime
+        )}</p>
 				<p style="font-size: 18px;"><strong>Notes:</strong> ${notes}</p>
 			</div>
 			
 		</body>
 	</html>
-`
-	const emailParams = {
-		Destination: {
-			ToAddresses: [emailTo]
-		},
-		Message: {
-			Body: {
-				Html: {
-					Charset: 'UTF-8',
-					Data: htmlTemplate
-				}
-			},
-			Subject: {
-				Charset: 'UTF-8',
-				Data: `Booking for ${serviceName}: ${firstName} ${lastName} | Pet: ${petName}`
-			}
-		},
-		Source: emailFrom
-	}
+`;
+  const emailParams = {
+    Destination: {
+      ToAddresses: [emailTo],
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: htmlTemplate,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: `Booking for ${serviceName}: ${firstName} ${lastName} | Pet: ${petName}`,
+      },
+    },
+    Source: emailFrom,
+  };
 
-	return await ses.sendEmail(emailParams).promise();
-}
+  return await ses.sendEmail(emailParams).promise();
+};
 
 export const sendEmailToClient = async (
-	emailTo: string,
-	emailFrom: string,
-	petName: string,
-	checkInDate: string,
-	startTime: string,
-	endTime: string,
-	serviceName: string,
-	checkOutDate?: string,
-	notes?: string,
+  emailTo: string,
+  emailFrom: string,
+  petName: string,
+  checkInDate: string,
+  startTime: string,
+  endTime: string,
+  serviceName: string,
+  checkOutDate?: string,
+  notes?: string
 ) => {
-	const formattedCheckInDate = checkInDate ? new Date(checkInDate).toLocaleDateString("en-US", {
-		weekday: "long",
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	}) : '';
-	const formattedCheckOutDate = checkOutDate ? new Date(checkOutDate).toLocaleDateString("en-US", {
-		weekday: "long",
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	}) : '';
-	const htmlTemplate = `
+  const formattedCheckInDate = checkInDate
+    ? new Date(checkInDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+  const formattedCheckOutDate = checkOutDate
+    ? new Date(checkOutDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+  const htmlTemplate = `
 	<html>
 		<head>
 			<meta charset="utf-8">
@@ -161,8 +175,12 @@ export const sendEmailToClient = async (
 					<p><span class="label black">Pet Name:</span> <span class="blue">${petName}</span></p>
 					<p><span class="label black">Check In Date:</span> <span class="blue">${formattedCheckInDate}</span></p>
 					<p><span class="label black">Check Out Date:</span> <span class="blue">${formattedCheckOutDate}</span></p>
-					<p><span class="label black">Start Time/Drop Off Time:</span> <span class="blue">${formatTime(startTime)}</span></p>
-					<p><span class="label black">End Time/Pick Up Time:</span> <span class="blue">${formatTime(endTime)}</span></p>
+					<p><span class="label black">Start Time/Drop Off Time:</span> <span class="blue">${formatTime(
+            startTime
+          )}</span></p>
+					<p><span class="label black">End Time/Pick Up Time:</span> <span class="blue">${formatTime(
+            endTime
+          )}</span></p>
 					<p><span class="label black">Notes:</span> <span class="blue">${notes}</span></p>
 				</div>
 				<p class="grey"><b>If you have not added your waiver form to your profile, you can do so via the <a style="color: #122748; font-weight: bold; font-size: inherit;" href="https://mnmk9-bookings.vercel.app/" target="_blank" rel="noopener">MNMK-9 Bookings App</a>.</b></p>
@@ -170,40 +188,39 @@ export const sendEmailToClient = async (
 			</div>
 		</body>
 	</html>
-`
-	const emailParams = {
-		Destination: {
-			ToAddresses: [emailTo]
-		},
-		Message: {
-			Body: {
-				Html: {
-					Charset: 'UTF-8',
-					Data: htmlTemplate
-				}
-			},
-			Subject: {
-				Charset: 'UTF-8',
-				Data: `MNMK-9 ${serviceName} Booking Details | ${petName}`
-			}
-		},
-		Source: emailFrom
-	}
+`;
+  const emailParams = {
+    Destination: {
+      ToAddresses: [emailTo],
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: htmlTemplate,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: `MNMK-9 ${serviceName} Booking Details | ${petName}`,
+      },
+    },
+    Source: emailFrom,
+  };
 
-	return await ses.sendEmail(emailParams).promise();
-}
-
+  return await ses.sendEmail(emailParams).promise();
+};
 
 export const sendEmailContactForm = async (
-	emailTo: string,
-	emailFrom: string,
-	name: string,
-	message: string
+  emailTo: string,
+  emailFrom: string,
+  name: string,
+  message: string
 ) => {
-	const date = new Date();
-	const dateString = date.toLocaleDateString();
-	const timeString = date.toLocaleTimeString();
-	const htmlTemplate = `
+  const date = new Date();
+  const dateString = date.toLocaleDateString();
+  const timeString = date.toLocaleTimeString();
+  const htmlTemplate = `
 	<html>
 		<body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
 			<h1 style="text-align: center; font-size: 24px;">Contact Form Request</h1>
@@ -211,29 +228,31 @@ export const sendEmailContactForm = async (
 				<p style="font-size: 18px;"><strong>Name:</strong> ${name}</p>
 				<p style="font-size: 18px;"><strong>Email:</strong> ${emailTo}</p>
 				<p style="font-size: 18px;"><strong>Message:</strong> ${message}</p>
-				<p style="font-size: 18px;"><strong>Date | Time:</strong> ${dateString + "|" + timeString}</p>
+				<p style="font-size: 18px;"><strong>Date | Time:</strong> ${
+          dateString + "|" + timeString
+        }</p>
 			</div>
 		</body>
 	</html>
-`
-	const emailParams = {
-		Destination: {
-			ToAddresses: [emailTo]
-		},
-		Message: {
-			Body: {
-				Html: {
-					Charset: 'UTF-8',
-					Data: htmlTemplate
-				}
-			},
-			Subject: {
-				Charset: 'UTF-8',
-				Data: `MNMK-9 Contact Form Request`
-			}
-		},
-		Source: emailFrom
-	}
+`;
+  const emailParams = {
+    Destination: {
+      ToAddresses: [emailTo],
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: htmlTemplate,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: `MNMK-9 Contact Form Request`,
+      },
+    },
+    Source: emailFrom,
+  };
 
-	return await ses.sendEmail(emailParams).promise();
-}
+  return await ses.sendEmail(emailParams).promise();
+};

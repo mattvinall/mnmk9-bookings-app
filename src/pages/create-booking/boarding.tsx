@@ -115,6 +115,8 @@ const Boarding: NextPage = () => {
 			// reset the form state
 			reset();
 
+			console.log("form data check in date", formData.checkInDate)
+
 			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailToAdmin(
 				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
