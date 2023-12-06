@@ -7,6 +7,7 @@ import { Pet, Services, User } from '@prisma/client';
 import { LoadingSpinner } from '../../client/ui/LoadingSpinner';
 import { trpc } from '../../../utils/trpc';
 import Swal from 'sweetalert2';
+import { sendEmailToClient } from '../../../lib/email';
 
 interface UserData extends User {
     pets: Pet[]
@@ -68,6 +69,18 @@ const AdminBookingForm = ({ secret }: Props) => {
                 petId,
                 serviceId,
             });
+
+            await sendEmailToClient(
+                data?.email,
+                "tylermelnike@mnmk9.ca",
+                data?.petName,
+                data?.checkInDate,
+                data?.startTime,
+                data?.endTime,
+                data.serviceName,
+                data?.checkOutDate,
+                data?.notes
+            );
 
             Swal.fire({
                 icon: 'success',
