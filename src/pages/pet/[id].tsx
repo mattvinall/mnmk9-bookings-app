@@ -32,11 +32,6 @@ const PetDetail: NextPage = () => {
 	const ownerId = petDetail?.map((pet: Pet) => pet.ownerId as string)[0];
 	const vaccinationRecords = petDetail && petDetail?.map((pet: PetDetail) => pet?.vaccinations)[0] || [];
 
-	const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ id: id as string });
-	console.log("waiverByPetId", waiverByPetId);
-
-	const waiverFormSigned = waiverByPetId ? true : false;
-	console.log("waiverFormSigned boolean status", waiverFormSigned);
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -108,7 +103,7 @@ const PetDetail: NextPage = () => {
 				{showPetDetails && (
 					<>
 						{/* Pet Detail Card */}
-						{petDetail && petDetail.length > 0 && petDetail.map((pet: Pet) => PetDetailCard(pet, waiverFormSigned, defaultImage))}
+						{petDetail && petDetail.length > 0 && petDetail.map((pet: Pet) => PetDetailCard(pet, defaultImage))}
 						{/* Edit Pet Form */}
 						{petId && key && petDetail && (
 							<GoogleReCaptchaProvider reCaptchaKey={key}>

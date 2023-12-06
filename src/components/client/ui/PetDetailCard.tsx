@@ -1,6 +1,13 @@
 import { Pet } from "@prisma/client";
+import { trpc } from "../../../utils/trpc";
 
-export const PetDetailCard = (pet: Pet, waiverFormSigned: boolean, defaultImage: string) => {
+export const PetDetailCard = (pet: Pet, defaultImage: string) => {
+    const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ id: pet.id as string });
+    console.log("waiverByPetId", waiverByPetId);
+
+    const waiverFormSigned = waiverByPetId ? true : false;
+    console.log("waiverFormSigned boolean status", waiverFormSigned);
+
     return (
         <div key={pet.id} className="flex justify-center items-stretch mb-6">
             <div className="rounded-lg shadow-lg bg-white w-full md:w-[32rem]">
