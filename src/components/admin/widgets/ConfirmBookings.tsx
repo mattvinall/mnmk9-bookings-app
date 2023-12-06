@@ -26,10 +26,7 @@ const ConfirmBookings = () => {
 
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
 		onSuccess: () => {
-			refetch();
-		},
-		onError: (error) => {
-			console.log("error calling confirm booking trpc function", error);
+			refetch()
 		}
 	});
 
@@ -70,7 +67,7 @@ const ConfirmBookings = () => {
 												{!booking.confirmedBooking && (
 													<button
 														className="text-center bg-green-700 hover:bg-green-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleConfirmBooking.mutate({ id: booking?.id as string, confirmedBooking: !booking?.confirmedBooking as boolean })}
+														onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: booking.confirmedBooking })}
 													>
 														Confirm Booking
 													</button>
