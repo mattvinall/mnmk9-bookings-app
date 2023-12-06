@@ -1,6 +1,7 @@
 import { Vaccination } from '@prisma/client'
 import Link from 'next/link';
 import React from 'react'
+import useUploadFileToS3 from './../../../hooks/useUploadFileToS3';
 
 
 const VaccinationRecordCard = (record: Vaccination, handleDeleteVaccinationRecord: (id: string) => void) => {
@@ -16,6 +17,13 @@ const VaccinationRecordCard = (record: Vaccination, handleDeleteVaccinationRecor
                             <p className="text-gray-600 font-medium text-lg">Valid To - {record.validTo.toLocaleDateString("en")}</p>
                         </div>
                     </div>
+                    {record.uploadedS3Url && (
+                        <div className="my-4 border-slate-500 border-b-2">
+                            <div className="mb-4">
+                                <p className="text-gray-600 font-medium text-lg"><a href={record?.uploadedS3Url}>View Vaccination Record</a></p>
+                            </div>
+                        </div>
+                    )}
                     <div className="my-4 flex">
                         <Link href={`/pet/vaccinations/${record.id}`} className="mt-6 flex flex-col items-center justify-center w-12 h-12 mr-2 text-gray-900 transition-colors duration-150 bg-red-600 rounded-full focus:shadow-outline hover:bg-red-500">
                             <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
