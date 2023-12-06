@@ -70,7 +70,7 @@ const ConfirmBookings = () => {
 												{!booking.confirmedBooking && (
 													<button
 														className="text-center bg-green-700 hover:bg-green-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: true })}
+														onClick={() => handleConfirmBooking.mutate({ id: booking?.id, confirmedBooking: !booking?.confirmedBooking })}
 													>
 														Confirm Booking
 													</button>
