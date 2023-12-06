@@ -33,6 +33,10 @@ const ConfirmBookings = () => {
 		}
 	});
 
+	const handleClick = (booking: Booking) => {
+		return handleConfirmBooking.mutate({ id: booking?.id, confirmedBooking: !booking?.confirmedBooking })
+	}
+
 	return (
 		<div className="w-full md:w-[50%] flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
@@ -70,7 +74,7 @@ const ConfirmBookings = () => {
 												{!booking.confirmedBooking && (
 													<button
 														className="text-center bg-green-700 hover:bg-green-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleConfirmBooking.mutate({ id: booking?.id, confirmedBooking: !booking?.confirmedBooking })}
+														onClick={() => handleClick(booking)}
 													>
 														Confirm Booking
 													</button>
