@@ -24,7 +24,7 @@ const ConfirmBookings = () => {
 		setShowArrows(false);
 	}, [showArrows, filteredBookingsByNotConfirmed?.length]);
 
-	const { mutate: handleConfirmBooking } = trpc.bookings.confirmBooking.useMutation({
+	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
 		onSuccess: () => {
 			refetch();
 		},
@@ -38,6 +38,7 @@ const ConfirmBookings = () => {
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Booking) => {
+					console.log("booking", booking);
 					const formattedCheckInDate = formatDate(booking.checkInDate);
 					const formattedCheckOutDate = formatDate(booking.checkOutDate);
 
@@ -69,7 +70,7 @@ const ConfirmBookings = () => {
 												{!booking.confirmedBooking && (
 													<button
 														className="text-center bg-green-700 hover:bg-green-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
-														onClick={() => handleConfirmBooking({ id: booking.id, confirmedBooking: true })}
+														onClick={() => handleConfirmBooking.mutate({ id: booking.id, confirmedBooking: true })}
 													>
 														Confirm Booking
 													</button>
