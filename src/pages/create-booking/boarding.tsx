@@ -119,10 +119,8 @@ const Boarding: NextPage = () => {
 
 			// call send email function that leverages AWS SES to send the form data via email
 			await sendEmailToAdmin(
-				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
-				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
 				formData?.email,
-				"matt.vinall7@gmail.com",
+				"tylermelnike@mnmk9.ca",
 				formData?.firstName,
 				formData?.lastName,
 				formData?.email,
@@ -137,10 +135,9 @@ const Boarding: NextPage = () => {
 			);
 
 			await sendEmailToClient(
-				// [formData?.email, `${process.env.NEXT_PUBLIC_EMAIL_TO}`],
-				// `${process.env.NEXT_PUBLIC_EMAIL_TO}`,
+
 				formData?.email,
-				"matt.vinall7@gmail.com",
+				"tylermelnike@mnmk9.ca",
 				formData?.petName,
 				formData?.checkInDate,
 				formData?.startTime,

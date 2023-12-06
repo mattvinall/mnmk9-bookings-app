@@ -65,6 +65,49 @@ export const sendEmailToAdmin = async (
   return await ses.sendEmail(emailParams).promise();
 };
 
+export const sendEmailToClientConfirmBooking = async (
+  emailTo: string,
+  emailFrom: string,
+  petName: string,
+  checkInDate: string,
+  startTime: string,
+  serviceName: string
+) => {
+  const formattedCheckInDate = checkInDate ? formatDate(checkInDate) : "";
+
+  const htmlTemplate = `
+    <html>
+      <body style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+        <h1 style="text-align: center; font-size: 24px;">Booking Confirmation</h1>
+        <p style="font-size: 18px">Thank you for booking with MNMK-9. Your ${serviceName} booking has been confirmed. We will see you and ${petName} on ${formattedCheckInDate} at ${formatTime(
+    startTime
+  )}</p>
+        <p stye="font-size: 18px">If you need to make any changes to your booking like changing the dates, time, or if you would like to cancel. Please use the <a style="color: #122748; font-weight: bold; font-size: inherit;" href="https://mnmk9-bookings.app/" target="_blank" rel="noopener">MNMK-9 Bookings App</a>. Thank you for choosing MNMK-9.</p>
+      </body>
+    </html>
+  `;
+  const emailParams = {
+    Destination: {
+      ToAddresses: [emailTo],
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: htmlTemplate,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: `MNMK-9 ${serviceName} Booking Confirmed | ${petName}`,
+      },
+    },
+    Source: emailFrom,
+  };
+
+  return await ses.sendEmail(emailParams).promise();
+};
+
 export const sendEmailToClient = async (
   emailTo: string,
   emailFrom: string,
@@ -95,7 +138,7 @@ export const sendEmailToClient = async (
 					color: #666;
 				}
 				.blue {
-					color: #0071c5;
+					color: #C70500;
 				}
 				.black {
 					color: #000;
@@ -139,7 +182,7 @@ export const sendEmailToClient = async (
 		<body>
 			<div class="container">
 				<div class="logo">
-					<img src="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/images/logo/mnmk9-logo.jpg" alt="MNMK-9 Company Logo">
+					<img src="https://mnmk9-bookings.s3.ca-central-1.amazonaws.com/images/logo/logo.jpg" alt="MNMK-9 Company Logo">
 				</div>
 				<h1 class="blue">Thank you for booking with MNMK-9</h1>
 				<div class="booking-details">
@@ -155,7 +198,7 @@ export const sendEmailToClient = async (
           )}</span></p>
 					<p><span class="label black">Notes:</span> <span class="blue">${notes}</span></p>
 				</div>
-				<p class="grey"><b>If you have not added your waiver form to your profile, you can do so via the <a style="color: #122748; font-weight: bold; font-size: inherit;" href="https://mnmk9-bookings.vercel.app/" target="_blank" rel="noopener">MNMK-9 Bookings App</a>.</b></p>
+				<p class="grey"><b>If you have not added your waiver form to your profile, you can do so via the <a style="color: #122748; font-weight: bold; font-size: inherit;" href="https://mnmk9-bookings.app/" target="_blank" rel="noopener">MNMK-9 Bookings App</a>.</b></p>
 				<p class="waiver-message grey"><b>Note: All pets require a waiver form to be on file prior to any service. Once the waiver is uploaded, the MNMK-9 team can confirm your booking.</b></p>
 			</div>
 		</body>

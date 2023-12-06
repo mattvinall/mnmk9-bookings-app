@@ -5,12 +5,31 @@ import usePagination from "../../../hooks/usePagination";
 import Pagination from "@mui/material/Pagination";
 import { BookingsArray, Booking } from "../../../types/router";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import Swal from "sweetalert2";
+import { sendEmailToClientConfirmBooking } from "../../../lib/email";
 
 const AdminBookings: React.FC = (): ReactJSXElement => {
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
-		onSuccess: () => {
-			refetch()
+		onSuccess: async (data) => {
+			console.log("data after confirming booking", data)
+			if (!data) return;
+
+			if (!data.startTime) return;
+			await sendEmailToClientConfirmBooking(
+				data.email,
+				"tylermelnike@mnmk9.ca",
+				data.petName,
+				data.checkInDate,
+				data.startTime,
+				data.serviceName
+			),
+				refetch(),
+				Swal.fire({
+					icon: 'success',
+					title: 'Success',
+					text: 'Booking Confirmed',
+				})
 		}
 	});
 

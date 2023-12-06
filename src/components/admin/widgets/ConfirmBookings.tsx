@@ -7,6 +7,8 @@ import { formatTime } from "../../../utils/formatTime";
 import { getAllBookings } from "../../../api/bookings";
 import { formatDate } from "../../../utils/formatDate";
 import { trpc } from "../../../utils/trpc";
+import Swal from "sweetalert2";
+import { sendEmailToClientConfirmBooking } from "../../../lib/email";
 
 const ConfirmBookings = () => {
 	const { data: bookingsData, refetch } = getAllBookings();
@@ -25,8 +27,25 @@ const ConfirmBookings = () => {
 	}, [showArrows, filteredBookingsByNotConfirmed?.length]);
 
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
-		onSuccess: () => {
-			refetch()
+		onSuccess: async (data) => {
+			console.log("data after confirming booking", data)
+			if (!data) return;
+
+			if (!data.startTime) return;
+			await sendEmailToClientConfirmBooking(
+				data.email,
+				"tylermelnike@mnmk9.ca",
+				data.petName,
+				data.checkInDate,
+				data.startTime,
+				data.serviceName
+			),
+				refetch(),
+				Swal.fire({
+					icon: 'success',
+					title: 'Success',
+					text: 'Booking Confirmed',
+				})
 		}
 	});
 
