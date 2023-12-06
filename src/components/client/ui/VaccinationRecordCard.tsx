@@ -1,8 +1,6 @@
 import { Vaccination } from '@prisma/client'
 import Link from 'next/link';
-import React from 'react'
-import useUploadFileToS3 from './../../../hooks/useUploadFileToS3';
-
+import React from 'react';
 
 const VaccinationRecordCard = (record: Vaccination, handleDeleteVaccinationRecord: (id: string) => void) => {
     return (
