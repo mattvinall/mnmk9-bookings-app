@@ -4,7 +4,7 @@ import '@splidejs/react-splide/css';
 import Link from "next/link";
 import { Booking } from "../../../types/router";
 import { formatTime } from "../../../utils/formatTime";
-import { confirmBooking, getAllBookings } from "../../../api/bookings";
+import { getAllBookings } from "../../../api/bookings";
 import { formatDate } from "../../../utils/formatDate";
 import { trpc } from "../../../utils/trpc";
 
