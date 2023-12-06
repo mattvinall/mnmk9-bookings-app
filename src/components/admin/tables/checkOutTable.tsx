@@ -27,7 +27,7 @@ const CheckOutTable = ({ checkOutBookings, checkOutBookingsList }: Props): React
 
 	return (
 		<>
-			<h3 className="text-white font-bold text-[2rem] my-8">Checking Out:</h3>
+			<h3 className="text-white text-center md:text-left font-bold text-[2rem] my-8">Checking Out:</h3>
 			<Media query={{ minWidth: 900 }}>
 				{matches => matches ? (
 
