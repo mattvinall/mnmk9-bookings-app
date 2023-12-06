@@ -50,7 +50,7 @@ const ConfirmBookings = () => {
 	});
 
 	return (
-		<div className="w-ful flex flex-col pl-0 lg:pl-24">
+		<div className="w-full flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-center md:text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
 				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Booking) => {
