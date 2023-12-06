@@ -6,6 +6,7 @@ import { Booking } from "../../../types/router";
 import { formatTime } from "../../../utils/formatTime";
 import { confirmBooking, getAllBookings } from "../../../api/bookings";
 import { formatDate } from "../../../utils/formatDate";
+import { trpc } from "../../../utils/trpc";
 
 const ConfirmBookings = () => {
 	const { data: bookingsData, refetch } = getAllBookings();
@@ -22,6 +23,12 @@ const ConfirmBookings = () => {
 
 		setShowArrows(false);
 	}, [showArrows, filteredBookingsByNotConfirmed?.length]);
+
+	const { mutate: confirmBooking } = trpc.bookings.confirmBooking.useMutation({
+		onSuccess: () => {
+			refetch();
+		},
+	});
 
 	return (
 		<div className="w-full md:w-[50%] flex flex-col pl-0 lg:pl-24">
@@ -59,7 +66,7 @@ const ConfirmBookings = () => {
 												{!booking.confirmedBooking && (
 													<button
 														className="text-center bg-green-700 hover:bg-green-600 text-white w-[175px] font-bold py-2 px-4 rounded mt-4"
-														onClick={() => confirmBooking(booking.id, !booking.confirmedBooking, refetch)}
+														onClick={() => confirmBooking({ id: booking.id, confirmedBooking: !booking.confirmedBooking })}
 													>
 														Confirm Booking
 													</button>
