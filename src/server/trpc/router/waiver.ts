@@ -12,7 +12,7 @@ export const waiverRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         const { id } = input;
-        return await ctx.prisma.waiver.findUnique({ where: { id } });
+        return await ctx.prisma.waiver.findMany({ where: { id } });
       } catch (error) {
         console.log(`Booking cannot be fetched by ID: ${error}`);
       }

@@ -36,6 +36,7 @@ const PetDetail: NextPage = () => {
 	console.log("waiverByPetId", waiverByPetId);
 
 	const waiverFormSigned = waiverByPetId && Object.keys(waiverByPetId).length > 0 ? true : false;
+	console.log("waiverFormSigned boolean status", waiverFormSigned);
 
 	useEffect(() => {
 		const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
