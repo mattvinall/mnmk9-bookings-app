@@ -135,7 +135,6 @@ const Boarding: NextPage = () => {
 			);
 
 			await sendEmailToClient(
-
 				formData?.email,
 				"tylermelnike@mnmk9.ca",
 				formData?.petName,
