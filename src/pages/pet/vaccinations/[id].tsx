@@ -13,6 +13,9 @@ const Vaccinations: NextPage = () => {
     const [key, setKey] = useState<string>("");
 
     const { data: vaccineDetail, refetch } = trpc.vaccine.byId.useQuery({ id })
+
+    console.log("vaccine detail in pet/vaccinations/id page", vaccineDetail);
+
     const { data: petDetail } = trpc.pet.getNameById.useQuery({ id: vaccineDetail?.petId as string })
     const petName = petDetail && petDetail?.length > 0 && petDetail?.map((pet) => pet.name)[0] as string || "";
     console.log("pet name", petName);
