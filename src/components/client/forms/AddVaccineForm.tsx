@@ -82,12 +82,14 @@ const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
         console.log("form data", formData);
         try {
             token && secret && verifyRecaptcha({ secret, token });
+            console.log("uplaoed s3 url", uploadedS3Url);
 
-            fileName && petId && addVaccine({
+            fileName && petId && uploadedS3Url && addVaccine({
                 ...formData,
                 fileName,
                 petId,
                 validTo: new Date(formData.validTo),
+                uploadedS3Url
             });
 
             Swal.fire({

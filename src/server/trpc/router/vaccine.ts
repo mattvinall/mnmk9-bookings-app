@@ -34,10 +34,11 @@ export const vaccineRouter = router({
         name: z.string(),
         validTo: z.date(),
         fileName: z.string(),
+        uploadedS3Url: z.string().url().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { petId, name, validTo, fileName } = input;
+      const { petId, name, validTo, fileName, uploadedS3Url } = input;
 
       const { success } = await rateLimit.limit(petId);
 
@@ -52,6 +53,7 @@ export const vaccineRouter = router({
             name,
             validTo,
             fileName,
+            uploadedS3Url,
           },
         });
         return addVaccinationRecord;
