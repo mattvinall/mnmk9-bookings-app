@@ -1,6 +1,6 @@
 import { Pet } from "@prisma/client";
 
-export const PetDetailCard = (pet: Pet, defaultImage: string) => {
+export const PetDetailCard = (pet: Pet, waiverFormSigned: boolean, defaultImage: string) => {
     return (
         <div key={pet.id} className="flex justify-center items-stretch mb-6">
             <div className="rounded-lg shadow-lg bg-white w-full md:w-[32rem]">
@@ -30,7 +30,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
                             <p className="text-gray-600 font-medium text-lg">{pet?.sex === "MALE" ? "Neutered: " : "Spayed: "}  <span className="inline-block ml-2">{pet?.ovariohysterectomy === false ? "❌" : "✅"}</span></p>
                         </div>
                         <div className="mb-4">
-                            <p className="text-gray-600 font-medium text-lg">Waiver Form Signed:  <span className="inline-block ml-2">{pet?.ovariohysterectomy === false ? "❌" : "✅"}</span></p>
+                            <p className="text-gray-600 font-medium text-lg">Waiver Form Signed:  <span className="inline-block ml-2">{waiverFormSigned === false ? "❌" : "✅"}</span></p>
                         </div>
                         {/* <p className="text-gray-600 font-medium text-lg">}</span></p> */}
                     </div>
