@@ -44,6 +44,8 @@ const AddVaccineForm = ({ petId, petName, secret, refetch }: Props) => {
         fileName,
     } = useUploadFileToS3(petName as string, 'vaccinations');
 
+    console.log("uploaded s3 url after calling useUploadToS3 hook", uploadedS3Url)
+
     const { executeRecaptcha } = useGoogleReCaptcha();
 
     // Create an event handler so you can call the verification on button click event or form submit

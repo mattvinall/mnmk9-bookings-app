@@ -45,6 +45,7 @@ const useUploadFileToS3 = (name: string, fileType: string) => {
 				}
 				// set url of file to state
 				setUploadedS3Url(data.Location as string);
+				console.log("uploaded s3 url after setting state", uploadedS3Url);
 			})
 		}
 	};
