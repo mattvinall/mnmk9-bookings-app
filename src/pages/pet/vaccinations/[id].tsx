@@ -4,6 +4,7 @@ import { trpc } from '../../../utils/trpc';
 import { useEffect, useState } from 'react';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import EditVaccineForm from '../../../components/client/forms/EditVaccineForm';
+import { formatDate } from './../../../utils/formatDate';
 
 const Vaccinations: NextPage = () => {
     const router = useRouter();
@@ -18,7 +19,6 @@ const Vaccinations: NextPage = () => {
 
     const { data: petDetail } = trpc.pet.getNameById.useQuery({ id: vaccineDetail?.petId as string })
     const petName = petDetail && petDetail?.length > 0 && petDetail?.map((pet) => pet.name)[0] as string || "";
-    console.log("pet name", petName);
 
     useEffect(() => {
         const key = process.env.NEXT_PUBLIC_RECAPTCHA_SITEKEY;
@@ -34,6 +34,8 @@ const Vaccinations: NextPage = () => {
     const handleGoBack = () => {
         router.back();
     }
+
+    const validToDate = vaccineDetail?.validTo && new Date(vaccineDetail?.validTo).toLocaleDateString("en") || "";
 
     return (
         <section className="container flex flex-col gap-12 px-16 py-16 max-w-8xl">
@@ -51,7 +53,7 @@ const Vaccinations: NextPage = () => {
                             </div>
                             <div className="my-4 border-slate-500 border-b-2">
                                 <div className="mb-4">
-                                    <p className="text-gray-600 font-medium text-lg">Valid To - {vaccineDetail?.validTo.toLocaleDateString("en")}</p>
+                                    {vaccineDetail?.validTo && <p className="text-gray-600 font-medium text-lg">Valid To - {formatDate(validToDate)}</p>}
                                 </div>
                             </div>
                             <div className="my-4 flex flex-col">

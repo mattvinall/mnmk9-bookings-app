@@ -17,10 +17,10 @@ const VaccinationRecordCard = (record: Vaccination, handleDeleteVaccinationRecor
                             <p className="text-gray-600 font-medium text-lg">Valid To - {record.validTo.toLocaleDateString("en")}</p>
                         </div>
                     </div>
-                    {record.uploadedS3Url && (
+                    {record.fileName && (
                         <div className="my-4 border-slate-500 border-b-2">
                             <div className="mb-4">
-                                <p className="text-gray-600 font-medium text-lg"><a href={record?.uploadedS3Url}>View Vaccination Record</a></p>
+                                <p className="text-gray-600 font-medium text-lg"><a href={record?.fileName}>View Vaccination Record</a></p>
                             </div>
                         </div>
                     )}
