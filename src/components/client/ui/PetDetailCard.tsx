@@ -1,14 +1,6 @@
-"use client";
-
 import { Pet } from "@prisma/client";
-import { trpc } from "../../../utils/trpc";
 
-export const PetDetailCard = (pet: Pet, defaultImage: string) => {
-    const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ id: pet.id as string });
-    console.log("waiverByPetId", waiverByPetId);
-
-    const waiverFormSigned = waiverByPetId ? true : false;
-    console.log("waiverFormSigned boolean status", waiverFormSigned);
+export const PetDetailCard = (pet: Pet, waiverFormSignedStatus: boolean, defaultImage: string) => {
 
     return (
         <div key={pet.id} className="flex justify-center items-stretch mb-6">
@@ -39,7 +31,7 @@ export const PetDetailCard = (pet: Pet, defaultImage: string) => {
                             <p className="text-gray-600 font-medium text-lg">{pet?.sex === "MALE" ? "Neutered: " : "Spayed: "}  <span className="inline-block ml-2">{pet?.ovariohysterectomy === false ? "❌" : "✅"}</span></p>
                         </div>
                         <div className="mb-4">
-                            <p className="text-gray-600 font-medium text-lg">Waiver Form Signed:  <span className="inline-block ml-2">{waiverFormSigned === false ? "❌" : "✅"}</span></p>
+                            <p className="text-gray-600 font-medium text-lg">Waiver Form Signed:  <span className="inline-block ml-2">{waiverFormSignedStatus === false ? "❌" : "✅"}</span></p>
                         </div>
                         {/* <p className="text-gray-600 font-medium text-lg">}</span></p> */}
                     </div>
