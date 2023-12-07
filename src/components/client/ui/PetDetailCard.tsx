@@ -1,3 +1,5 @@
+"use client";
+
 import { Pet } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
 
