@@ -36,7 +36,7 @@ const PetDetail: NextPage = () => {
 	const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ id: petId as string });
 	console.log("waiverByPetId", waiverByPetId);
 
-	const waiverFormSignedStatus = waiverByPetId ? true : false;
+	const waiverFormSignedStatus = waiverByPetId && waiverByPetId.length > 0 ? true : false;
 	console.log("waiverFormSigned boolean status", waiverFormSignedStatus);
 
 	useEffect(() => {
