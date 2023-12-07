@@ -35,7 +35,7 @@ const PetDetail: NextPage = () => {
 
 	console.log("pet id used to call waiver API", petId);
 
-	const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ id: petId as string });
+	const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ petId: petId as string });
 	console.log("waiverByPetId", waiverByPetId);
 
 	const waiverFormSignedStatus = waiverByPetId && Object.keys(waiverByPetId)?.length > 0 ? true : false;

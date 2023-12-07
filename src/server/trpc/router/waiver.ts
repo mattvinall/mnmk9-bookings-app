@@ -8,11 +8,11 @@ export const waiverRouter = router({
     return ctx.prisma.vaccination.findMany();
   }),
   byPetId: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ petId: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
-        const { id } = input;
-        return await ctx.prisma.waiver.findUnique({ where: { id } });
+        const { petId } = input;
+        return await ctx.prisma.waiver.findFirst({ where: { petId } });
       } catch (error) {
         console.log(`Booking cannot be fetched by ID: ${error}`);
       }
