@@ -33,10 +33,12 @@ const PetDetail: NextPage = () => {
 	const ownerId = petDetail?.map((pet: Pet) => pet.ownerId as string)[0];
 	const vaccinationRecords = petDetail && petDetail?.map((pet: PetDetail) => pet?.vaccinations)[0] || [];
 
+	console.log("pet id used to call waiver API", petId);
+
 	const { data: waiverByPetId } = trpc.waiver.byPetId.useQuery({ id: petId as string });
 	console.log("waiverByPetId", waiverByPetId);
 
-	const waiverFormSignedStatus = waiverByPetId && waiverByPetId.length > 0 ? true : false;
+	const waiverFormSignedStatus = waiverByPetId && Object.keys(waiverByPetId).length > 0 ? true : false;
 	console.log("waiverFormSigned boolean status", waiverFormSignedStatus);
 
 	useEffect(() => {
