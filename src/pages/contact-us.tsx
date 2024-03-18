@@ -15,6 +15,7 @@ import {
 } from 'react-google-recaptcha-v3';
 
 const ContactUs = () => {
+	console.log("contact us page");
 	const router = useRouter();
 
 	const [token, setToken] = useState<string>("");
