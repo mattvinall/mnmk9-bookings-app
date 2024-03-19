@@ -5,13 +5,15 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Media from "react-media";
-import { Booking } from "../../../types/router";
+// import { Booking } from "../../../types/router";
 import { formatTime } from "../../../utils/formatTime";
+import { Bookings } from "@prisma/client";
 
 type Props = {
 	checkOutBookings: any
 	checkOutBookingsList: any
 }
+
 
 const CheckOutTable = ({ checkOutBookings, checkOutBookingsList }: Props): ReactJSXElement => {
 	const [showArrows, setShowArrows] = useState<boolean>(true);
@@ -60,14 +62,14 @@ const CheckOutTable = ({ checkOutBookings, checkOutBookingsList }: Props): React
 					</table>
 				) : (
 					<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
-						{checkOutBookings && checkOutBookings?.map((booking: Booking) => {
-							const formattedCheckInDate = booking.checkInDate ? new Date(booking.checkInDate).toLocaleDateString("en-US", {
+						{checkOutBookings && checkOutBookings?.map((booking: Bookings) => {
+							const formattedCheckInDate = booking?.checkInDate ? new Date(booking.checkInDate).toLocaleDateString("en-US", {
 								weekday: "long",
 								year: "numeric",
 								month: "long",
 								day: "numeric",
 							}) : '';
-							const formattedCheckOutDate = booking.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString("en-US", {
+							const formattedCheckOutDate = booking && booking?.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString("en-US", {
 								weekday: "long",
 								year: "numeric",
 								month: "long",
