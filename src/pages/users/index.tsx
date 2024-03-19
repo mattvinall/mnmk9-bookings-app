@@ -43,6 +43,10 @@ const Users = () => {
 
     // pagination setup
     const ITEMS_PER_PAGE = 6;
+
+    // recent change
+    if (!allUserData) return;
+
     const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, ITEMS_PER_PAGE)
     const currentData = getCurrentData();
 
