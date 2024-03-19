@@ -5,7 +5,6 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Media from "react-media";
-// import { Booking } from "../../../types/router";
 import { formatTime } from "../../../utils/formatTime";
 import { Bookings } from "@prisma/client";
 

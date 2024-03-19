@@ -28,7 +28,12 @@ const Boarding: NextPage = () => {
 	// query service table and find the service name of boarding and store the service ID
 	const { data: serviceData } = trpc.service.getAllServices.useQuery();
 
+	console.log("service data", serviceData);
+
 	const boarding = serviceData?.find((service: Services) => service.serviceName === "Boarding");
+
+	console.log("boarding", boarding);
+
 	const boardingId = boarding?.id as string;
 
 	// query the pets table and find the 
