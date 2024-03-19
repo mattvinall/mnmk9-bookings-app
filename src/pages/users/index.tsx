@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import usePagination from "../../hooks/usePagination";
@@ -19,6 +19,7 @@ const Users = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<[]>([]);
     const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
+    const [allUserDataArray, setAllUserDataArray] = useState<[]>([]);
 
     // useAuth hook to extract user id and isSignedIn from clerk
     const { userId, isSignedIn } = useAuth();
@@ -28,6 +29,14 @@ const Users = () => {
 
     // fetch user by id to check if admin role
     const { data: userData, isLoading, error } = getUserById(userId as string);
+
+    useEffect(() => {
+        if (!allUserData) {
+            return;
+        }
+
+        setAllUserDataArray(allUserData as []);
+    }, [allUserData])
 
     const { mutate } = trpc.user.makeUserAdmin.useMutation({
         onSuccess: () => refetch()
@@ -44,10 +53,7 @@ const Users = () => {
     // pagination setup
     const ITEMS_PER_PAGE = 6;
 
-    // recent change
-    if (!allUserData) return;
-
-    const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserData, ITEMS_PER_PAGE)
+    const { currentPage, getCurrentData, changePage, pageCount } = usePagination(allUserDataArray, ITEMS_PER_PAGE)
     const currentData = getCurrentData();
 
     const onPageChange = (event: any, value: number) => {
