@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { trpc } from "../../../utils/trpc";
 import Link from "next/link"
 import { formatTime } from "../../../utils/formatTime";
@@ -9,6 +10,7 @@ import Swal from "sweetalert2";
 import { sendEmailToClientConfirmBooking } from "../../../lib/email";
 
 const AdminBookings: React.FC = (): ReactJSXElement => {
+	const [bookingsDataArray, setBookingsDataArray] = useState<[]>([]);
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
 		onSuccess: async (data) => {
@@ -33,6 +35,12 @@ const AdminBookings: React.FC = (): ReactJSXElement => {
 		}
 	});
 
+	useEffect(() => {
+		if (!bookingsData || bookingsData.length === 0) return;
+
+		setBookingsDataArray(bookingsData as [])
+	}, [bookingsData])
+
 	const handleCancelBooking = trpc.bookings.cancelBooking.useMutation({
 		onSuccess: () => {
 			refetch()
@@ -41,7 +49,7 @@ const AdminBookings: React.FC = (): ReactJSXElement => {
 
 	// Pagination Logic
 	const ITEMS_PER_PAGE = 6;
-	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(bookingsData, ITEMS_PER_PAGE)
+	const { currentPage, getCurrentData, changePage, pageCount } = usePagination(bookingsDataArray, ITEMS_PER_PAGE)
 	const currentData = getCurrentData();
 
 	const onPageChange = (event: any, value: number) => {
