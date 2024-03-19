@@ -36,9 +36,10 @@ const AdminBookings: React.FC = (): ReactJSXElement => {
 	});
 
 	useEffect(() => {
-		if (!bookingsData || bookingsData.length === 0) return;
+		if (!bookingsData || Object.keys(bookingsData).length === 0) return;
 
-		setBookingsDataArray(bookingsData as [])
+		const newBookingsDataArray = [...bookingsData];
+		setBookingsDataArray(newBookingsDataArray as []);
 	}, [bookingsData])
 
 	const handleCancelBooking = trpc.bookings.cancelBooking.useMutation({
@@ -59,7 +60,7 @@ const AdminBookings: React.FC = (): ReactJSXElement => {
 	return (
 		<div className="flex flex-col items-center">
 			<ul className="w-full grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 md:gap-8 my-20">
-				{currentData as BookingsArray && currentData?.length > 0 ? currentData?.map((booking: Booking) => (
+				{currentData as BookingsArray && currentData?.length > 0 ? currentData?.map((booking: any) => (
 					<li key={booking?.id} className="flex flex-col gap-4 rounded-xl bg-white/10 p-2 text-white hover:bg-white/20">
 						<div className="flex justify-center">
 							<div className="rounded-lg shadow-lg bg-white max-w-md w-full h-full min-h-[350px]">
