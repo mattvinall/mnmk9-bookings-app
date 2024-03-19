@@ -27,13 +27,14 @@ const AdminBookingForm = ({ secret }: Props) => {
 
     useEffect(() => {
         const user = users?.filter((user: User) => user.id === userId)[0];
-        console.log("user found", user);
+
+        if (!user || user === userData) return;
         setUserData(user);
 
-        const { email, phoneNumber } = user || {};
+        const { email, phoneNumber } = user;
 
         setValue("email", email)
-        setValue("phoneNumber", phoneNumber)
+        setValue("phoneNumber", phoneNumber || "")
 
     }, [userId]);
 
@@ -57,7 +58,8 @@ const AdminBookingForm = ({ secret }: Props) => {
             data.serviceName = data.serviceName.split("-")[0] as string;
             const userId = userData && userData?.id as string;
             const name = userData && userData?.name as string;
-            const petId = userData && userData?.pets?.length > 0 ? users.filter((user: User) => user.id === userId)[0].pets[0].id as string : "";
+            const petId = users?.find((user: User) => user.id === userId)?.pets?.[0]?.id ?? "";
+
             const service = services && services?.length > 0 && services?.filter((service: Services) => service.serviceName === data.serviceName);
             const serviceId = service && service?.length > 0 && service[0]?.id as string;
 
