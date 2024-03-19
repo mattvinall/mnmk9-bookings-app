@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Link from "next/link";
-import { Booking } from "../../../types/router";
+import { Bookings } from "@prisma/client";
 import { formatTime } from "../../../utils/formatTime";
 import { getAllBookings } from "../../../api/bookings";
 import { formatDate } from "../../../utils/formatDate";
@@ -13,7 +13,7 @@ import { sendEmailToClientConfirmBooking } from "../../../lib/email";
 const ConfirmBookings = () => {
 	const { data: bookingsData, refetch } = getAllBookings();
 
-	const filteredBookingsByNotConfirmed = bookingsData?.filter((booking: Booking) => booking.confirmedBooking === false);
+	const filteredBookingsByNotConfirmed = bookingsData?.filter((booking: Bookings) => booking.confirmedBooking === false);
 
 	const [showArrows, setShowArrows] = useState<boolean>(true);
 
@@ -53,10 +53,10 @@ const ConfirmBookings = () => {
 		<div className="w-full flex flex-col pl-0 lg:pl-24">
 			{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed?.length > 0 ? <h2 className="text-center md:text-left mt-16 lg:mt-0 lg:text-center text-3xl font-bold mb-8 text-white">Confirm Bookings:</h2> : null}
 			<Splide aria-label="MNMK-9 Bookings that have not confirmed" options={{ arrows: showArrows === true ? true : false }}>
-				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Booking) => {
+				{filteredBookingsByNotConfirmed && filteredBookingsByNotConfirmed.length > 0 ? filteredBookingsByNotConfirmed?.map((booking: Bookings) => {
 					console.log("booking", booking);
-					const formattedCheckInDate = formatDate(booking.checkInDate);
-					const formattedCheckOutDate = formatDate(booking.checkOutDate);
+					const formattedCheckInDate = formatDate(booking?.checkInDate);
+					const formattedCheckOutDate = formatDate(booking?.checkOutDate ?? "");
 
 					return (
 						<SplideSlide key={booking?.id}>
