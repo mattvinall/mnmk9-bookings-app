@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { sendEmailToClientConfirmBooking } from "../../../lib/email";
 
 const AdminBookings: React.FC = (): ReactJSXElement => {
+	console.log("admin bookings component");
 	const [bookingsDataArray, setBookingsDataArray] = useState<[]>([]);
 	const { data: bookingsData, refetch } = trpc.bookings.getAllBookings.useQuery();
 	const handleConfirmBooking = trpc.bookings.confirmBooking.useMutation({
